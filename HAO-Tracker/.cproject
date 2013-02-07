@@ -85,7 +85,7 @@
 								<option id="de.innot.avreclipse.cpplinker.option.libpath.649478372" name="Libraries Path (-L)" superClass="de.innot.avreclipse.cpplinker.option.libpath" valueType="stringList">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/Nano328P}&quot;"/>
 								</option>
-								<option id="de.innot.avreclipse.cpplinker.option.otherobjs.1222556813" superClass="de.innot.avreclipse.cpplinker.option.otherobjs" valueType="userObjs">
+								<option id="de.innot.avreclipse.cpplinker.option.otherobjs.1222556813" name="Other Objects (*.o)" superClass="de.innot.avreclipse.cpplinker.option.otherobjs" valueType="userObjs">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FSK600Bauds900Hz1500HzModulation/Nano328P/FSK600BaudTA900TB1500Mod.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Nano328P/GPS.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Nano328P/utility/Sd2Card.o}&quot;"/>
@@ -157,7 +157,7 @@
 								<option id="de.innot.avreclipse.compiler.option.incpath.275704706" name="Include Paths (-I)" superClass="de.innot.avreclipse.compiler.option.incpath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/srcCore}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/srcVariants/standard}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/srcVariants/mega}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FSK600Bauds900Hz1500HzModulation}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD}&quot;"/>
@@ -172,7 +172,7 @@
 								<option id="de.innot.avreclipse.cppcompiler.option.incpath.1305056388" name="Include Paths (-I)" superClass="de.innot.avreclipse.cppcompiler.option.incpath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/srcCore}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/srcVariants/standard}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/srcVariants/mega}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FSK600Bauds900Hz1500HzModulation}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD}&quot;"/>
@@ -198,7 +198,7 @@
 								<option id="de.innot.avreclipse.cpplinker.option.libpath.1925474821" name="Libraries Path (-L)" superClass="de.innot.avreclipse.cpplinker.option.libpath" valueType="stringList">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/Mega2560}&quot;"/>
 								</option>
-								<option id="de.innot.avreclipse.cpplinker.option.otherobjs.272862930" superClass="de.innot.avreclipse.cpplinker.option.otherobjs" valueType="userObjs">
+								<option id="de.innot.avreclipse.cpplinker.option.otherobjs.272862930" name="Other Objects (*.o)" superClass="de.innot.avreclipse.cpplinker.option.otherobjs" valueType="userObjs">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FSK600Bauds900Hz1500HzModulation/Mega2560/FSK600BaudTA900TB1500Mod.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/GPS.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/Sd2Card.o}&quot;"/>
