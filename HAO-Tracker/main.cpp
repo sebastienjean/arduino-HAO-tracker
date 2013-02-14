@@ -249,7 +249,7 @@ loop()
     fskMod.write(kiwiFrame[cpt]);
   fskMod.off();
 
-  // Opening logFile
+  // Logging
   logFile = SD.open(LOGFILE, FILE_WRITE);
   if (logFile)
     {
@@ -261,6 +261,8 @@ loop()
       digitalWrite(LED_GREEN, HIGH);
       delay(100);
       digitalWrite(LED_GREEN, LOW);
+      logFile.print(sensorString);
+      logFile.close();
     }
   else
     {
@@ -284,12 +286,6 @@ loop()
   for (int cpt = 0; cpt < strlen(sensorString); cpt++)
     fskMod.write(sensorString[cpt]);
   fskMod.off();
-
-  // Logging
-  if (logFile)
-    {
-      logFile.print(sensorString);
-    }
 
   // NMEA RMC
   gpsStatus = nmea.readRMC(nmeaFrame);
@@ -328,11 +324,31 @@ loop()
   fskMod.off();
 
   // Logging
+  logFile = SD.open(LOGFILE, FILE_WRITE);
   if (logFile)
     {
+      Serial.println(F("log file access success"));
+      digitalWrite(LED_GREEN, HIGH);
+      delay(100);
+      digitalWrite(LED_GREEN, LOW);
+      delay(100);
+      digitalWrite(LED_GREEN, HIGH);
+      delay(100);
+      digitalWrite(LED_GREEN, LOW);
       logFile.print(nmeaFrame);
+      logFile.close();
     }
-
+  else
+    {
+      Serial.println(F("log file access failure"));
+      digitalWrite(LED_RED, HIGH);
+      delay(100);
+      digitalWrite(LED_RED, LOW);
+      delay(100);
+      digitalWrite(LED_RED, HIGH);
+      delay(100);
+      digitalWrite(LED_RED, LOW);
+    }
   // NMEA RMC
   gpsStatus = nmea.readGGA(nmeaFrame);
   switch (gpsStatus)
@@ -356,11 +372,31 @@ loop()
   fskMod.off();
 
   // Logging
-  if (logFile)
-    {
-      logFile.print(nmeaFrame);
-      logFile.close();
-    }
+    logFile = SD.open(LOGFILE, FILE_WRITE);
+    if (logFile)
+      {
+        Serial.println(F("log file access success"));
+        digitalWrite(LED_GREEN, HIGH);
+        delay(100);
+        digitalWrite(LED_GREEN, LOW);
+        delay(100);
+        digitalWrite(LED_GREEN, HIGH);
+        delay(100);
+        digitalWrite(LED_GREEN, LOW);
+        logFile.print(nmeaFrame);
+        logFile.close();
+      }
+    else
+      {
+        Serial.println(F("log file access failure"));
+        digitalWrite(LED_RED, HIGH);
+        delay(100);
+        digitalWrite(LED_RED, LOW);
+        delay(100);
+        digitalWrite(LED_RED, HIGH);
+        delay(100);
+        digitalWrite(LED_RED, LOW);
+      }
   //wdt_reset();
 }
 
