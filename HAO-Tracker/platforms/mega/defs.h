@@ -1,18 +1,18 @@
 /*
-Copyright (C) 2012 Sebastien Jean <baz dot jean at gmail dot com>
+ Copyright (C) 2012 Sebastien Jean <baz dot jean at gmail dot com>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the version 3 GNU General Public License as
-published by the Free Software Foundation.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the version 3 GNU General Public License as
+ published by the Free Software Foundation.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 // User Button
 #define USER_BUTTON 5
@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LED_RED 9
 
 // Orange LED
-#define LED_ORANGE 8
+#define LED_ORANGE 10
 
 // Green LED
 #define LED_GREEN 7
@@ -49,3 +49,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // SD card Chip Select PIN
 #define SD_CS 53
+

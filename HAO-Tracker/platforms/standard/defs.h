@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LED_RED 9
 
 // Orange LED
-#define LED_ORANGE 8
+#define LED_ORANGE 10
 
 // Green LED
 #define LED_GREEN 7
