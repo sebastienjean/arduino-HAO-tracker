@@ -26,6 +26,11 @@
 
 #define FSK_MODULATOR_TX 6
 
+#define GPS_SERIAL_RX 2
+
+// unused but required for software serial initialization
+#define GPS_SERIAL_TX 3
+
 #define DIFFERENTIAL_PRESSURE_ANALOG_SENSOR A0
 
 #define ABSOLUTE_PRESSURE_ANALOG_SENSOR A1
