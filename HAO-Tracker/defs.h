@@ -14,6 +14,9 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SERIAL_DEBUG Serial
+
+#define SERIAL_NMEA_GPS_BAUDRATE 4800
 
 #define SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT 2000
 

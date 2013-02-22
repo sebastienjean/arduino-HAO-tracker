@@ -64,33 +64,67 @@ char nmeaSentence[MAX_NMEA_SENTENCE_LENGTH];
 unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
 
 /**
- * Application's main (what else to say?)
- * @return (never)
+ * Initializes LEDs wirings.
  */
-int
-main(void)
+void initLEDs()
 {
-  init();
-
-  setup();
-
-  for (;;)
-    loop();
-
-  return 0;
-}
-/**
- * Arduino's setup function, called once at startup, after init
- */
-void
-setup()
-{
-  // LEDs init
   pinMode(RED_LED, OUTPUT);
   pinMode(ORANGE_LED, OUTPUT);
   pinMode(GREEN_LED, OUTPUT);
   pinMode(BLUE_LED, OUTPUT);
+}
 
+/**
+ * Initializes SD shield.
+ * @return SD initialization success status (boolean)
+ */
+int initSdShield()
+{
+  pinMode(SD_CARD_CHIP_SELECT, OUTPUT);
+  return SD.begin(SD_CARD_CHIP_SELECT);
+}
+
+/**
+ * Initializes User switch.
+ */
+void initUserButton()
+{
+  pinMode(USER_BUTTON, INPUT);
+  digitalWrite(USER_BUTTON, HIGH);
+}
+
+/**
+ * Initializes serial debug communication.
+ */
+void initSerialDebug()
+{
+  SERIAL_DEBUG.begin(600);
+}
+
+/**
+ * Initializes GPS.
+ */
+void initGPS()
+{
+  // GPS on software serial at 4800 Baud
+  serialNmeaGPSPort.begin(SERIAL_NMEA_GPS_BAUDRATE);
+}
+
+/**
+ * Resets KIWI frame contents.
+ */
+void resetKiwiFrame()
+{
+  for (int i = 0; i < 11; i++)
+          kiwiFrame[i] = 0x00;
+  kiwiFrame[0] = 0xFF;
+}
+
+/**
+ * Plays LEDs startup sequence.
+ */
+void showLEDsStartupSequence()
+{
   digitalWrite(RED_LED, HIGH);
   digitalWrite(ORANGE_LED, HIGH);
   digitalWrite(GREEN_LED, HIGH);
@@ -100,78 +134,104 @@ setup()
   digitalWrite(ORANGE_LED, LOW);
   digitalWrite(GREEN_LED, LOW);
   digitalWrite(BLUE_LED, LOW);
+}
 
-  pinMode(USER_BUTTON, INPUT);
-  digitalWrite(USER_BUTTON, HIGH);
-
-  // Serial debug at 600 baud
-  Serial.begin(600);
-
-  // SD card init
-  Serial.print(F("SD Init..."));
-  pinMode(SD_CARD_CHIP_SELECT, OUTPUT);
-  if (!SD.begin(SD_CARD_CHIP_SELECT))
-    {
-      Serial.println(F("KO"));
-      digitalWrite(RED_LED,HIGH);
-    }
+/**
+ * Displays status (OK/KO) using red/green LEDs.
+ */
+void showStatus(int status)
+{
+  if (status)
+  {
+    digitalWrite(GREEN_LED,HIGH);
+    digitalWrite(RED_LED,LOW);
+  }
   else
-    {
-      Serial.println(F("OK"));
-      digitalWrite(GREEN_LED,HIGH);
-      delay(1000);
-      if (digitalRead(USER_BUTTON) == 0)
-        {
-          // delete the file:
-          Serial.println(F("SD clear..."));
-          SD.remove(LOG_FILE_PATH);
-          for (int i=0;i<5;i++)
-            {
-              digitalWrite(ORANGE_LED, HIGH);
-              delay(100);
-              digitalWrite(ORANGE_LED, LOW);
-              delay(100);
-            }
-        }
-      Serial.println(F("RESET"));
-      // opening logFile
-      logFile = SD.open(LOG_FILE_PATH, FILE_WRITE);
-      if (logFile)
-        {
-          logFile.println(F("Logging Reset..."));
-          logFile.close();
-          Serial.println(F("OK"));
-          for (int i=0;i<5;i++)
-            {
-              digitalWrite(GREEN_LED, HIGH);
-              delay(100);
-              digitalWrite(GREEN_LED, LOW);
-              delay(100);
-            }
-        }
-      // if the file isn't open, pop up an error:
-      else
-        {
-          Serial.println(F("KO"));
-          for (int i=0;i<5;i++)
-            {
-              digitalWrite(RED_LED, HIGH);
-              delay(100);
-              digitalWrite(RED_LED, LOW);
-              delay(100);
-            }
-        }
+  {
+    digitalWrite(GREEN_LED,LOW);
+    digitalWrite(RED_LED,HIGH);
+  }
+}
 
+/**
+ * Blinks a given LED at 5Hz a given number of times.
+ * @param led the LED to blink
+ * @param times the number of times the LED should blink
+ */
+void quicklyMakeSomeLedBlinkSeveralTimes(int led, int times)
+{
+  for (int i=0;i<times;i++)
+  {
+    digitalWrite(led, HIGH);
+    delay(100);
+    digitalWrite(led, LOW);
+    delay(100);
+  }
+}
+
+/**
+ * Logs a message on the SD card.
+ * @param message the string to be logged
+ * (line termination characters are appended)
+ * @param times the number of times the LED should blink
+ */
+int logMessageOnSdCard(char *message)
+{
+  logFile = SD.open(LOG_FILE_PATH, FILE_WRITE);
+  if (logFile)
+  {
+    logFile.println(message);
+    logFile.close();
+  }
+  return logFile;
+}
+
+
+/**
+ * Arduino's setup function, called once at startup, after init
+ */
+void
+setup()
+{
+  initLEDs();
+
+  showLEDsStartupSequence();
+
+  initUserButton();
+
+  initSerialDebug();
+
+  SERIAL_DEBUG.println(F("R"));
+
+  SERIAL_DEBUG.print(F("SD Init..."));
+
+  if (!initSdShield())
+  {
+    SERIAL_DEBUG.println(F("KO"));
+    showStatus(0);
+  }
+  else
+  {
+    SERIAL_DEBUG.println(F("OK"));
+    showStatus(1);
+    delay(1000);
+    if (digitalRead(USER_BUTTON) == LOW)
+    {
+            // delete the file:
+        SERIAL_DEBUG.println(F("SD Clear"));
+        SD.remove(LOG_FILE_PATH);
+        quicklyMakeSomeLedBlinkSeveralTimes(ORANGE_LED, 5);
     }
 
-      // GPS on software serial at 4800 Baud
-  serialNmeaGPSPort.begin(4800);
+    if (logMessageOnSdCard("R"))
+        quicklyMakeSomeLedBlinkSeveralTimes(GREEN_LED, 5);
+    else
+        quicklyMakeSomeLedBlinkSeveralTimes(RED_LED, 5);
+  }
 
-  for (int i = 0; i < 11; i++)
-    kiwiFrame[i] = 0x00;
-  kiwiFrame[0] = 0xFF;
+  initGPS();
 
-  // wdt_enable(WDTO_8S);
+  resetKiwiFrame();
 }
 
 /**
@@ -395,5 +455,21 @@ loop()
         digitalWrite(RED_LED, LOW);
       }
   //wdt_reset();
+}
+
+/**
+ * Application's main (what else to say?)
+ * @return (never)
+ */
+int main(void)
+{
+  init();
+
+  setup();
+
+  for (;;)
+    loop();
+
+  return 0;
 }
 
