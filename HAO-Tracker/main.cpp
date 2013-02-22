@@ -16,16 +16,13 @@
 #include <Arduino.h>
 #include <SD.h>
 #include <GPS.h>
-#include <SoftwareSerial.h>
-#include <FSK600BaudTA900TB1500Mod.h>
 #include <pins.h>
+#include <defs.h>
+#if defined(GPS_SERIAL_RX)
+#include <SoftwareSerial.h>
+#endif
+#include <FSK600BaudTA900TB1500Mod.h>
 
-// SD logfile path
-#define LOGFILE "data.txt"
-
-#define SENSOR_DATA_ASCII_STRING_LENGTH 40
-
-#define KIWI_FRAME_LENGTH 11
 
 // FSK modulator
 FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX);
@@ -38,7 +35,7 @@ SoftwareSerial serialNmeaGPSPort(GPS_SERIAL_RX, GPS_SERIAL_TX);
 #endif
 
 // GPS
-GPS serialNmeaGPS(&serialNmeaGPSPort, 2000,2000);
+GPS serialNmeaGPS(&serialNmeaGPSPort, SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT,SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT);
 
 // sensor data, as ASCII
 char sensorString[SENSOR_DATA_ASCII_STRING_LENGTH];
@@ -127,7 +124,7 @@ setup()
         {
           // delete the file:
           Serial.println(F("SD clear..."));
-          SD.remove(LOGFILE);
+          SD.remove(LOG_FILE_PATH);
           for (int i=0;i<5;i++)
             {
               digitalWrite(ORANGE_LED, HIGH);
@@ -138,7 +135,7 @@ setup()
         }
       Serial.println(F("RESET"));
       // opening logFile
-      logFile = SD.open(LOGFILE, FILE_WRITE);
+      logFile = SD.open(LOG_FILE_PATH, FILE_WRITE);
       if (logFile)
         {
           logFile.println(F("Logging Reset..."));
@@ -250,7 +247,7 @@ loop()
   fskModulator.off();
 
   // Logging
-  logFile = SD.open(LOGFILE, FILE_WRITE);
+  logFile = SD.open(LOG_FILE_PATH, FILE_WRITE);
   if (logFile)
     {
       Serial.println(F("log file access success"));
@@ -324,7 +321,7 @@ loop()
   fskModulator.off();
 
   // Logging
-  logFile = SD.open(LOGFILE, FILE_WRITE);
+  logFile = SD.open(LOG_FILE_PATH, FILE_WRITE);
   if (logFile)
     {
       Serial.println(F("log file access success"));
@@ -372,7 +369,7 @@ loop()
   fskModulator.off();
 
   // Logging
-    logFile = SD.open(LOGFILE, FILE_WRITE);
+    logFile = SD.open(LOG_FILE_PATH, FILE_WRITE);
     if (logFile)
       {
         Serial.println(F("log file access success"));

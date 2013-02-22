@@ -14,7 +14,12 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define LOGFILE "data.txt"
+
+#define SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT 2000
+
+#define SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT 2000
+
+#define LOG_FILE_PATH "data.txt"
 
 #define SENSOR_DATA_ASCII_STRING_LENGTH 40
 
