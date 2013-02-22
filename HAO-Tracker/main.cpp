@@ -182,10 +182,31 @@ int logMessageOnSdCard(char *message)
   {
     logFile.println(message);
     logFile.close();
+    quicklyMakeSomeLedBlinkSeveralTimes(ORANGE_LED, 2);
   }
+  else
+    quicklyMakeSomeLedBlinkSeveralTimes(ORANGE_LED, 5);
+
   return logFile;
 }
 
+/**
+ * Waits for user to decide if log file has to be deleted, deletes if if needed
+ * @return <tt>true</tt> if log file has been claimed to be deleted (and has been deleted), <tt>false</tt> if not
+ */
+int deleteLogFileIfUserClaimsTo()
+{
+  // User has one second to decide
+  delay(1000);
+
+  if (digitalRead(USER_BUTTON) == LOW)
+  {
+      SD.remove(LOG_FILE_PATH);
+      quicklyMakeSomeLedBlinkSeveralTimes(RED_LED, 10);
+      return true;
+  }
+  return false;
+}
 
 /**
  * Arduino's setup function, called once at startup, after init
@@ -214,20 +235,12 @@ setup()
   {
     SERIAL_DEBUG.println(F("OK"));
     showStatus(1);
-    delay(1000);
-    if (digitalRead(USER_BUTTON) == LOW)
-    {
-            // delete the file:
-        SERIAL_DEBUG.println(F("SD Clear"));
-        SD.remove(LOG_FILE_PATH);
-        quicklyMakeSomeLedBlinkSeveralTimes(ORANGE_LED, 5);
-    }
 
-    if (logMessageOnSdCard("R"))
-        quicklyMakeSomeLedBlinkSeveralTimes(GREEN_LED, 5);
-    else
-        quicklyMakeSomeLedBlinkSeveralTimes(RED_LED, 5);
+    if (deleteLogFileIfUserClaimsTo())
+      SERIAL_DEBUG.println(F("SD Clear"));
   }
+
+  logMessageOnSdCard("R");
 
   initGPS();
 
