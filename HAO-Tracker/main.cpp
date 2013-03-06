@@ -40,6 +40,9 @@ GPS serialNmeaGPS(&serialNmeaGPSPort, SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT,SER
 // sensor data, as ASCII
 char sensorString[SENSOR_DATA_ASCII_STRING_LENGTH];
 
+// sensor string size
+int sensorStringSize;
+
 // log File
 File logFile;
 
@@ -61,7 +64,14 @@ int batteryVoltageSensorValue = 0;
 // buffer for NMEA sentence reading
 char nmeaSentence[MAX_NMEA_SENTENCE_LENGTH];
 
+// KIWI frame
 unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
+
+// KIWI frame checksum
+unsigned char kiwiFrameChecksum;
+
+// Offset of the next value to be inserted in KIWI frame, while building it
+int kiwiFrameNextOffset;
 
 /**
  * Initializes LEDs wirings.
@@ -211,8 +221,7 @@ int deleteLogFileIfUserClaimsTo()
 /**
  * Arduino's setup function, called once at startup, after init
  */
-void
-setup()
+void setup()
 {
   initLEDs();
 
@@ -247,122 +256,125 @@ setup()
   resetKiwiFrame();
 }
 
+void appendTimeToSensorString()
+{
+  // seconds elapsed since last reset, as a decimal coded ASCII string
+  itoa(millis() / 1000, sensorString+sensorStringSize, 10);
+  sensorStringSize = strlen(sensorString);
+}
+
+void appendFieldSeparatorToSensorString()
+{
+  sensorString[sensorStringSize++] = SENSOR_STRING_FIELD_SEPARATOR;
+}
+
+void appendAnalogValueToSensorString(int value)
+{
+  itoa(value, sensorString + sensorStringSize, 10);
+  sensorStringSize = strlen(sensorString);
+}
+
+void terminateSensorString()
+{
+  sensorString[sensorStringSize] = '\0';
+}
+
+void appendAnalogValueToKiwiFrame(int value)
+{
+  kiwiFrame[kiwiFrameNextOffset] = (unsigned char) (value / 4);
+  if (kiwiFrame[kiwiFrameNextOffset] == 0xFF)
+    kiwiFrame[kiwiFrameNextOffset] = 0xFE;
+  kiwiFrameNextOffset++;
+}
+
+void computeKiwiFrameChecksum()
+{
+  for (int cpt = 1; cpt < KIWI_FRAME_LENGTH - 1; cpt++)
+      kiwiFrameChecksum = (unsigned char) ((kiwiFrameChecksum + kiwiFrame[cpt]) % 256);
+
+  kiwiFrameChecksum = (unsigned char) (kiwiFrameChecksum / 2);
+  kiwiFrame[KIWI_FRAME_LENGTH] = kiwiFrameChecksum;
+}
+
+void modulateBytes(unsigned char *bytes, int length)
+{
+  for (int cpt = 0; cpt < length; cpt++)
+    fskModulator.write(bytes[cpt]);
+  fskModulator.off();
+}
+
 /**
  * Arduino's loop function, called in loop (incredible, isn't it ?)
  */
-void
-loop()
+void loop()
 {
-  int sensorStringOffset = 0;
-  unsigned char chk = 0;
-  GPS_status_enum gpsStatus;
+  sensorStringSize = 0;
+  kiwiFrameChecksum = 0;
+  kiwiFrameNextOffset = 1; // OxFF header at offset 0 is inserted in setup
+  GPS_status_enum gpsReadingStatus;
 
-  // millis since last reset processing
-  itoa(millis() / 1000, sensorString, 10);
-  sensorStringOffset = strlen(sensorString);
-  sensorString[sensorStringOffset++] = ',';
+  // local time processing
+  appendTimeToSensorString();
+  appendFieldSeparatorToSensorString();
+
   // absolute pressure processing
   absolutePressureSensorValue = analogRead(ABSOLUTE_PRESSURE_ANALOG_SENSOR);
-  itoa(absolutePressureSensorValue, sensorString + sensorStringOffset, 10);
-  sensorStringOffset = strlen(sensorString);
-  sensorString[sensorStringOffset++] = ',';
-  kiwiFrame[1] = (unsigned char) (absolutePressureSensorValue / 4);
-  if (kiwiFrame[1] == 0xFF)
-    kiwiFrame[1] = 0xFE;
+  appendAnalogValueToSensorString(absolutePressureSensorValue);
+  appendFieldSeparatorToSensorString();
+  appendAnalogValueToKiwiFrame(absolutePressureSensorValue);
 
   // differential pressure processing
   differentialPressureSensorValue = analogRead(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR);
-  itoa(differentialPressureSensorValue, sensorString + sensorStringOffset, 10);
-  sensorStringOffset = strlen(sensorString);
-  sensorString[sensorStringOffset++] = ',';
-  kiwiFrame[2] = (unsigned char) (differentialPressureSensorValue / 4);
-  if (kiwiFrame[2] == 0xFF)
-    kiwiFrame[2] = 0xFE;
+  appendAnalogValueToSensorString(differentialPressureSensorValue);
+  appendFieldSeparatorToSensorString();
+  appendAnalogValueToKiwiFrame(differentialPressureSensorValue);
 
   // internal temperature pressure processing
   internalTemperatureSensorValue = analogRead(INTERNAL_TEMPERATURE_ANALOG_SENSOR);
-  itoa(internalTemperatureSensorValue, sensorString + sensorStringOffset, 10);
-  sensorStringOffset = strlen(sensorString);
-  sensorString[sensorStringOffset++] = ',';
-  kiwiFrame[3] = (unsigned char) (internalTemperatureSensorValue / 4);
-  if (kiwiFrame[3] == 0xFF)
-    kiwiFrame[3] = 0xFE;
+  appendAnalogValueToSensorString(internalTemperatureSensorValue);
+  appendFieldSeparatorToSensorString();
+  appendAnalogValueToKiwiFrame(internalTemperatureSensorValue);
 
   // external temperature pressure processing
   externalTemperatureSensorValue = analogRead(EXTERNAL_TEMPERATURE_ANALOG_SENSOR);
-  itoa(externalTemperatureSensorValue, sensorString + sensorStringOffset, 10);
-  sensorStringOffset = strlen(sensorString);
-  sensorString[sensorStringOffset++] = ',';
-  kiwiFrame[4] = (unsigned char) (externalTemperatureSensorValue / 4);
-  if (kiwiFrame[4] == 0xFF)
-    kiwiFrame[4] = 0xFE;
+  appendAnalogValueToSensorString(externalTemperatureSensorValue);
+  appendFieldSeparatorToSensorString();
+  appendAnalogValueToKiwiFrame(externalTemperatureSensorValue);
 
   // battery voltage processing
   batteryVoltageSensorValue = analogRead(BATTERY_VOLTAGE_ANALOG_SENSOR);
-  itoa(batteryVoltageSensorValue, sensorString + sensorStringOffset, 10);
-  sensorStringOffset = strlen(sensorString);
-  sensorString[sensorStringOffset++] = '\r';
-  sensorString[sensorStringOffset++] = '\n';
-  kiwiFrame[5] = (unsigned char) (batteryVoltageSensorValue / 4);
-  if (kiwiFrame[5] == 0xFF)
-    kiwiFrame[5] = 0xFE;
-  kiwiFrame[9] = (unsigned char) (batteryVoltageSensorValue / 8);
+  appendAnalogValueToSensorString(batteryVoltageSensorValue);
+  appendAnalogValueToKiwiFrame(batteryVoltageSensorValue);
 
-  for (int cpt = 1; cpt < KIWI_FRAME_LENGTH - 1; cpt++)
-    chk = (unsigned char) ((chk + kiwiFrame[cpt]) % 256);
+  // end of frame processing
+  terminateSensorString();
 
-  chk = (unsigned char) (chk / 2);
-  kiwiFrame[KIWI_FRAME_LENGTH] = chk;
+  appendAnalogValueToKiwiFrame(0);
+  appendAnalogValueToKiwiFrame(0);
+  appendAnalogValueToKiwiFrame(0);
+  appendAnalogValueToKiwiFrame(batteryVoltageSensorValue / 2);
+  computeKiwiFrameChecksum();
 
   // Kiwi Frame transmission
-  for (int cpt = 0; cpt < KIWI_FRAME_LENGTH; cpt++)
-    fskModulator.write(kiwiFrame[cpt]);
-  fskModulator.off();
+  modulateBytes(kiwiFrame, KIWI_FRAME_LENGTH);
 
-  // Logging
-  logFile = SD.open(LOG_FILE_PATH, FILE_WRITE);
-  if (logFile)
-    {
-      Serial.println(F("log file access success"));
-      digitalWrite(GREEN_LED, HIGH);
-      delay(100);
-      digitalWrite(GREEN_LED, LOW);
-      delay(100);
-      digitalWrite(GREEN_LED, HIGH);
-      delay(100);
-      digitalWrite(GREEN_LED, LOW);
-      logFile.print(sensorString);
-      logFile.close();
-    }
-  else
-    {
-      Serial.println(F("log file access failure"));
-      digitalWrite(RED_LED, HIGH);
-      delay(100);
-      digitalWrite(RED_LED, LOW);
-      delay(100);
-      digitalWrite(RED_LED, HIGH);
-      delay(100);
-      digitalWrite(RED_LED, LOW);
-    }
-      //wdt_reset();
+  // sensor string logging
+  logMessageOnSdCard(sensorString);
 
-      // Sensor data processing
+  // sensor string debug
+  SERIAL_DEBUG.println(sensorString);
 
-      // Debug
-  Serial.print(sensorString);
+  // sensor string transmission (with line termination)
+  sensorString[sensorStringSize++]='\r';
+  sensorString[sensorStringSize++]='\n';
+  modulateBytes((unsigned char *) sensorString, sensorStringSize);
 
-  // Transmission
-  for (int cpt = 0; cpt < strlen(sensorString); cpt++)
-    fskModulator.write(sensorString[cpt]);
-  fskModulator.off();
-
-  // NMEA RMC
-  gpsStatus = serialNmeaGPS.readRMC(nmeaSentence);
-  switch (gpsStatus)
-    {
-  case GPS_OK:
-    for (int cpt = 0; cpt < MAX_NMEA_SENTENCE_LENGTH; cpt++)
+  // NMEA RMC sentence reading
+  gpsReadingStatus = serialNmeaGPS.readRMC(nmeaSentence);
+  switch (gpsReadingStatus)
+  {
+    case GPS_OK:
+      for (int cpt = 0; cpt < MAX_NMEA_SENTENCE_LENGTH; cpt++)
       {
         if ((cpt > 5) && (cpt <= 25) && (nmeaSentence[cpt] == 'A'))
           {
@@ -375,99 +387,48 @@ loop()
             digitalWrite(ORANGE_LED, LOW);
           }
       }
-    break;
-  case GPS_TIMEOUT:
-    strcpy(nmeaSentence, "GPS TO\r\n");
-    break;
-  default:
-    strcpy(nmeaSentence, "GPS E\r\n");
-    break;
-    }
-  //wdt_reset();
+      break;
+    case GPS_TIMEOUT:
+      strcpy(nmeaSentence, "GPS TO\r\n");
+      break;
+    default:
+      strcpy(nmeaSentence, "GPS E\r\n");
+      break;
+  }
 
-  // Debug
-  Serial.print(nmeaSentence);
+  // NMEA RMC sentence debug
+  SERIAL_DEBUG.print(nmeaSentence);
 
-  // Transmission
-  for (int cpt = 0; cpt < strlen(nmeaSentence); cpt++)
-    fskModulator.write(nmeaSentence[cpt]);
-  fskModulator.off();
+  // NMEA RMC sentence transmission
+  modulateBytes((unsigned char *) nmeaSentence, strlen(nmeaSentence));
 
-  // Logging
-  logFile = SD.open(LOG_FILE_PATH, FILE_WRITE);
-  if (logFile)
-    {
-      Serial.println(F("log file access success"));
-      digitalWrite(GREEN_LED, HIGH);
-      delay(100);
-      digitalWrite(GREEN_LED, LOW);
-      delay(100);
-      digitalWrite(GREEN_LED, HIGH);
-      delay(100);
-      digitalWrite(GREEN_LED, LOW);
-      logFile.print(nmeaSentence);
-      logFile.close();
-    }
-  else
-    {
-      Serial.println(F("log file access failure"));
-      digitalWrite(RED_LED, HIGH);
-      delay(100);
-      digitalWrite(RED_LED, LOW);
-      delay(100);
-      digitalWrite(RED_LED, HIGH);
-      delay(100);
-      digitalWrite(RED_LED, LOW);
-    }
-  // NMEA RMC
-  gpsStatus = serialNmeaGPS.readGGA(nmeaSentence);
-  switch (gpsStatus)
-    {
-  case GPS_OK:
-    break;
-  case GPS_TIMEOUT:
-    strcpy(nmeaSentence, "GPS TO\r\n");
-    break;
-  default:
-    strcpy(nmeaSentence, "GPS E\r\n");
-    break;
-    }
+  // NMEA RMC sentence logging
+  // TODO fix line termination dup bug
+  logMessageOnSdCard(nmeaSentence);
 
-  // Debug
-  Serial.print(nmeaSentence);
+  // NMEA GGA sentence reading
+  gpsReadingStatus = serialNmeaGPS.readGGA(nmeaSentence);
+  switch (gpsReadingStatus)
+  {
+    case GPS_OK:
+      break;
+    case GPS_TIMEOUT:
+      strcpy(nmeaSentence, "GPS TO\r\n");
+      break;
+    default:
+      strcpy(nmeaSentence, "GPS E\r\n");
+      break;
+  }
 
-  // Transmission
-  for (int cpt = 0; cpt < strlen(nmeaSentence); cpt++)
-    fskModulator.write(nmeaSentence[cpt]);
-  fskModulator.off();
+  // NMEA GGA sentence debug
+  SERIAL_DEBUG.print(nmeaSentence);
 
-  // Logging
-    logFile = SD.open(LOG_FILE_PATH, FILE_WRITE);
-    if (logFile)
-      {
-        Serial.println(F("log file access success"));
-        digitalWrite(GREEN_LED, HIGH);
-        delay(100);
-        digitalWrite(GREEN_LED, LOW);
-        delay(100);
-        digitalWrite(GREEN_LED, HIGH);
-        delay(100);
-        digitalWrite(GREEN_LED, LOW);
-        logFile.print(nmeaSentence);
-        logFile.close();
-      }
-    else
-      {
-        Serial.println(F("log file access failure"));
-        digitalWrite(RED_LED, HIGH);
-        delay(100);
-        digitalWrite(RED_LED, LOW);
-        delay(100);
-        digitalWrite(RED_LED, HIGH);
-        delay(100);
-        digitalWrite(RED_LED, LOW);
-      }
-  //wdt_reset();
+  // NMEA GGA sentence transmission
+  modulateBytes((unsigned char *) nmeaSentence, strlen(nmeaSentence));
+
+  // NMEA GGA sentence logging
+  // TODO fix line termination dup bug
+  logMessageOnSdCard(nmeaSentence);
 }
 
 /**
