@@ -24,6 +24,7 @@
 #include <FSK600BaudTA900TB1500Mod.h>
 
 #include <sensors_module.h>
+#include <leds_module.h>
 
 // FSK modulator
 FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX);
@@ -58,17 +59,6 @@ unsigned char kiwiFrameChecksum;
 
 // Offset of the next value to be inserted in KIWI frame, while building it
 int kiwiFrameNextOffset;
-
-/**
- * Initializes LEDs wirings.
- */
-void initLEDs()
-{
-  pinMode(RED_LED, OUTPUT);
-  pinMode(ORANGE_LED, OUTPUT);
-  pinMode(GREEN_LED, OUTPUT);
-  pinMode(BLUE_LED, OUTPUT);
-}
 
 /**
  * Initializes SD shield.
@@ -114,55 +104,6 @@ void resetKiwiFrame()
   for (int i = 0; i < 11; i++)
           kiwiFrame[i] = 0x00;
   kiwiFrame[0] = 0xFF;
-}
-
-/**
- * Plays LEDs startup sequence.
- */
-void showLEDsStartupSequence()
-{
-  digitalWrite(RED_LED, HIGH);
-  digitalWrite(ORANGE_LED, HIGH);
-  digitalWrite(GREEN_LED, HIGH);
-  digitalWrite(BLUE_LED, HIGH);
-  delay(1000);
-  digitalWrite(RED_LED, LOW);
-  digitalWrite(ORANGE_LED, LOW);
-  digitalWrite(GREEN_LED, LOW);
-  digitalWrite(BLUE_LED, LOW);
-}
-
-/**
- * Displays status (OK/KO) using red/green LEDs.
- */
-void showStatus(int status)
-{
-  if (status)
-  {
-    digitalWrite(GREEN_LED,HIGH);
-    digitalWrite(RED_LED,LOW);
-  }
-  else
-  {
-    digitalWrite(GREEN_LED,LOW);
-    digitalWrite(RED_LED,HIGH);
-  }
-}
-
-/**
- * Blinks a given LED at 5Hz a given number of times.
- * @param led the LED to blink
- * @param times the number of times the LED should blink
- */
-void quicklyMakeSomeLedBlinkSeveralTimes(int led, int times)
-{
-  for (int i=0;i<times;i++)
-  {
-    digitalWrite(led, HIGH);
-    delay(100);
-    digitalWrite(led, LOW);
-    delay(100);
-  }
 }
 
 /**
