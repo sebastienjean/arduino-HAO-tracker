@@ -25,6 +25,7 @@
 
 #include <sensors_module.h>
 #include <leds_module.h>
+#include <kiwiFrameBuilder_module.h>
 
 // FSK modulator
 FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX);
@@ -50,15 +51,6 @@ File logFile;
 
 // buffer for NMEA sentence reading
 char nmeaSentence[MAX_NMEA_SENTENCE_LENGTH];
-
-// KIWI frame
-unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
-
-// KIWI frame checksum
-unsigned char kiwiFrameChecksum;
-
-// Offset of the next value to be inserted in KIWI frame, while building it
-int kiwiFrameNextOffset;
 
 /**
  * Initializes SD shield.
@@ -94,16 +86,6 @@ void initGPS()
 {
   // GPS on software serial at 4800 Baud
   serialNmeaGPSPort.begin(SERIAL_NMEA_GPS_BAUDRATE);
-}
-
-/**
- * Resets KIWI frame contents.
- */
-void resetKiwiFrame()
-{
-  for (int i = 0; i < 11; i++)
-          kiwiFrame[i] = 0x00;
-  kiwiFrame[0] = 0xFF;
 }
 
 /**
@@ -181,8 +163,6 @@ void setup()
   logMessageOnSdCard("R");
 
   initGPS();
-
-  resetKiwiFrame();
 }
 
 void appendTimeToSensorString()
@@ -208,31 +188,13 @@ void terminateSensorString()
   sensorString[sensorStringSize] = '\0';
 }
 
-void appendAnalogValueToKiwiFrame(int value)
-{
-  kiwiFrame[kiwiFrameNextOffset] = (unsigned char) (value / 4);
-  if (kiwiFrame[kiwiFrameNextOffset] == 0xFF)
-    kiwiFrame[kiwiFrameNextOffset] = 0xFE;
-  kiwiFrameNextOffset++;
-}
-
-void computeKiwiFrameChecksum()
-{
-  for (int cpt = 1; cpt < KIWI_FRAME_LENGTH - 1; cpt++)
-      kiwiFrameChecksum = (unsigned char) ((kiwiFrameChecksum + kiwiFrame[cpt]) % 256);
-
-  kiwiFrameChecksum = (unsigned char) (kiwiFrameChecksum / 2);
-  kiwiFrame[KIWI_FRAME_LENGTH] = kiwiFrameChecksum;
-}
-
 /**
  * Arduino's loop function, called in loop (incredible, isn't it ?)
  */
 void loop()
 {
   sensorStringSize = 0;
-  kiwiFrameChecksum = 0;
-  kiwiFrameNextOffset = 1; // OxFF header at offset 0 is inserted in setup
+
   GPS_status_enum gpsReadingStatus;
 
   // local time processing
@@ -242,38 +204,30 @@ void loop()
   // sensors reading
   readSensors();
 
+  // kiwi frame building
+  buildKiwiFrame();
+
   // absolute pressure processing
   appendAnalogValueToSensorString(absolutePressureSensorValue);
   appendFieldSeparatorToSensorString();
-  appendAnalogValueToKiwiFrame(absolutePressureSensorValue);
 
   // differential pressure processing
   appendAnalogValueToSensorString(differentialPressureSensorValue);
   appendFieldSeparatorToSensorString();
-  appendAnalogValueToKiwiFrame(differentialPressureSensorValue);
 
   // internal temperature pressure processing
   appendAnalogValueToSensorString(internalTemperatureSensorValue);
   appendFieldSeparatorToSensorString();
-  appendAnalogValueToKiwiFrame(internalTemperatureSensorValue);
 
   // external temperature pressure processing
   appendAnalogValueToSensorString(externalTemperatureSensorValue);
   appendFieldSeparatorToSensorString();
-  appendAnalogValueToKiwiFrame(externalTemperatureSensorValue);
 
   // battery voltage processing
   appendAnalogValueToSensorString(batteryVoltageSensorValue);
-  appendAnalogValueToKiwiFrame(batteryVoltageSensorValue);
 
   // end of frame processing
   terminateSensorString();
-
-  appendAnalogValueToKiwiFrame(0);
-  appendAnalogValueToKiwiFrame(0);
-  appendAnalogValueToKiwiFrame(0);
-  appendAnalogValueToKiwiFrame(batteryVoltageSensorValue / 2);
-  computeKiwiFrameChecksum();
 
   // Kiwi Frame transmission
   fskModulator.modulateBytes(kiwiFrame, KIWI_FRAME_LENGTH);

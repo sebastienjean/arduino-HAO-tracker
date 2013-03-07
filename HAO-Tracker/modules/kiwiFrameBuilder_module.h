@@ -14,17 +14,12 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define SERIAL_DEBUG Serial
+#define KIWI_FRAME_LENGTH 11
 
-#define SERIAL_NMEA_GPS_BAUDRATE 4800
+// kiwi frame
+extern unsigned char kiwiFrame[];
 
-#define SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT 2000
-
-#define SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT 2000
-
-#define LOG_FILE_PATH "data.txt"
-
-#define SENSOR_DATA_ASCII_STRING_LENGTH 40
-
-#define SENSOR_STRING_FIELD_SEPARATOR ','
-
+/**
+ * Builds kiwi frame (channel fields, voltage field, checksum) from values retrieved from sensors variables.
+ */
+void buildKiwiFrame(void);
