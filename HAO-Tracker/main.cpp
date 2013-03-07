@@ -23,6 +23,7 @@
 #endif
 #include <FSK600BaudTA900TB1500Mod.h>
 
+#include <sensors_module.h>
 
 // FSK modulator
 FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX);
@@ -45,21 +46,6 @@ int sensorStringSize;
 
 // log File
 File logFile;
-
-// absolute pressure sensor value
-int absolutePressureSensorValue = 0;
-
-// differential pressure sensor value
-int differentialPressureSensorValue = 0;
-
-// internal temperature sensor value
-int internalTemperatureSensorValue = 0;
-
-// external temperature sensor value
-int externalTemperatureSensorValue = 0;
-
-// battery voltage sensor value
-int batteryVoltageSensorValue = 0;
 
 // buffer for NMEA sentence reading
 char nmeaSentence[MAX_NMEA_SENTENCE_LENGTH];
@@ -223,6 +209,8 @@ int deleteLogFileIfUserClaimsTo()
  */
 void setup()
 {
+  initSensors();
+
   initLEDs();
 
   showLEDsStartupSequence();
@@ -317,32 +305,30 @@ void loop()
   appendTimeToSensorString();
   appendFieldSeparatorToSensorString();
 
+  // sensors reading
+  readSensors();
+
   // absolute pressure processing
-  absolutePressureSensorValue = analogRead(ABSOLUTE_PRESSURE_ANALOG_SENSOR);
   appendAnalogValueToSensorString(absolutePressureSensorValue);
   appendFieldSeparatorToSensorString();
   appendAnalogValueToKiwiFrame(absolutePressureSensorValue);
 
   // differential pressure processing
-  differentialPressureSensorValue = analogRead(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR);
   appendAnalogValueToSensorString(differentialPressureSensorValue);
   appendFieldSeparatorToSensorString();
   appendAnalogValueToKiwiFrame(differentialPressureSensorValue);
 
   // internal temperature pressure processing
-  internalTemperatureSensorValue = analogRead(INTERNAL_TEMPERATURE_ANALOG_SENSOR);
   appendAnalogValueToSensorString(internalTemperatureSensorValue);
   appendFieldSeparatorToSensorString();
   appendAnalogValueToKiwiFrame(internalTemperatureSensorValue);
 
   // external temperature pressure processing
-  externalTemperatureSensorValue = analogRead(EXTERNAL_TEMPERATURE_ANALOG_SENSOR);
   appendAnalogValueToSensorString(externalTemperatureSensorValue);
   appendFieldSeparatorToSensorString();
   appendAnalogValueToKiwiFrame(externalTemperatureSensorValue);
 
   // battery voltage processing
-  batteryVoltageSensorValue = analogRead(BATTERY_VOLTAGE_ANALOG_SENSOR);
   appendAnalogValueToSensorString(batteryVoltageSensorValue);
   appendAnalogValueToKiwiFrame(batteryVoltageSensorValue);
 
