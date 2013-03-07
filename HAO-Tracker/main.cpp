@@ -225,13 +225,6 @@ void computeKiwiFrameChecksum()
   kiwiFrame[KIWI_FRAME_LENGTH] = kiwiFrameChecksum;
 }
 
-void modulateBytes(unsigned char *bytes, int length)
-{
-  for (int cpt = 0; cpt < length; cpt++)
-    fskModulator.write(bytes[cpt]);
-  fskModulator.off();
-}
-
 /**
  * Arduino's loop function, called in loop (incredible, isn't it ?)
  */
@@ -283,7 +276,7 @@ void loop()
   computeKiwiFrameChecksum();
 
   // Kiwi Frame transmission
-  modulateBytes(kiwiFrame, KIWI_FRAME_LENGTH);
+  fskModulator.modulateBytes(kiwiFrame, KIWI_FRAME_LENGTH);
 
   // sensor string logging
   logMessageOnSdCard(sensorString);
@@ -294,7 +287,7 @@ void loop()
   // sensor string transmission (with line termination)
   sensorString[sensorStringSize++]='\r';
   sensorString[sensorStringSize++]='\n';
-  modulateBytes((unsigned char *) sensorString, sensorStringSize);
+  fskModulator.modulateBytes((unsigned char *) sensorString, sensorStringSize);
 
   // NMEA RMC sentence reading
   gpsReadingStatus = serialNmeaGPS.readRMC(nmeaSentence);
@@ -327,7 +320,7 @@ void loop()
   SERIAL_DEBUG.print(nmeaSentence);
 
   // NMEA RMC sentence transmission
-  modulateBytes((unsigned char *) nmeaSentence, strlen(nmeaSentence));
+  fskModulator.modulateBytes((unsigned char *) nmeaSentence, strlen(nmeaSentence));
 
   // NMEA RMC sentence logging
   // TODO fix line termination dup bug
@@ -351,7 +344,7 @@ void loop()
   SERIAL_DEBUG.print(nmeaSentence);
 
   // NMEA GGA sentence transmission
-  modulateBytes((unsigned char *) nmeaSentence, strlen(nmeaSentence));
+  fskModulator.modulateBytes((unsigned char *) nmeaSentence, strlen(nmeaSentence));
 
   // NMEA GGA sentence logging
   // TODO fix line termination dup bug
