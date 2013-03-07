@@ -88,8 +88,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/Nano328P}&quot;"/>
 								</option>
 								<option id="de.innot.avreclipse.cpplinker.option.otherobjs.1222556813" name="Other Objects (*.o)" superClass="de.innot.avreclipse.cpplinker.option.otherobjs" valueType="userObjs">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/sensors_module.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FSK600Bauds900Hz1500HzModulation/Nano328P/FSK600BaudTA900TB1500Mod.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/EEPROM/Nano328P/EEPROM.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Nano328P/GPS.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Nano328P/utility/Sd2Card.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Nano328P/utility/SdFile.o}&quot;"/>
@@ -97,6 +97,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Nano328P/File.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Nano328P/SD.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SoftwareSerial/Nano328P/SoftwareSerial.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/sensors_module.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/leds_module.o}&quot;"/>
 								</option>
 								<inputType id="de.innot.avreclipse.tool.cpplinker.input.1424867908" name="OBJ Files" superClass="de.innot.avreclipse.tool.cpplinker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -163,6 +165,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/srcVariants/mega}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FSK600Bauds900Hz1500HzModulation}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/EEPROM}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/utility}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platforms/mega}&quot;"/>
@@ -178,6 +181,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/srcCore}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/srcVariants/mega}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FSK600Bauds900Hz1500HzModulation}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/EEPROM}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/utility}&quot;"/>
@@ -207,11 +211,13 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FSK600Bauds900Hz1500HzModulation/Mega2560/FSK600BaudTA900TB1500Mod.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/SD.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/File.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/EEPROM/Mega2560/EEPROM.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/GPS.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/Sd2Card.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/SdFile.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/SdVolume.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/sensors_module.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/leds_module.o}&quot;"/>
 								</option>
 								<inputType id="de.innot.avreclipse.tool.cpplinker.input.158647553" name="OBJ Files" superClass="de.innot.avreclipse.tool.cpplinker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
