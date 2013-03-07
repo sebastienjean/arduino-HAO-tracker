@@ -26,6 +26,7 @@
 #include <sensors_module.h>
 #include <leds_module.h>
 #include <kiwiFrameBuilder_module.h>
+#include <logging_module.h>
 
 // FSK modulator
 FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX);
@@ -46,21 +47,8 @@ char sensorString[SENSOR_DATA_ASCII_STRING_LENGTH];
 // sensor string size
 int sensorStringSize;
 
-// log File
-File logFile;
-
 // buffer for NMEA sentence reading
 char nmeaSentence[MAX_NMEA_SENTENCE_LENGTH];
-
-/**
- * Initializes SD shield.
- * @return SD initialization success status (boolean)
- */
-int initSdShield()
-{
-  pinMode(SD_CARD_CHIP_SELECT, OUTPUT);
-  return SD.begin(SD_CARD_CHIP_SELECT);
-}
 
 /**
  * Initializes User switch.
@@ -88,44 +76,6 @@ void initGPS()
   serialNmeaGPSPort.begin(SERIAL_NMEA_GPS_BAUDRATE);
 }
 
-/**
- * Logs a message on the SD card.
- * @param message the string to be logged
- * (line termination characters are appended)
- * @param times the number of times the LED should blink
- */
-int logMessageOnSdCard(char *message)
-{
-  logFile = SD.open(LOG_FILE_PATH, FILE_WRITE);
-  if (logFile)
-  {
-    logFile.println(message);
-    logFile.close();
-    quicklyMakeSomeLedBlinkSeveralTimes(ORANGE_LED, 2);
-  }
-  else
-    quicklyMakeSomeLedBlinkSeveralTimes(ORANGE_LED, 5);
-
-  return logFile;
-}
-
-/**
- * Waits for user to decide if log file has to be deleted, deletes if if needed
- * @return <tt>true</tt> if log file has been claimed to be deleted (and has been deleted), <tt>false</tt> if not
- */
-int deleteLogFileIfUserClaimsTo()
-{
-  // User has one second to decide
-  delay(1000);
-
-  if (digitalRead(USER_BUTTON) == LOW)
-  {
-      SD.remove(LOG_FILE_PATH);
-      quicklyMakeSomeLedBlinkSeveralTimes(RED_LED, 10);
-      return true;
-  }
-  return false;
-}
 
 /**
  * Arduino's setup function, called once at startup, after init
@@ -146,7 +96,7 @@ void setup()
 
   SERIAL_DEBUG.print(F("SD Init..."));
 
-  if (!initSdShield())
+  if (!initLogging())
   {
     SERIAL_DEBUG.println(F("KO"));
     showStatus(0);
@@ -160,7 +110,7 @@ void setup()
       SERIAL_DEBUG.println(F("SD Clear"));
   }
 
-  logMessageOnSdCard("R");
+  logMessage("R", true);
 
   initGPS();
 }
@@ -185,6 +135,8 @@ void appendAnalogValueToSensorString(int value)
 
 void terminateSensorString()
 {
+  sensorString[sensorStringSize++]='\r';
+  sensorString[sensorStringSize++]='\n';
   sensorString[sensorStringSize] = '\0';
 }
 
@@ -233,14 +185,13 @@ void loop()
   fskModulator.modulateBytes(kiwiFrame, KIWI_FRAME_LENGTH);
 
   // sensor string logging
-  logMessageOnSdCard(sensorString);
+  logMessage(sensorString, false);
 
   // sensor string debug
-  SERIAL_DEBUG.println(sensorString);
+  SERIAL_DEBUG.print(sensorString);
 
   // sensor string transmission (with line termination)
-  sensorString[sensorStringSize++]='\r';
-  sensorString[sensorStringSize++]='\n';
+
   fskModulator.modulateBytes((unsigned char *) sensorString, sensorStringSize);
 
   // NMEA RMC sentence reading
@@ -277,8 +228,7 @@ void loop()
   fskModulator.modulateBytes((unsigned char *) nmeaSentence, strlen(nmeaSentence));
 
   // NMEA RMC sentence logging
-  // TODO fix line termination dup bug
-  logMessageOnSdCard(nmeaSentence);
+  logMessage(nmeaSentence, false);
 
   // NMEA GGA sentence reading
   gpsReadingStatus = serialNmeaGPS.readGGA(nmeaSentence);
@@ -301,8 +251,7 @@ void loop()
   fskModulator.modulateBytes((unsigned char *) nmeaSentence, strlen(nmeaSentence));
 
   // NMEA GGA sentence logging
-  // TODO fix line termination dup bug
-  logMessageOnSdCard(nmeaSentence);
+  logMessage(nmeaSentence, false);
 }
 
 /**
