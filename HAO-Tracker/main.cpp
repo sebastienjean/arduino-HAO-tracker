@@ -26,6 +26,7 @@
 #include <sensors_module.h>
 #include <leds_module.h>
 #include <kiwiFrameBuilder_module.h>
+#include <customFrameBuilder_module.h>
 #include <logging_module.h>
 
 // FSK modulator
@@ -40,12 +41,6 @@ SoftwareSerial serialNmeaGPSPort(GPS_SERIAL_RX, GPS_SERIAL_TX);
 
 // GPS
 GPS serialNmeaGPS(&serialNmeaGPSPort, SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT,SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT);
-
-// sensor data, as ASCII
-char sensorString[SENSOR_DATA_ASCII_STRING_LENGTH];
-
-// sensor string size
-int sensorStringSize;
 
 // buffer for NMEA sentence reading
 char nmeaSentence[MAX_NMEA_SENTENCE_LENGTH];
@@ -115,43 +110,12 @@ void setup()
   initGPS();
 }
 
-void appendTimeToSensorString()
-{
-  // seconds elapsed since last reset, as a decimal coded ASCII string
-  itoa(millis() / 1000, sensorString+sensorStringSize, 10);
-  sensorStringSize = strlen(sensorString);
-}
-
-void appendFieldSeparatorToSensorString()
-{
-  sensorString[sensorStringSize++] = SENSOR_STRING_FIELD_SEPARATOR;
-}
-
-void appendAnalogValueToSensorString(int value)
-{
-  itoa(value, sensorString + sensorStringSize, 10);
-  sensorStringSize = strlen(sensorString);
-}
-
-void terminateSensorString()
-{
-  sensorString[sensorStringSize++]='\r';
-  sensorString[sensorStringSize++]='\n';
-  sensorString[sensorStringSize] = '\0';
-}
-
 /**
  * Arduino's loop function, called in loop (incredible, isn't it ?)
  */
 void loop()
 {
-  sensorStringSize = 0;
-
   GPS_status_enum gpsReadingStatus;
-
-  // local time processing
-  appendTimeToSensorString();
-  appendFieldSeparatorToSensorString();
 
   // sensors reading
   readSensors();
@@ -159,40 +123,20 @@ void loop()
   // kiwi frame building
   buildKiwiFrame();
 
-  // absolute pressure processing
-  appendAnalogValueToSensorString(absolutePressureSensorValue);
-  appendFieldSeparatorToSensorString();
-
-  // differential pressure processing
-  appendAnalogValueToSensorString(differentialPressureSensorValue);
-  appendFieldSeparatorToSensorString();
-
-  // internal temperature pressure processing
-  appendAnalogValueToSensorString(internalTemperatureSensorValue);
-  appendFieldSeparatorToSensorString();
-
-  // external temperature pressure processing
-  appendAnalogValueToSensorString(externalTemperatureSensorValue);
-  appendFieldSeparatorToSensorString();
-
-  // battery voltage processing
-  appendAnalogValueToSensorString(batteryVoltageSensorValue);
-
-  // end of frame processing
-  terminateSensorString();
-
-  // Kiwi Frame transmission
+  // kiwi Frame transmission
   fskModulator.modulateBytes(kiwiFrame, KIWI_FRAME_LENGTH);
 
-  // sensor string logging
-  logMessage(sensorString, false);
+  // custom frame building
+  buildCustomFrame();
 
-  // sensor string debug
-  SERIAL_DEBUG.print(sensorString);
+  // custom frame logging
+  logMessage(customFrame, false);
 
-  // sensor string transmission (with line termination)
+  // custom frame debug
+  SERIAL_DEBUG.print(customFrame);
 
-  fskModulator.modulateBytes((unsigned char *) sensorString, sensorStringSize);
+  // custom frame transmission
+  fskModulator.modulateBytes((unsigned char *) customFrame, customFrameLength);
 
   // NMEA RMC sentence reading
   gpsReadingStatus = serialNmeaGPS.readRMC(nmeaSentence);

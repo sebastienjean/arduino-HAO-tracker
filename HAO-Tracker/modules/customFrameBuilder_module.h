@@ -14,14 +14,16 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define SERIAL_DEBUG Serial
+#define CUSTOM_FRAME_MAX_LENGTH 40
 
-#define SERIAL_NMEA_GPS_BAUDRATE 4800
+# define CUSTOM_FRAME_FIELD_SEPARATOR ','
+// custom frame, as an ASCII string
+extern char customFrame[];
 
-#define SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT 2000
+// custom frame length
+extern int customFrameLength;
 
-#define SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT 2000
-
-#define LOG_FILE_PATH "data.txt"
-
-
+/**
+ * Builds custom frame (time, sensors data, ...) from values retrieved from global variables.
+ */
+void buildCustomFrame(void);
