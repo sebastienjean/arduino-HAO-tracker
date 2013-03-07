@@ -58,10 +58,10 @@ void readSensors()
   // differential pressure processing
   differentialPressureSensorValue = analogRead(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR);
 
-  // internal temperature pressure processing
+  // internal temperature processing
   internalTemperatureSensorValue = analogRead(INTERNAL_TEMPERATURE_ANALOG_SENSOR);
 
-  // external temperature pressure processing
+  // external temperature processing
   externalTemperatureSensorValue = analogRead(EXTERNAL_TEMPERATURE_ANALOG_SENSOR);
 
   // battery voltage processing
