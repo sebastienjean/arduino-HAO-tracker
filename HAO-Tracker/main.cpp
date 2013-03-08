@@ -28,12 +28,10 @@
 #include <kiwiFrameBuilder_module.h>
 #include <customFrameBuilder_module.h>
 #include <logging_module.h>
-
-// FSK modulator
-FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX);
+#include <gps_module.h>
 
 // Software serial link used by GPS
-#if defined(GPS_SERIAL_RX)
+/*#if defined(GPS_SERIAL_RX)
 SoftwareSerial serialNmeaGPSPort(GPS_SERIAL_RX, GPS_SERIAL_TX);
 #else
 #define serialNmeaGPSPort Serial1
@@ -41,9 +39,11 @@ SoftwareSerial serialNmeaGPSPort(GPS_SERIAL_RX, GPS_SERIAL_TX);
 
 // GPS
 GPS serialNmeaGPS(&serialNmeaGPSPort, SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT,SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT);
+*/
 
-// buffer for NMEA sentence reading
-char nmeaSentence[MAX_NMEA_SENTENCE_LENGTH];
+// FSK modulator
+FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX);
+
 
 /**
  * Initializes User switch.
@@ -64,13 +64,13 @@ void initSerialDebug()
 
 /**
  * Initializes GPS.
- */
+ *
 void initGPS()
 {
   // GPS on software serial at 4800 Baud
   serialNmeaGPSPort.begin(SERIAL_NMEA_GPS_BAUDRATE);
 }
-
+*/
 
 /**
  * Arduino's setup function, called once at startup, after init
@@ -115,7 +115,6 @@ void setup()
  */
 void loop()
 {
-  GPS_status_enum gpsReadingStatus;
 
   // sensors reading
   readSensors();
@@ -139,63 +138,29 @@ void loop()
   fskModulator.modulateBytes((unsigned char *) customFrame, customFrameLength);
 
   // NMEA RMC sentence reading
-  gpsReadingStatus = serialNmeaGPS.readRMC(nmeaSentence);
-  switch (gpsReadingStatus)
-  {
-    case GPS_OK:
-      for (int cpt = 0; cpt < MAX_NMEA_SENTENCE_LENGTH; cpt++)
-      {
-        if ((cpt > 5) && (cpt <= 25) && (nmeaSentence[cpt] == 'A'))
-          {
-            digitalWrite(ORANGE_LED, HIGH);
-            delay(100);
-            digitalWrite(ORANGE_LED, LOW);
-            delay(100);
-            digitalWrite(ORANGE_LED, HIGH);
-            delay(100);
-            digitalWrite(ORANGE_LED, LOW);
-          }
-      }
-      break;
-    case GPS_TIMEOUT:
-      strcpy(nmeaSentence, "GPS TO\r\n");
-      break;
-    default:
-      strcpy(nmeaSentence, "GPS E\r\n");
-      break;
-  }
-
-  // NMEA RMC sentence debug
-  SERIAL_DEBUG.print(nmeaSentence);
-
-  // NMEA RMC sentence transmission
-  fskModulator.modulateBytes((unsigned char *) nmeaSentence, strlen(nmeaSentence));
+  readNmeaRmcSentence();
 
   // NMEA RMC sentence logging
-  logMessage(nmeaSentence, false);
+  logMessage(nmeaRmcSentence, false);
+
+  // NMEA RMC sentence debug
+  SERIAL_DEBUG.print(nmeaRmcSentence);
+
+  // NMEA RMC sentence transmission
+  fskModulator.modulateBytes((unsigned char *) nmeaRmcSentence, strlen(nmeaRmcSentence));
 
   // NMEA GGA sentence reading
-  gpsReadingStatus = serialNmeaGPS.readGGA(nmeaSentence);
-  switch (gpsReadingStatus)
-  {
-    case GPS_OK:
-      break;
-    case GPS_TIMEOUT:
-      strcpy(nmeaSentence, "GPS TO\r\n");
-      break;
-    default:
-      strcpy(nmeaSentence, "GPS E\r\n");
-      break;
-  }
-
-  // NMEA GGA sentence debug
-  SERIAL_DEBUG.print(nmeaSentence);
-
-  // NMEA GGA sentence transmission
-  fskModulator.modulateBytes((unsigned char *) nmeaSentence, strlen(nmeaSentence));
+  readNmeaGgaSentence();
 
   // NMEA GGA sentence logging
-  logMessage(nmeaSentence, false);
+  logMessage(nmeaGgaSentence, false);
+
+  // NMEA GGA sentence debug
+  SERIAL_DEBUG.print(nmeaGgaSentence);
+
+  // NMEA GGA sentence transmission
+  fskModulator.modulateBytes((unsigned char *) nmeaGgaSentence, strlen(nmeaGgaSentence));
+
 }
 
 /**
