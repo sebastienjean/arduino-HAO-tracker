@@ -16,6 +16,7 @@
 #include <Arduino.h>
 #include <customFrameBuilder_module.h>
 #include <sensors_module.h>
+#include <gps_module.h>
 
 // custom frame, as an ASCII string
 char customFrame[CUSTOM_FRAME_MAX_LENGTH];
@@ -49,6 +50,12 @@ void appendEndOfFrame()
   customFrame[customFrameLength] = '\0';
 }
 
+void addCharGpsValue(char *value)
+{
+  strcat(customFrame,value);
+  customFrameLength = strlen(customFrame);
+}
+
 /**
  * Builds custom frame (time, sensors data, ...) from values retrieved from global variables.
  */
@@ -58,6 +65,48 @@ void buildCustomFrame()
 
   // time
   appendTime();
+
+  // separator
+  appendFieldSeparator();
+
+  // GPS clock
+  addCharGpsValue(gpsTime);
+
+  // separator
+    appendFieldSeparator();
+
+  // GPS latitude
+  addCharGpsValue(gpsLatitude);
+
+  // separator
+  appendFieldSeparator();
+
+  // GPS longitude
+  addCharGpsValue(gpsLongitude);
+
+  // separator
+  appendFieldSeparator();
+
+  // GPS altitude
+  addCharGpsValue(gpsAltitude);
+
+  // separator
+  appendFieldSeparator();
+
+  // GPS Nb Sat
+  addCharGpsValue(gpsNbSat);
+
+  // separator
+  appendFieldSeparator();
+
+  // GPS Data status
+  addCharGpsValue(gpsDataStatus);
+
+  // separator
+  appendFieldSeparator();
+
+  // GPS Speed Over Ground
+  addCharGpsValue(gpsSpeedOverGround);
 
   // separator
   appendFieldSeparator();

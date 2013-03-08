@@ -125,18 +125,6 @@ void loop()
   // kiwi Frame transmission
   fskModulator.modulateBytes(kiwiFrame, KIWI_FRAME_LENGTH);
 
-  // custom frame building
-  buildCustomFrame();
-
-  // custom frame logging
-  logMessage(customFrame, false);
-
-  // custom frame debug
-  SERIAL_DEBUG.print(customFrame);
-
-  // custom frame transmission
-  fskModulator.modulateBytes((unsigned char *) customFrame, customFrameLength);
-
   // NMEA RMC sentence reading
   readNmeaRmcSentence();
 
@@ -160,6 +148,18 @@ void loop()
 
   // NMEA GGA sentence transmission
   fskModulator.modulateBytes((unsigned char *) nmeaGgaSentence, strlen(nmeaGgaSentence));
+
+  // custom frame building
+  buildCustomFrame();
+
+  // custom frame logging
+  logMessage(customFrame, false);
+
+  // custom frame debug
+  SERIAL_DEBUG.print(customFrame);
+
+  // custom frame transmission
+  fskModulator.modulateBytes((unsigned char *) customFrame, customFrameLength);
 
 }
 
