@@ -28,18 +28,19 @@
 #include <kiwiFrameBuilder_module.h>
 #include <customFrameBuilder_module.h>
 #include <logging_module.h>
-#include <gps_module.h>
+#include <GPS3D.h>
+/*#include <gps_module.h>*/
 
 // Software serial link used by GPS
-/*#if defined(GPS_SERIAL_RX)
+#if defined(GPS_SERIAL_RX)
 SoftwareSerial serialNmeaGPSPort(GPS_SERIAL_RX, GPS_SERIAL_TX);
 #else
 #define serialNmeaGPSPort Serial1
 #endif
 
 // GPS
-GPS serialNmeaGPS(&serialNmeaGPSPort, SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT,SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT);
-*/
+GPS3D nmeaGPS(&serialNmeaGPSPort, &SERIAL_DEBUG);
+
 
 // FSK modulator
 FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX);
@@ -64,13 +65,12 @@ void initSerialDebug()
 
 /**
  * Initializes GPS.
- *
+ */
 void initGPS()
 {
   // GPS on software serial at 4800 Baud
   serialNmeaGPSPort.begin(SERIAL_NMEA_GPS_BAUDRATE);
 }
-*/
 
 /**
  * Arduino's setup function, called once at startup, after init
@@ -125,29 +125,8 @@ void loop()
   // kiwi Frame transmission
   fskModulator.modulateBytes(kiwiFrame, KIWI_FRAME_LENGTH);
 
-  // NMEA RMC sentence reading
-  readNmeaRmcSentence();
-
-  // NMEA RMC sentence logging
-  logMessage(nmeaRmcSentence, false);
-
-  // NMEA RMC sentence debug
-  SERIAL_DEBUG.print(nmeaRmcSentence);
-
-  // NMEA RMC sentence transmission
-  fskModulator.modulateBytes((unsigned char *) nmeaRmcSentence, strlen(nmeaRmcSentence));
-
-  // NMEA GGA sentence reading
-  readNmeaGgaSentence();
-
-  // NMEA GGA sentence logging
-  logMessage(nmeaGgaSentence, false);
-
-  // NMEA GGA sentence debug
-  SERIAL_DEBUG.print(nmeaGgaSentence);
-
-  // NMEA GGA sentence transmission
-  fskModulator.modulateBytes((unsigned char *) nmeaGgaSentence, strlen(nmeaGgaSentence));
+  // Positioning data reading
+  nmeaGPS.readPositioningData();
 
   // custom frame building
   buildCustomFrame();

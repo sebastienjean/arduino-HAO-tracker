@@ -13,6 +13,7 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <GPS3D.h>
 
 #define SERIAL_DEBUG Serial
 
@@ -23,5 +24,7 @@
 #define SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT 2000
 
 #define LOG_FILE_PATH "data.txt"
+
+extern GPS3D nmeaGPS;
 
 

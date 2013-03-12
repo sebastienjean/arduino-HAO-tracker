@@ -91,6 +91,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FSK600Bauds900Hz1500HzModulation/Nano328P/FSK600BaudTA900TB1500Mod.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/EEPROM/Nano328P/EEPROM.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Nano328P/GPS.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Nano328P/GPS2D.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Nano328P/GPS3D.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Nano328P/utility/Sd2Card.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Nano328P/utility/SdFile.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Nano328P/utility/SdVolume.o}&quot;"/>
@@ -216,6 +218,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/File.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/EEPROM/Mega2560/EEPROM.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/GPS.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/GPS2D.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/GPS3D.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/Sd2Card.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/SdFile.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/SdVolume.o}&quot;"/>
