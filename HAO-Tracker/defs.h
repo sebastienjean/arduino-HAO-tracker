@@ -27,4 +27,10 @@
 
 extern GPS3D nmeaGPS;
 
+extern char nmeaRmcSentenceBuffer[];
+
+extern char nmeaRmcSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
+
+extern char nmeaGgaSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
+
 

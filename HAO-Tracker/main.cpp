@@ -40,6 +40,10 @@ SoftwareSerial serialNmeaGPSPort(GPS_SERIAL_RX, GPS_SERIAL_TX);
 // GPS
 GPS3D nmeaGPS(&serialNmeaGPSPort, &SERIAL_DEBUG);
 
+char nmeaRmcSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
+
+char nmeaGgaSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
+
 
 // FSK modulator
 FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX);
@@ -121,23 +125,31 @@ void loop()
   // kiwi frame building
   buildKiwiFrame();
 
-  // kiwi Frame transmission
-  fskModulator.modulateBytes(kiwiFrame, KIWI_FRAME_LENGTH);
+  // kiwi frame transmission
+  fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
 
-  // Positioning data reading
-  nmeaGPS.readPositioningData();
+  // Positioning data reading (and debug)
+  nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer);
+
+  // NMEA sentences logging
+  logMessage(nmeaRmcSentenceBuffer, false);
+  logMessage(nmeaGgaSentenceBuffer, false);
+
+  // NMEA sentences transmission
+  fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
+  fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
 
   // custom frame building
   buildCustomFrame();
 
-  // custom frame logging
-  logMessage(customFrame, false);
-
   // custom frame debug
   SERIAL_DEBUG.print(customFrame);
 
+  // custom frame logging
+  logMessage(customFrame, false);
+
   // custom frame transmission
-  fskModulator.modulateBytes((unsigned char *) customFrame, customFrameLength);
+  fskModulator.modulateBytes(customFrame, customFrameLength);
 
 }
 
