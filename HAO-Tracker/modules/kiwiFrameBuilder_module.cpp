@@ -57,7 +57,7 @@ void computeKiwiFrameChecksum()
     kiwiFrameChecksum = (unsigned char) ((kiwiFrameChecksum + kiwiFrame[cpt]) % 256);
 
   kiwiFrameChecksum = (unsigned char) (kiwiFrameChecksum / 2);
-  kiwiFrame[KIWI_FRAME_LENGTH] = kiwiFrameChecksum;
+  kiwiFrame[KIWI_FRAME_LENGTH-1] = kiwiFrameChecksum;
 }
 
 /**
