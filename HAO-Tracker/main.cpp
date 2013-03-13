@@ -29,7 +29,6 @@
 #include <customFrameBuilder_module.h>
 #include <logging_module.h>
 #include <GPS3D.h>
-/*#include <gps_module.h>*/
 
 // Software serial link used by GPS
 #if defined(GPS_SERIAL_RX)
