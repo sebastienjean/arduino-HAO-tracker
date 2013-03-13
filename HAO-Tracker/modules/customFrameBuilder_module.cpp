@@ -20,6 +20,7 @@
 #include <defs.h>
 #include <GPS2D.h>
 #include <GPS3D.h>
+#include <stdlib.h>
 
 // custom frame, as an ASCII string
 char customFrame[CUSTOM_FRAME_MAX_LENGTH];
@@ -48,9 +49,70 @@ void appendAnalogValue(int value)
 
 void appendPositioningData()
 {
+  // TIME OF FIX
   strncpy(customFrame+customFrameLength, nmeaGPS.getTimeOfFix(),6);
   customFrameLength +=6;
-  //appendFieldSeparator();
+
+  // SEPARATOR
+  appendFieldSeparator();
+
+  // FIX
+  if (nmeaGPS.getFix())
+  {
+    customFrame[customFrameLength++]='A';
+  }
+  else
+  {
+      customFrame[customFrameLength++]='V';
+  }
+  // SEPARATOR
+  appendFieldSeparator();
+
+  // Longitude
+  dtostrf(nmeaGPS.getLongitude(),7,2,customFrame+customFrameLength);
+  customFrameLength = strlen(customFrame);
+
+  // SEPARATOR
+  appendFieldSeparator();
+
+  // Latitude
+  dtostrf(nmeaGPS.getLatitude(),6,2,customFrame+customFrameLength);
+  customFrameLength = strlen(customFrame);
+
+  // SEPARATOR
+  appendFieldSeparator();
+
+  // Altitude
+  dtostrf(nmeaGPS.getAltitude(),1,2,customFrame+customFrameLength);
+  customFrameLength = strlen(customFrame);
+
+  // SEPARATOR
+  appendFieldSeparator();
+
+  // Speed
+  dtostrf(nmeaGPS.getSpeedOverGround(),1,2,customFrame+customFrameLength);
+  customFrameLength = strlen(customFrame);
+
+  // SEPARATOR
+  appendFieldSeparator();
+
+  // Course
+  dtostrf(nmeaGPS.getCourseOverGround(),1,2,customFrame+customFrameLength);
+  customFrameLength = strlen(customFrame);
+
+  // SEPARATOR
+  appendFieldSeparator();
+
+  // NB SAT
+  itoa(nmeaGPS.getSatellitesInUse(),customFrame+customFrameLength,10);
+  customFrameLength = strlen(customFrame);
+
+  // SEPARATOR
+  appendFieldSeparator();
+
+  // HDOP
+  dtostrf(nmeaGPS.getHDOP(),2,2,customFrame+customFrameLength);
+  customFrameLength = strlen(customFrame);
 }
 
 void appendEndOfFrame()
