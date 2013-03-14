@@ -101,22 +101,24 @@ void setup()
   if (!initLogging())
   {
     SERIAL_DEBUG.println(F("KO"));
-    showStatus(0);
+    showStatus(ORANGE_LED, false);
   }
   else
   {
     SERIAL_DEBUG.println(F("OK"));
-    showStatus(1);
+    showStatus(ORANGE_LED, true);
 
     if (deleteLogFileIfUserClaimsTo())
       SERIAL_DEBUG.println(F("SD Clear"));
   }
 
-  logMessage("R", true);
+  showStatus(ORANGE_LED, logMessage("R", true));
 
   initGPS();
 
   initRTC();
+
+  allLEDsOff();
 }
 
 /**
@@ -124,14 +126,21 @@ void setup()
  */
 void loop()
 {
+  // show loop start sequence
+  quicklyMakeSomeLedBlinkSeveralTimes(RED_LED, 1);
+  quicklyMakeSomeLedBlinkSeveralTimes(GREEN_LED, 1);
+
   // kiwi frame building
   buildKiwiFrame();
 
   // kiwi frame transmission
   fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
 
+  quicklyMakeSomeLedBlinkSeveralTimes(GREEN_LED, 2);
   // Positioning data reading (and debug)
   nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer);
+
+  showStatus(BLUE_LED, nmeaGPS.getFix());
 
   // NMEA sentences logging
   logMessage(nmeaRmcSentenceBuffer, false);
@@ -140,7 +149,9 @@ void loop()
   // NMEA sentences transmission
   fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
   fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
+  singleLedOn(ORANGE_LED);
 
+  quicklyMakeSomeLedBlinkSeveralTimes(GREEN_LED, 3);
   // custom frame building
   buildCustomFrame(customFrame);
 
@@ -152,6 +163,9 @@ void loop()
 
   // custom frame transmission
   fskModulator.modulateBytes(customFrame, strlen(customFrame));
+
+  quicklyMakeSomeLedBlinkSeveralTimes(RED_LED, 1);
+  delay(1000);
 }
 
 /**

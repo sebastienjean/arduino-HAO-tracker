@@ -31,15 +31,21 @@ void initLEDs()
 }
 
 /**
- * Plays LEDs startup sequence.
+ * Turns all LEDs on.
  */
-void showLEDsStartupSequence()
+void allLEDsOn()
 {
   digitalWrite(RED_LED, HIGH);
   digitalWrite(ORANGE_LED, HIGH);
   digitalWrite(GREEN_LED, HIGH);
   digitalWrite(BLUE_LED, HIGH);
-  delay(1000);
+}
+
+/**
+ * Turns all LEDs off.
+ */
+void allLEDsOff(void)
+{
   digitalWrite(RED_LED, LOW);
   digitalWrite(ORANGE_LED, LOW);
   digitalWrite(GREEN_LED, LOW);
@@ -47,21 +53,43 @@ void showLEDsStartupSequence()
 }
 
 /**
- * Displays status (OK/KO) using red/green LEDs.
- * @param status the status to display (standard C boolean convention)
+ * Turns a single LED on.
+ *
+ * @param ledNumber the led to turn on
  */
-void showStatus(int status)
+void singleLedOn(int ledNumber)
 {
-  if (status)
-  {
-    digitalWrite(GREEN_LED,HIGH);
-    digitalWrite(RED_LED,LOW);
-  }
-  else
-  {
-    digitalWrite(GREEN_LED,LOW);
-    digitalWrite(RED_LED,HIGH);
-  }
+  digitalWrite(ledNumber, HIGH);
+}
+
+/**
+ * Turns a single LED off.
+ *
+ * @param ledNumber the led to turn off
+ */
+void singleLedOff(int ledNumber)
+{
+  digitalWrite(ledNumber, LOW);
+}
+
+/**
+ * Plays LEDs startup sequence.
+ */
+void showLEDsStartupSequence()
+{
+  allLEDsOn();
+  delay(1000);
+  allLEDsOff();
+}
+
+/**
+ * Displays status (OK/KO) using a given LED
+ * @param ledNumber the led to use
+ * @param status the status to display (OK/KO)
+ */
+void showStatus(int ledNumber, boolean status)
+{
+  digitalWrite(ledNumber, status);
 }
 
 /**

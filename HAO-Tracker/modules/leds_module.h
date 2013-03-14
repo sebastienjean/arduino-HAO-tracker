@@ -20,15 +20,40 @@
 void initLEDs(void);
 
 /**
+ * Turns all LEDs on.
+ */
+void allLEDsOn(void);
+
+/**
+ * Turns all LEDs off.
+ */
+void allLEDsOff(void);
+
+/**
+ * Turns a single LED on.
+ *
+ * @param ledNumber the led to turn on
+ */
+void singleLedOn(int ledNumber);
+
+/**
+ * Turns a single LED off.
+ *
+ * @param ledNumber the led to turn off
+ */
+void singleLedOff(int ledNumber);
+
+/**
  * Plays LEDs startup sequence.
  */
 void showLEDsStartupSequence(void);
 
 /**
- * Displays status (OK/KO) using red/green LEDs.
- * @param status the status to display (standard C boolean convention)
+ * Displays status (OK/KO) using a given LED
+ * @param ledNumber the led to use
+ * @param status the status to display (OK/KO)
  */
-void showStatus(int status);
+void showStatus(int ledNumber, boolean status);
 
 /**
  * Blinks a given LED at 5Hz a given number of times.

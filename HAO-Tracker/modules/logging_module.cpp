@@ -50,14 +50,8 @@ boolean logMessage(char *message, boolean newLine)
     else
       logFile.print(message);
     logFile.close();
-    quicklyMakeSomeLedBlinkSeveralTimes(ORANGE_LED, 2);
-    return true;
   }
-  else
-  {
-    quicklyMakeSomeLedBlinkSeveralTimes(ORANGE_LED, 5);
-    return false;
-  }
+  return logFile;
 }
 
 /**
@@ -70,9 +64,7 @@ boolean deleteLogFileIfUserClaimsTo()
 
   if (digitalRead(USER_BUTTON) == LOW)
   {
-      SD.remove(LOG_FILE_PATH);
-      quicklyMakeSomeLedBlinkSeveralTimes(RED_LED, 10);
-      return true;
+      return SD.remove(LOG_FILE_PATH);
   }
   return false;
 }
