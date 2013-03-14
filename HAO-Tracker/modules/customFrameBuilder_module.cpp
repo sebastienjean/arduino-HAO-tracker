@@ -61,6 +61,18 @@ char * appendEndOfFrameString(char *customFrame)
 }
 
 /**
+ * Internal function used to append HAO name to custom frame
+ *
+ * @param customFrame a pointer on an external buffer where to append HAO name
+ * @return a pointer to the external buffer where to add the next custom frame character
+ */
+char * appendHaoName(char *customFrame)
+{
+  strcpy(customFrame, HAO_NAME);
+  return customFrame + strlen(customFrame);
+}
+
+/**
  * Internal function used to append system time (seconds since last reset) to custom frame
  *
  * @param customFrame a pointer on an external buffer where to append system time
@@ -201,6 +213,12 @@ char *appendPositioningData(char *customFrame)
 void buildCustomFrame(char *customFrame)
 {
   customFrame = appendStartOfFrameChar(customFrame);
+
+  // HAO name
+  customFrame = appendHaoName(customFrame);
+
+  // separator
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // system time
   customFrame = appendSystemTime(customFrame);
