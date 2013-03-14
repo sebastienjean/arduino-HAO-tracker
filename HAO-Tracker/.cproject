@@ -47,7 +47,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/utility}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DS1302}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino-ds1302}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SoftwareSerial}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platforms/standard}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/modules}&quot;"/>
@@ -65,7 +65,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/utility}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DS1302}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino-ds1302}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SoftwareSerial}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platforms/standard}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/modules}&quot;"/>
@@ -100,9 +100,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Nano328P/utility/SdVolume.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Nano328P/File.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Nano328P/SD.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DS1302/Nano328P/DS1302.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino-ds1302/Nano328P/DS1302.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SoftwareSerial/Nano328P/SoftwareSerial.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/sensors_module.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/analogSensors_module.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/leds_module.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/kiwiFrameBuilder_module.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/rtc_module.o}&quot;"/>
@@ -177,7 +177,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/EEPROM}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/utility}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DS1302}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino-ds1302}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platforms/mega}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/modules}&quot;"/>
 								</option>
@@ -195,7 +195,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/utility}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DS1302}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino-ds1302}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platforms/mega}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/modules}&quot;"/>
 								</option>
@@ -229,8 +229,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/Sd2Card.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/SdFile.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/SdVolume.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DS1302/Mega2560/DS1302.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/sensors_module.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino-ds1302/Mega2560/DS1302.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/analogSensors_module.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/leds_module.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/kiwiFrameBuilder_module.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/customFrameBuilder_module.o}&quot;"/>
