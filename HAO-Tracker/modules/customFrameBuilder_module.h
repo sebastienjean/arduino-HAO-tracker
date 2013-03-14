@@ -16,14 +16,15 @@
 
 #define CUSTOM_FRAME_MAX_LENGTH 100
 
-# define CUSTOM_FRAME_FIELD_SEPARATOR ','
-// custom frame, as an ASCII string
-extern char customFrame[];
+# define CUSTOM_FRAME_FIELD_SEPARATOR_CHAR ','
 
-// custom frame length
-extern int customFrameLength;
+# define CUSTOM_FRAME_START_OF_FRAME_CHAR '#'
+
+#define CUSTOM_FRAME_END_OF_FRAME_STRING "\r\n"
 
 /**
- * Builds custom frame (time, sensors data, ...) from values retrieved from global variables.
+ * Builds custom frame (time, location, sensor data, ...)
+ *
+ * @param customFrame the external buffer used to store custom frame
  */
-void buildCustomFrame(void);
+void buildCustomFrame(char * customFrame);

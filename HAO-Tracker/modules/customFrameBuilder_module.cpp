@@ -23,165 +23,207 @@
 #include <sensors_module.h>
 #include <rtc_module.h>
 
+/**
+ * Internal function used to append start-of-frame char to custom frame
+ *
+ * @param customFrame a pointer on an external buffer where to append the start-of-frame character
+ * @return a pointer to the external buffer where to add the next custom frame character
+ */
+char *appendStartOfFrameChar(char* customFrame)
+{
+  customFrame[0] = CUSTOM_FRAME_START_OF_FRAME_CHAR;
+  return customFrame+1;
+}
 
-// custom frame, as an ASCII string
-char customFrame[CUSTOM_FRAME_MAX_LENGTH];
+/**
+ * Internal function used to append field separator char to custom frame
+ *
+ * @param customFrame a pointer on an external buffer where to append the separator
+ * @return a pointer to the external buffer where to add the next custom frame character
+ */
+char *appendFieldSeparatorChar(char *customFrame)
+{
+  customFrame[0] = CUSTOM_FRAME_FIELD_SEPARATOR_CHAR;
+  return customFrame+1;
+}
 
-// custom frame length
-int customFrameLength;
+/**
+ * Internal function used to append end-of-frame string to custom frame
+ *
+ * @param customFrame a pointer on an external buffer where to append end-of-frame
+ * @return a pointer to the external buffer where to add the next custom frame character
+ */
+char * appendEndOfFrameString(char *customFrame)
+{
+  strcpy(customFrame, CUSTOM_FRAME_END_OF_FRAME_STRING);
+  return customFrame + strlen(customFrame);
+}
 
-void appendSystemTime()
+/**
+ * Internal function used to append system time (seconds since last reset) to custom frame
+ *
+ * @param customFrame a pointer on an external buffer where to append system time
+ * @return a pointer to the external buffer where to add the next custom frame character
+ */
+char *appendSystemTime(char* customFrame)
 {
   // seconds elapsed since last reset, as a decimal coded ASCII string
-  itoa(millis() / 1000, customFrame+customFrameLength, 10);
-  customFrameLength = strlen(customFrame);
+  itoa(millis() / 1000, customFrame, 10);
+  return customFrame+strlen(customFrame);
 }
 
-void appendRtcTime()
+/**
+ * Internal function used to append RTC time to custom frame
+ *
+ * @param customFrame a pointer on an external buffer where to append RTC time
+ * @return a pointer to the external buffer where to add the next custom frame character
+ */
+char *appendRtcTime(char* customFrame)
 {
-  getRtcTime(customFrame+customFrameLength);
-  customFrameLength = strlen(customFrame);
+  getRtcTime(customFrame);
+  return customFrame+strlen(customFrame);
 }
 
-void appendFieldSeparator()
+/**
+ * Internal function used to append an analog sensor value to custom frame
+ *
+ * @param customFrame a pointer on an external buffer where to append analog value
+ * @param value analog value to append (in [0, 1023])
+ * @return a pointer to the external buffer where to add the next custom frame character
+ */
+char *appendAnalogValue(char* customFrame, int value)
 {
-  customFrame[customFrameLength++] = CUSTOM_FRAME_FIELD_SEPARATOR;
+  itoa(value, customFrame, 10);
+  return customFrame + strlen(customFrame);
 }
 
-void appendAnalogValue(int value)
-{
-  itoa(value, customFrame + customFrameLength, 10);
-  customFrameLength = strlen(customFrame);
-}
-
-void appendPositioningData()
+/**
+ * Internal function used to append positioning data to custom frame
+ *
+ * @param customFrame a pointer on an external buffer where to append positioning data
+ * @return a pointer to the external buffer where to add the next custom frame character
+ */
+char *appendPositioningData(char *customFrame)
 {
   // time of fix
-  strncpy(customFrame+customFrameLength, nmeaGPS.getTimeOfFix(),6);
-  customFrameLength +=6;
+  strncpy(customFrame, nmeaGPS.getTimeOfFix(),6);
+  customFrame += 6;
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // fix
   if (nmeaGPS.getFix())
   {
-    customFrame[customFrameLength++]='A';
+      customFrame++[0]='A';
   }
   else
   {
-      customFrame[customFrameLength++]='V';
+      customFrame++[0]='V';
   }
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // longitude
-  dtostrf(nmeaGPS.getLongitude(),2,3,customFrame+customFrameLength);
-  customFrameLength = strlen(customFrame);
+  dtostrf(nmeaGPS.getLongitude(),2,3,customFrame);
+  customFrame += strlen(customFrame);
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // latitude
-  dtostrf(nmeaGPS.getLatitude(),2,3,customFrame+customFrameLength);
-  customFrameLength = strlen(customFrame);
+  dtostrf(nmeaGPS.getLatitude(),2,3,customFrame);
+  customFrame += strlen(customFrame);
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // altitude
-  dtostrf(nmeaGPS.getAltitude(),2,1,customFrame+customFrameLength);
-  customFrameLength = strlen(customFrame);
+  dtostrf(nmeaGPS.getAltitude(),2,1,customFrame);
+  customFrame += strlen(customFrame);
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // speed
-  dtostrf(nmeaGPS.getSpeedOverGround(),2,1,customFrame+customFrameLength);
-  customFrameLength = strlen(customFrame);
+  dtostrf(nmeaGPS.getSpeedOverGround(),2,1,customFrame);
+  customFrame += strlen(customFrame);
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // course
-  dtostrf(nmeaGPS.getCourseOverGround(),2,1,customFrame+customFrameLength);
-  customFrameLength = strlen(customFrame);
+  dtostrf(nmeaGPS.getCourseOverGround(),2,1,customFrame);
+  customFrame += strlen(customFrame);
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // satellites in use
-  itoa(nmeaGPS.getSatellitesInUse(),customFrame+customFrameLength,10);
-  customFrameLength = strlen(customFrame);
+  itoa(nmeaGPS.getSatellitesInUse(),customFrame,10);
+  customFrame += strlen(customFrame);
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // HDOP
-  dtostrf(nmeaGPS.getHDOP(),2,1,customFrame+customFrameLength);
-  customFrameLength = strlen(customFrame);
-}
-
-void appendEndOfFrame()
-{
-  customFrame[customFrameLength++]='\r';
-  customFrame[customFrameLength++]='\n';
-  customFrame[customFrameLength] = '\0';
+  dtostrf(nmeaGPS.getHDOP(),2,1,customFrame);
+  return  customFrame +strlen(customFrame);
 }
 
 /**
- * Builds custom frame (time, sensors data, ...) from values retrieved from global variables.
+ * Builds custom frame (time, location, sensor data, ...)
  */
-void buildCustomFrame()
+void buildCustomFrame(char *customFrame)
 {
-  customFrameLength = 0;
+  customFrame = appendStartOfFrameChar(customFrame);
 
   // system time
-  appendSystemTime();
+  customFrame = appendSystemTime(customFrame);
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // RTC time
-  appendRtcTime();
+  customFrame = appendRtcTime(customFrame);
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // positioning data
-  appendPositioningData();
+  customFrame = appendPositioningData(customFrame);
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // absolute pressure
-  appendAnalogValue(absolutePressureSensorValue);
+  customFrame = appendAnalogValue(customFrame, absolutePressureSensorValue);
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // differential pressure
-  appendAnalogValue(differentialPressureSensorValue);
+  customFrame = appendAnalogValue(customFrame, differentialPressureSensorValue);
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // internal temperature
-  appendAnalogValue(internalTemperatureSensorValue);
+  customFrame = appendAnalogValue(customFrame, internalTemperatureSensorValue);
 
   // separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // external temperature
-  appendAnalogValue(externalTemperatureSensorValue);
+  customFrame = appendAnalogValue(customFrame, externalTemperatureSensorValue);
 
   //separator
-  appendFieldSeparator();
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // battery voltage
-  appendAnalogValue(batteryVoltageSensorValue);
+  customFrame = appendAnalogValue(customFrame, batteryVoltageSensorValue);
 
   // end of frame
-  appendEndOfFrame();
+  customFrame = appendEndOfFrameString(customFrame);
 }
