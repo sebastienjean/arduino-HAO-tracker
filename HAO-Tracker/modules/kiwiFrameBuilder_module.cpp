@@ -17,7 +17,7 @@
 #include <defs.h>
 #include <kiwiFrameBuilder_module.h>
 #include <analogSensors_module.h>
-#include <voltageMonitor_module.h>
+#include <VoltageMonitor.h>
 
 // kiwi frame
 unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
@@ -83,7 +83,7 @@ void buildKiwiFrame()
   }
 
   // voltage
-  setKiwiFrameVoltageFieldFromAnalogReadValue(readVoltage());
+  setKiwiFrameVoltageFieldFromAnalogReadValue(VOLTAGE_MONITOR.readVoltage());
 
   // checksum
   computeKiwiFrameChecksum();

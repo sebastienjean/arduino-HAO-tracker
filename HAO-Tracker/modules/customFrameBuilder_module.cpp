@@ -21,7 +21,7 @@
 
 #include <customFrameBuilder_module.h>
 #include <analogSensors_module.h>
-#include <voltageMonitor_module.h>
+#include <VoltageMonitor.h>
 #include <rtc_module.h>
 
 /**
@@ -128,7 +128,7 @@ char *appendAnalogSensorValues(char* customFrame)
  */
 char *appendVoltage(char* customFrame)
 {
-  itoa(readVoltage(), customFrame, 10);
+  itoa(VOLTAGE_MONITOR.readVoltage(), customFrame, 10);
   return customFrame + strlen(customFrame);
 }
 

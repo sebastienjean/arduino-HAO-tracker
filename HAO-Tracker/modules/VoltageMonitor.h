@@ -14,16 +14,22 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Inits sensors.
- */
-void initVoltageMonitor(void);
+#ifndef VOLTAGE_MONITOR_h
+#define VOLTAGE_MONITOR_h
 
+class VoltageMonitor
+{
+  public:
 
-/**
- * Reads voltage value.
- *
- * @return voltage value (in [0,1023])
- *
- */
-int readVoltage(void);
+  /**
+   * Reads voltage value.
+   *
+   * @return voltage value (in [0,1023])
+   *
+   */
+  int readVoltage(void);
+};
+
+extern VoltageMonitor VOLTAGE_MONITOR;
+
+#endif

@@ -15,15 +15,7 @@
  */
 #include <Arduino.h>
 #include <pins.h>
-#include <defs.h>
-#include <voltageMonitor_module.h>
-
-/**
- * Inits sensors.
- */
-void initVoltageMonitor(void)
-{
-}
+#include <VoltageMonitor.h>
 
 /**
  * Reads a given sensor value.
@@ -32,7 +24,9 @@ void initVoltageMonitor(void)
  * @return value of sensor <tt>sensorNumber</tt> if it exists, -1 else
  *
  */
-int readVoltage()
+int VoltageMonitor::readVoltage()
 {
     return analogRead(BATTERY_VOLTAGE_ANALOG_SENSOR);
 }
+
+VoltageMonitor VOLTAGE_MONITOR;
