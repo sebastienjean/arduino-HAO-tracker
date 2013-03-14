@@ -28,7 +28,8 @@
 
 // modules
 #include <analogSensors_module.h>
-#include <leds_module.h>
+#include <Led.h>
+#include <Leds.h>
 #include <kiwiFrameBuilder_module.h>
 #include <customFrameBuilder_module.h>
 #include <logging_module.h>
@@ -56,6 +57,14 @@ char customFrame[CUSTOM_FRAME_MAX_LENGTH];
 // RTC
 DS1302_RTC RTC(RTC_CE, RTC_IO, RTC_SCLK);
 
+// LEDS
+Led Red_LED(RED_LED);
+Led Orange_LED(ORANGE_LED);
+Led Green_LED(GREEN_LED);
+Led Blue_LED(BLUE_LED);
+
+Led* ledArray[4] = {&Red_LED, &Orange_LED, &Green_LED, &Blue_LED};
+Leds All_Leds(ledArray, 4);
 /**
  * Initializes User switch.
  */
@@ -89,9 +98,9 @@ void setup()
 {
   initSensors();
 
-  initLEDs();
-
-  showLEDsStartupSequence();
+  All_Leds.on();
+  delay(1000);
+  All_Leds.off();
 
   initUserButton();
 
@@ -104,22 +113,22 @@ void setup()
   if (!initLogging())
   {
     SERIAL_DEBUG.println(F("KO"));
-    showStatus(ORANGE_LED, false);
+    Orange_LED.showStatus(false);
   }
   else
   {
     SERIAL_DEBUG.println(F("OK"));
-    showStatus(ORANGE_LED, true);
+    Orange_LED.showStatus(true);
 
     if (deleteLogFileIfUserClaimsTo())
       SERIAL_DEBUG.println(F("SD Clear"));
   }
 
-  showStatus(ORANGE_LED, logMessage("R", true));
+  Orange_LED.showStatus(logMessage("R", true));
 
   initGPS();
 
-  allLEDsOff();
+  All_Leds.off();
 }
 
 /**
@@ -128,8 +137,8 @@ void setup()
 void loop()
 {
   // show loop start sequence
-  quicklyMakeSomeLedBlinkSeveralTimes(RED_LED, 1);
-  quicklyMakeSomeLedBlinkSeveralTimes(GREEN_LED, 1);
+  Red_LED.quicklyMakeBlinkSeveralTimes(1);
+  Green_LED.quicklyMakeBlinkSeveralTimes(1);
 
   // kiwi frame building
   buildKiwiFrame();
@@ -137,11 +146,11 @@ void loop()
   // kiwi frame transmission
   fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
 
-  quicklyMakeSomeLedBlinkSeveralTimes(GREEN_LED, 2);
+  Green_LED.quicklyMakeBlinkSeveralTimes(2);
   // Positioning data reading (and debug)
   nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer);
 
-  showStatus(BLUE_LED, nmeaGPS.getFix());
+  Blue_LED.showStatus(nmeaGPS.getFix());
 
   // NMEA sentences logging
   logMessage(nmeaRmcSentenceBuffer, false);
@@ -150,9 +159,8 @@ void loop()
   // NMEA sentences transmission
   fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
   fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
-  singleLedOn(ORANGE_LED);
 
-  quicklyMakeSomeLedBlinkSeveralTimes(GREEN_LED, 3);
+  Green_LED.quicklyMakeBlinkSeveralTimes(3);
   // custom frame building
   buildCustomFrame(customFrame);
 
@@ -165,7 +173,7 @@ void loop()
   // custom frame transmission
   fskModulator.modulateBytes(customFrame, strlen(customFrame));
 
-  quicklyMakeSomeLedBlinkSeveralTimes(RED_LED, 1);
+  Red_LED.quicklyMakeBlinkSeveralTimes(1);
   delay(1000);
 }
 
