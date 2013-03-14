@@ -14,10 +14,9 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Arduino.h>
+#include <defs.h>
 #include <customFrameBuilder_module.h>
 #include <sensors_module.h>
-//#include <gps_module.h>
-#include <defs.h>
 #include <GPS2D.h>
 #include <GPS3D.h>
 #include <stdlib.h>
@@ -49,14 +48,14 @@ void appendAnalogValue(int value)
 
 void appendPositioningData()
 {
-  // TIME OF FIX
+  // time of fix
   strncpy(customFrame+customFrameLength, nmeaGPS.getTimeOfFix(),6);
   customFrameLength +=6;
 
-  // SEPARATOR
+  // separator
   appendFieldSeparator();
 
-  // FIX
+  // fix
   if (nmeaGPS.getFix())
   {
     customFrame[customFrameLength++]='A';
@@ -65,53 +64,54 @@ void appendPositioningData()
   {
       customFrame[customFrameLength++]='V';
   }
-  // SEPARATOR
+
+  // separator
   appendFieldSeparator();
 
-  // Longitude
-  dtostrf(nmeaGPS.getLongitude(),7,2,customFrame+customFrameLength);
+  // longitude
+  dtostrf(nmeaGPS.getLongitude(),2,3,customFrame+customFrameLength);
   customFrameLength = strlen(customFrame);
 
-  // SEPARATOR
+  // separator
   appendFieldSeparator();
 
-  // Latitude
-  dtostrf(nmeaGPS.getLatitude(),6,2,customFrame+customFrameLength);
+  // latitude
+  dtostrf(nmeaGPS.getLatitude(),2,3,customFrame+customFrameLength);
   customFrameLength = strlen(customFrame);
 
-  // SEPARATOR
+  // separator
   appendFieldSeparator();
 
-  // Altitude
-  dtostrf(nmeaGPS.getAltitude(),1,2,customFrame+customFrameLength);
+  // altitude
+  dtostrf(nmeaGPS.getAltitude(),2,1,customFrame+customFrameLength);
   customFrameLength = strlen(customFrame);
 
-  // SEPARATOR
+  // separator
   appendFieldSeparator();
 
-  // Speed
-  dtostrf(nmeaGPS.getSpeedOverGround(),1,2,customFrame+customFrameLength);
+  // speed
+  dtostrf(nmeaGPS.getSpeedOverGround(),2,1,customFrame+customFrameLength);
   customFrameLength = strlen(customFrame);
 
-  // SEPARATOR
+  // separator
   appendFieldSeparator();
 
-  // Course
-  dtostrf(nmeaGPS.getCourseOverGround(),1,2,customFrame+customFrameLength);
+  // course
+  dtostrf(nmeaGPS.getCourseOverGround(),2,1,customFrame+customFrameLength);
   customFrameLength = strlen(customFrame);
 
-  // SEPARATOR
+  // separator
   appendFieldSeparator();
 
-  // NB SAT
+  // satellites in use
   itoa(nmeaGPS.getSatellitesInUse(),customFrame+customFrameLength,10);
   customFrameLength = strlen(customFrame);
 
-  // SEPARATOR
+  // separator
   appendFieldSeparator();
 
   // HDOP
-  dtostrf(nmeaGPS.getHDOP(),2,2,customFrame+customFrameLength);
+  dtostrf(nmeaGPS.getHDOP(),2,1,customFrame+customFrameLength);
   customFrameLength = strlen(customFrame);
 }
 
@@ -121,12 +121,6 @@ void appendEndOfFrame()
   customFrame[customFrameLength++]='\n';
   customFrame[customFrameLength] = '\0';
 }
-
-//void addCharGpsValue(char *value)
-//{
-//  strcat(customFrame,value);
-//  customFrameLength = strlen(customFrame);
-//}
 
 /**
  * Builds custom frame (time, sensors data, ...) from values retrieved from global variables.
@@ -141,8 +135,9 @@ void buildCustomFrame()
   // separator
   appendFieldSeparator();
 
-  // Positioning Data
+  // positioning data
   appendPositioningData();
+
   // separator
   appendFieldSeparator();
 

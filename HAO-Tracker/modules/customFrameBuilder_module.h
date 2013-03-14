@@ -14,7 +14,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define CUSTOM_FRAME_MAX_LENGTH 40
+#define CUSTOM_FRAME_MAX_LENGTH 100
 
 # define CUSTOM_FRAME_FIELD_SEPARATOR ','
 // custom frame, as an ASCII string
