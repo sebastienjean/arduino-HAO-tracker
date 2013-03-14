@@ -27,6 +27,8 @@
 
 #define ANALOG_SENSORS_COUNT 5
 
+#define HAO_NAME "POKEBALL"
+
 extern GPS3D nmeaGPS;
 
 

@@ -36,6 +36,18 @@ char *appendStartOfFrameChar(char* customFrame)
 }
 
 /**
+ * Internal function used to append the name of the ball to custom frame
+ *
+ * @param customFrame a pointer on an external buffer where to append the name of the ball
+ * @return a pointer to the external buffer where to add the next custom frame character
+ */
+char * appendNameOfBall(char *customFrame)
+{
+  strcpy(customFrame, HAO_NAME);
+  return customFrame + strlen(customFrame);
+}
+
+/**
  * Internal function used to append field separator char to custom frame
  *
  * @param customFrame a pointer on an external buffer where to append the separator
@@ -188,6 +200,12 @@ char *appendPositioningData(char *customFrame)
 void buildCustomFrame(char *customFrame)
 {
   customFrame = appendStartOfFrameChar(customFrame);
+
+  // name of the ball
+  customFrame = appendNameOfBall(customFrame);
+
+  // separator
+  customFrame = appendFieldSeparatorChar(customFrame);
 
   // system time
   customFrame = appendSystemTime(customFrame);
