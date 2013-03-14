@@ -13,8 +13,11 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <Arduino.h>
+#include <defs.h>
 #include <kiwiFrameBuilder_module.h>
 #include <analogSensors_module.h>
+#include <voltageMonitor_module.h>
 
 // kiwi frame
 unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
@@ -68,32 +71,19 @@ void buildKiwiFrame()
   // start-of-frame
   kiwiFrame[0] = 0xFF;
 
-  // channel 1: absolute pressure
-  setKiwiFrameChannelFieldFromAnalogReadValue(1,readSensor(1));
+  for (int i=1;i<KIWI_FRAME_LENGTH;i++)
+  {
+      kiwiFrame[i] = 0x00;
+  }
 
-  // channel 2: differential pressure
-  setKiwiFrameChannelFieldFromAnalogReadValue(2,readSensor(2));
-
-  // channel 3: internal temperature
-  setKiwiFrameChannelFieldFromAnalogReadValue(3,readSensor(3));
-
-  // channel 4: external temperature
-  setKiwiFrameChannelFieldFromAnalogReadValue(4,readSensor(4));
-
-  // channel 5: <empty>
-  kiwiFrame[5] = 0x00;
-
-  // channel 6: <empty>
-  kiwiFrame[6] = 0x00;
-
-  // channel 7: <empty>
-  kiwiFrame[7] = 0x00;
-
-  // channel 8: <empty>
-  kiwiFrame[8] = 0x00;
+  // channels : analog sensors
+  for (int i=1;(i<ANALOG_SENSORS_COUNT)&&(i<KIWI_FRAME_CHANNELS_AMOUNT);i++)
+  {
+      setKiwiFrameChannelFieldFromAnalogReadValue(1,readSensor(i));
+  }
 
   // voltage
-  setKiwiFrameVoltageFieldFromAnalogReadValue(readSensor(4));
+  setKiwiFrameVoltageFieldFromAnalogReadValue(readVoltage());
 
   // checksum
   computeKiwiFrameChecksum();

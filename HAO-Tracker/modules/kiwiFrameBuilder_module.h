@@ -16,6 +16,8 @@
 
 #define KIWI_FRAME_LENGTH 11
 
+#define KIWI_FRAME_CHANNELS_AMOUNT 8
+
 // kiwi frame
 extern unsigned char kiwiFrame[];
 

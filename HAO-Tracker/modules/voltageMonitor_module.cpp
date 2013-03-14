@@ -13,26 +13,26 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DEFS_h
-#define DEF_h
+#include <Arduino.h>
+#include <pins.h>
+#include <defs.h>
+#include <voltageMonitor_module.h>
 
-#include <GPS3D.h>
+/**
+ * Inits sensors.
+ */
+void initVoltageMonitor(void)
+{
+}
 
-#define SERIAL_DEBUG Serial
-
-#define SERIAL_NMEA_GPS_BAUDRATE 4800
-
-#define SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT 2000
-
-#define SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT 2000
-
-#define LOG_FILE_PATH "data.txt"
-
-#define ANALOG_SENSORS_COUNT 4
-
-#define HAO_NAME "POKEBALL"
-
-extern GPS3D nmeaGPS;
-#endif
-
-
+/**
+ * Reads a given sensor value.
+ *
+ * @param sensorNumber the number of the sensor to read
+ * @return value of sensor <tt>sensorNumber</tt> if it exists, -1 else
+ *
+ */
+int readVoltage()
+{
+    return analogRead(BATTERY_VOLTAGE_ANALOG_SENSOR);
+}

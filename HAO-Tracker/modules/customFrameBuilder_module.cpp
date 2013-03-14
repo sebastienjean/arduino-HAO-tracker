@@ -21,6 +21,7 @@
 
 #include <customFrameBuilder_module.h>
 #include <analogSensors_module.h>
+#include <voltageMonitor_module.h>
 #include <rtc_module.h>
 
 /**
@@ -33,18 +34,6 @@ char *appendStartOfFrameChar(char* customFrame)
 {
   customFrame[0] = CUSTOM_FRAME_START_OF_FRAME_CHAR;
   return customFrame+1;
-}
-
-/**
- * Internal function used to append the name of the ball to custom frame
- *
- * @param customFrame a pointer on an external buffer where to append the name of the ball
- * @return a pointer to the external buffer where to add the next custom frame character
- */
-char * appendNameOfBall(char *customFrame)
-{
-  strcpy(customFrame, HAO_NAME);
-  return customFrame + strlen(customFrame);
 }
 
 /**
@@ -117,6 +106,18 @@ char *appendAnalogSensorValues(char* customFrame)
       }
   }
   return customFrame;
+}
+
+/**
+ * Internal function used to append analog sensor values to custom frame
+ *
+ * @param customFrame a pointer on an external buffer where to append analog sensor values
+ * @return a pointer to the external buffer where to add the next custom frame character
+ */
+char *appendVoltage(char* customFrame)
+{
+  itoa(readVoltage(), customFrame, 10);
+  return customFrame + strlen(customFrame);
 }
 
 /**
@@ -201,12 +202,6 @@ void buildCustomFrame(char *customFrame)
 {
   customFrame = appendStartOfFrameChar(customFrame);
 
-  // name of the ball
-  customFrame = appendNameOfBall(customFrame);
-
-  // separator
-  customFrame = appendFieldSeparatorChar(customFrame);
-
   // system time
   customFrame = appendSystemTime(customFrame);
 
@@ -227,6 +222,12 @@ void buildCustomFrame(char *customFrame)
 
   // analog sensors
   customFrame = appendAnalogSensorValues(customFrame);
+
+  // separator
+    customFrame = appendFieldSeparatorChar(customFrame);
+
+  // voltage
+  customFrame = appendVoltage(customFrame);
 
   // end of frame
   customFrame = appendEndOfFrameString(customFrame);
