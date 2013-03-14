@@ -13,38 +13,39 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <Arduino.h>
+#include <pins.h>
+#include <defs.h>
 
-#define USER_BUTTON 5
+#include <rtc_module.h>
+#include <DS1302.h>
+#include <stdio.h>
+#include <string.h>
 
-#define RED_LED 9
+DS1302 rtc(RTC_CE, RTC_IO, RTC_SCLK);
 
-#define ORANGE_LED 10
+char timeString[7];
+/**
+ * Initializes RTC.
+ */
+void initRTC()
+{
+  rtc.write_protect(true);
+  rtc.halt(false);
+  memset(timeString, 0, sizeof(timeString));
+}
 
-#define GREEN_LED 7
+/**
+ * Returns local time.
+ *
+ * @return local time as hhmmss
+ */
+void getRtcTime(char * timeString)
+{
+   strcpy(timeString,"000000");
+   Time time = rtc.time();
 
-#define BLUE_LED 6
+   snprintf(timeString, 7, "%02d%02d%02d", time.hr, time.min, time.sec);
+}
 
-#define FSK_MODULATOR_TX 6
 
-#define GPS_SERIAL_RX 2
-
-// unused but required for software serial initialization
-#define GPS_SERIAL_TX 3
-
-#define DIFFERENTIAL_PRESSURE_ANALOG_SENSOR A0
-
-#define ABSOLUTE_PRESSURE_ANALOG_SENSOR A1
-
-#define EXTERNAL_TEMPERATURE_ANALOG_SENSOR A2
-
-#define INTERNAL_TEMPERATURE_ANALOG_SENSOR A3
-
-#define BATTERY_VOLTAGE_ANALOG_SENSOR A4
-
-#define SD_CARD_CHIP_SELECT 8
-
-#define RTC_CE   7
-
-#define RTC_IO   9
-
-#define RTC_SCLK 10

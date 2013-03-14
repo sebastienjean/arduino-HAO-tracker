@@ -21,14 +21,19 @@
 #if defined(GPS_SERIAL_RX)
 #include <SoftwareSerial.h>
 #endif
-#include <FSK600BaudTA900TB1500Mod.h>
 
+// libs
+#include <FSK600BaudTA900TB1500Mod.h>
+#include <GPS3D.h>
+
+// modules
 #include <sensors_module.h>
 #include <leds_module.h>
 #include <kiwiFrameBuilder_module.h>
 #include <customFrameBuilder_module.h>
 #include <logging_module.h>
-#include <GPS3D.h>
+#include <rtc_module.h>
+
 
 // Software serial link used by GPS
 #if defined(GPS_SERIAL_RX)
@@ -43,7 +48,6 @@ GPS3D nmeaGPS(&serialNmeaGPSPort, &SERIAL_DEBUG);
 char nmeaRmcSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
 
 char nmeaGgaSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
-
 
 // FSK modulator
 FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX);
@@ -111,6 +115,8 @@ void setup()
   logMessage("R", true);
 
   initGPS();
+
+  initRTC();
 }
 
 /**
@@ -150,7 +156,6 @@ void loop()
 
   // custom frame transmission
   fskModulator.modulateBytes(customFrame, customFrameLength);
-
 }
 
 /**

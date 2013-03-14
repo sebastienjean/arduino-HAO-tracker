@@ -38,3 +38,8 @@
 
 #define SD_CARD_CHIP_SELECT 53
 
+#define RTC_CE   7
+
+#define RTC_IO   9
+
+#define RTC_SCLK 10

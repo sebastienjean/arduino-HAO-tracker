@@ -14,12 +14,15 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Arduino.h>
+#include <stdlib.h>
 #include <defs.h>
-#include <customFrameBuilder_module.h>
-#include <sensors_module.h>
 #include <GPS2D.h>
 #include <GPS3D.h>
-#include <stdlib.h>
+
+#include <customFrameBuilder_module.h>
+#include <sensors_module.h>
+#include <rtc_module.h>
+
 
 // custom frame, as an ASCII string
 char customFrame[CUSTOM_FRAME_MAX_LENGTH];
@@ -27,11 +30,16 @@ char customFrame[CUSTOM_FRAME_MAX_LENGTH];
 // custom frame length
 int customFrameLength;
 
-// TODO move time management to a dedicated module
-void appendTime()
+void appendSystemTime()
 {
   // seconds elapsed since last reset, as a decimal coded ASCII string
   itoa(millis() / 1000, customFrame+customFrameLength, 10);
+  customFrameLength = strlen(customFrame);
+}
+
+void appendRtcTime()
+{
+  getRtcTime(customFrame+customFrameLength);
   customFrameLength = strlen(customFrame);
 }
 
@@ -129,8 +137,14 @@ void buildCustomFrame()
 {
   customFrameLength = 0;
 
-  // time
-  appendTime();
+  // system time
+  appendSystemTime();
+
+  // separator
+  appendFieldSeparator();
+
+  // RTC time
+  appendRtcTime();
 
   // separator
   appendFieldSeparator();

@@ -14,37 +14,15 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define USER_BUTTON 5
+/**
+ * Initializes RTC
+ */
+void initRTC(void);
 
-#define RED_LED 9
+/**
+ * Retrieve local time.
+ *
+ * @param timeString an external buffer of at least 7 bytes used to get time as "hhmmss"
+ */
+void getRtcTime(char *timeString);
 
-#define ORANGE_LED 10
-
-#define GREEN_LED 7
-
-#define BLUE_LED 6
-
-#define FSK_MODULATOR_TX 6
-
-#define GPS_SERIAL_RX 2
-
-// unused but required for software serial initialization
-#define GPS_SERIAL_TX 3
-
-#define DIFFERENTIAL_PRESSURE_ANALOG_SENSOR A0
-
-#define ABSOLUTE_PRESSURE_ANALOG_SENSOR A1
-
-#define EXTERNAL_TEMPERATURE_ANALOG_SENSOR A2
-
-#define INTERNAL_TEMPERATURE_ANALOG_SENSOR A3
-
-#define BATTERY_VOLTAGE_ANALOG_SENSOR A4
-
-#define SD_CARD_CHIP_SELECT 8
-
-#define RTC_CE   7
-
-#define RTC_IO   9
-
-#define RTC_SCLK 10
