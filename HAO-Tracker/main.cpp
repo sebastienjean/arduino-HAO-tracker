@@ -18,7 +18,7 @@
 #include <GPS.h>
 #include <pins.h>
 #include <defs.h>
-#if defined(GPS_SERIAL_RX)
+#if defined(GPS_SERIAL_RX_PIN)
 #include <SoftwareSerial.h>
 #endif
 
@@ -37,8 +37,8 @@
 
 
 // Software serial link used by GPS
-#if defined(GPS_SERIAL_RX)
-SoftwareSerial serialNmeaGPSPort(GPS_SERIAL_RX, GPS_SERIAL_TX);
+#if defined(GPS_SERIAL_RX_PIN)
+SoftwareSerial serialNmeaGPSPort(GPS_SERIAL_RX_PIN, GPS_SERIAL_TX_PIN);
 #else
 #define serialNmeaGPSPort Serial1
 #endif
@@ -49,19 +49,19 @@ char nmeaRmcSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
 char nmeaGgaSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
 
 // FSK modulator
-FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX);
+FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX_PIN);
 
 // customFrameBuilder
 char customFrame[CUSTOM_FRAME_MAX_LENGTH];
 
 // RTC
-DS1302_RTC RTC(RTC_CE, RTC_IO, RTC_SCLK);
+DS1302_RTC RTC(RTC_CE_PIN, RTC_IO_PIN, RTC_SCLK_PIN);
 
 // LEDS
-Led Red_LED(RED_LED);
-Led Orange_LED(ORANGE_LED);
-Led Green_LED(GREEN_LED);
-Led Blue_LED(BLUE_LED);
+Led Red_LED(RED_LED_PIN);
+Led Orange_LED(ORANGE_LED_PIN);
+Led Green_LED(GREEN_LED_PIN);
+Led Blue_LED(BLUE_LED_PIN);
 
 Led* ledArray[4] = {&Red_LED, &Orange_LED, &Green_LED, &Blue_LED};
 Leds All_Leds(ledArray, 4);
@@ -70,8 +70,8 @@ Leds All_Leds(ledArray, 4);
  */
 void initUserButton()
 {
-  pinMode(USER_BUTTON, INPUT);
-  digitalWrite(USER_BUTTON, HIGH);
+  pinMode(USER_BUTTON_PIN, INPUT);
+  digitalWrite(USER_BUTTON_PIN, HIGH);
 }
 
 /**

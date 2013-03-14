@@ -26,7 +26,7 @@
  */
 int VoltageMonitor::readVoltage()
 {
-    return analogRead(BATTERY_VOLTAGE_ANALOG_SENSOR);
+    return analogRead(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 }
 
 VoltageMonitor VOLTAGE_MONITOR;

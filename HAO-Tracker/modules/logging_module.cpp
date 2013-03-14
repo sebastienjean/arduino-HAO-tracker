@@ -30,8 +30,8 @@ File logFile;
  */
 boolean initLogging()
 {
-  pinMode(SD_CARD_CHIP_SELECT, OUTPUT);
-  return SD.begin(SD_CARD_CHIP_SELECT);
+  pinMode(SD_CARD_CHIP_SELECT_PIN, OUTPUT);
+  return SD.begin(SD_CARD_CHIP_SELECT_PIN);
 }
 
 /**
@@ -62,7 +62,7 @@ boolean deleteLogFileIfUserClaimsTo()
 {
   delay(1000);
 
-  if (digitalRead(USER_BUTTON) == LOW)
+  if (digitalRead(USER_BUTTON_PIN) == LOW)
   {
       return SD.remove(LOG_FILE_PATH);
   }

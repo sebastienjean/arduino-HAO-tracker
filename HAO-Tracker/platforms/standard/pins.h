@@ -14,37 +14,37 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define USER_BUTTON 5
+#define USER_BUTTON_PIN 5
 
-#define RED_LED 9
+#define RED_LED_PIN 9
 
-#define ORANGE_LED 10
+#define ORANGE_LED_PIN 10
 
-#define GREEN_LED 7
+#define GREEN_LED_PIN 7
 
-#define BLUE_LED 6
+#define BLUE_LED_PIN 6
 
-#define FSK_MODULATOR_TX 6
+#define FSK_MODULATOR_TX_PIN 6
 
-#define GPS_SERIAL_RX 2
+#define GPS_SERIAL_RX_PIN 2
 
 // unused but required for software serial initialization
-#define GPS_SERIAL_TX 3
+#define GPS_SERIAL_TX_PIN 3
 
-#define DIFFERENTIAL_PRESSURE_ANALOG_SENSOR A0
+#define DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL A0
 
-#define ABSOLUTE_PRESSURE_ANALOG_SENSOR A1
+#define ABSOLUTE_PRESSURE_ANALOG_SENSOR_CHANNEL A1
 
-#define EXTERNAL_TEMPERATURE_ANALOG_SENSOR A2
+#define EXTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL A2
 
-#define INTERNAL_TEMPERATURE_ANALOG_SENSOR A3
+#define INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL A3
 
-#define BATTERY_VOLTAGE_ANALOG_SENSOR A4
+#define BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL A4
 
-#define SD_CARD_CHIP_SELECT 8
+#define SD_CARD_CHIP_SELECT_PIN 8
 
-#define RTC_CE   7
+#define RTC_CE_PIN   7
 
-#define RTC_IO   9
+#define RTC_IO_PIN   9
 
-#define RTC_SCLK 10
+#define RTC_SCLK_PIN 10

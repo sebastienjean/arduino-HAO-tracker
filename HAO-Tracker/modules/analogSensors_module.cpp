@@ -36,15 +36,15 @@ int readSensor(int sensorNumber)
 {
   switch (sensorNumber)
   {
-    case 1: return analogRead(ABSOLUTE_PRESSURE_ANALOG_SENSOR);
+    case 1: return analogRead(ABSOLUTE_PRESSURE_ANALOG_SENSOR_CHANNEL);
 
-    case 2: return analogRead(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR);
+    case 2: return analogRead(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
 
-    case 3: return analogRead(INTERNAL_TEMPERATURE_ANALOG_SENSOR);
+    case 3: return analogRead(INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
-    case 4: return analogRead(EXTERNAL_TEMPERATURE_ANALOG_SENSOR);
+    case 4: return analogRead(EXTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
-    case 5: return analogRead(BATTERY_VOLTAGE_ANALOG_SENSOR);
+    case 5: return analogRead(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 
     default: return -1;
   }
