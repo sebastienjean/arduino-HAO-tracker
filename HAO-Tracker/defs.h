@@ -25,6 +25,8 @@
 
 #define LOG_FILE_PATH "data.txt"
 
+#define ANALOG_SENSORS_COUNT 5
+
 extern GPS3D nmeaGPS;
 
 extern char nmeaRmcSentenceBuffer[];

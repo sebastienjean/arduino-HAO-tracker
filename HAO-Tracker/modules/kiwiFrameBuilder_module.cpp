@@ -14,7 +14,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <kiwiFrameBuilder_module.h>
-#include <sensors_module.h>
+#include <analogSensors_module.h>
 
 // kiwi frame
 unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
@@ -69,16 +69,16 @@ void buildKiwiFrame()
   kiwiFrame[0] = 0xFF;
 
   // channel 1: absolute pressure
-  setKiwiFrameChannelFieldFromAnalogReadValue(1,absolutePressureSensorValue);
+  setKiwiFrameChannelFieldFromAnalogReadValue(1,readSensor(1));
 
   // channel 2: differential pressure
-  setKiwiFrameChannelFieldFromAnalogReadValue(2,differentialPressureSensorValue);
+  setKiwiFrameChannelFieldFromAnalogReadValue(2,readSensor(2));
 
   // channel 3: internal temperature
-  setKiwiFrameChannelFieldFromAnalogReadValue(3,internalTemperatureSensorValue);
+  setKiwiFrameChannelFieldFromAnalogReadValue(3,readSensor(3));
 
   // channel 4: external temperature
-  setKiwiFrameChannelFieldFromAnalogReadValue(4,externalTemperatureSensorValue);
+  setKiwiFrameChannelFieldFromAnalogReadValue(4,readSensor(4));
 
   // channel 5: <empty>
   kiwiFrame[5] = 0x00;
@@ -93,7 +93,7 @@ void buildKiwiFrame()
   kiwiFrame[8] = 0x00;
 
   // voltage
-  setKiwiFrameVoltageFieldFromAnalogReadValue(batteryVoltageSensorValue);
+  setKiwiFrameVoltageFieldFromAnalogReadValue(readSensor(4));
 
   // checksum
   computeKiwiFrameChecksum();

@@ -20,7 +20,7 @@
 #include <GPS3D.h>
 
 #include <customFrameBuilder_module.h>
-#include <sensors_module.h>
+#include <analogSensors_module.h>
 #include <rtc_module.h>
 
 /**
@@ -85,16 +85,26 @@ char *appendRtcTime(char* customFrame)
 }
 
 /**
- * Internal function used to append an analog sensor value to custom frame
+ * Internal function used to append analog sensor values to custom frame
  *
- * @param customFrame a pointer on an external buffer where to append analog value
- * @param value analog value to append (in [0, 1023])
+ * @param customFrame a pointer on an external buffer where to append analog sensor values
  * @return a pointer to the external buffer where to add the next custom frame character
  */
-char *appendAnalogValue(char* customFrame, int value)
+char *appendAnalogSensorValues(char* customFrame)
 {
-  itoa(value, customFrame, 10);
-  return customFrame + strlen(customFrame);
+  for (int i=1;i<=ANALOG_SENSORS_COUNT;i++)
+  {
+      // append next sensor value
+      itoa(readSensor(i), customFrame, 10);
+      customFrame += strlen(customFrame);
+
+      // separator (if not last)
+      if (i < ANALOG_SENSORS_COUNT)
+      {
+        customFrame = appendFieldSeparatorChar(customFrame);
+      }
+  }
+  return customFrame;
 }
 
 /**
@@ -197,32 +207,8 @@ void buildCustomFrame(char *customFrame)
   // separator
   customFrame = appendFieldSeparatorChar(customFrame);
 
-  // absolute pressure
-  customFrame = appendAnalogValue(customFrame, absolutePressureSensorValue);
-
-  // separator
-  customFrame = appendFieldSeparatorChar(customFrame);
-
-  // differential pressure
-  customFrame = appendAnalogValue(customFrame, differentialPressureSensorValue);
-
-  // separator
-  customFrame = appendFieldSeparatorChar(customFrame);
-
-  // internal temperature
-  customFrame = appendAnalogValue(customFrame, internalTemperatureSensorValue);
-
-  // separator
-  customFrame = appendFieldSeparatorChar(customFrame);
-
-  // external temperature
-  customFrame = appendAnalogValue(customFrame, externalTemperatureSensorValue);
-
-  //separator
-  customFrame = appendFieldSeparatorChar(customFrame);
-
-  // battery voltage
-  customFrame = appendAnalogValue(customFrame, batteryVoltageSensorValue);
+  // analog sensors
+  customFrame = appendAnalogSensorValues(customFrame);
 
   // end of frame
   customFrame = appendEndOfFrameString(customFrame);

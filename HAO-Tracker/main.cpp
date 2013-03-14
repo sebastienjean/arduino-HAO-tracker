@@ -27,7 +27,7 @@
 #include <GPS3D.h>
 
 // modules
-#include <sensors_module.h>
+#include <analogSensors_module.h>
 #include <leds_module.h>
 #include <kiwiFrameBuilder_module.h>
 #include <customFrameBuilder_module.h>
@@ -124,10 +124,6 @@ void setup()
  */
 void loop()
 {
-
-  // sensors reading
-  readSensors();
-
   // kiwi frame building
   buildKiwiFrame();
 

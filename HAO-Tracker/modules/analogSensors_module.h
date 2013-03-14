@@ -14,28 +14,17 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// absolute pressure sensor value
-extern int absolutePressureSensorValue;
-
-// differential pressure sensor value
-extern int differentialPressureSensorValue;
-
-// internal temperature sensor value
-extern int internalTemperatureSensorValue;
-
-// external temperature sensor value
-extern int externalTemperatureSensorValue;
-
-// battery voltage sensor value
-extern int batteryVoltageSensorValue;
-
 /**
  * Inits sensors.
  */
 void initSensors(void);
 
+
 /**
- * Reads all sensors values and stores them in appropriate variables.
+ * Reads a given sensor value.
+ *
+ * @param sensorNumber the number of the sensor to read
+ * @return value of sensor <tt>sensorNumber</tt> if it exists, -1 else
  *
  */
-void readSensors(void);
+int readSensor(int sensorNumber);
