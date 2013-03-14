@@ -16,13 +16,13 @@
 
 #define USER_BUTTON 5
 
-#define RED_LED 9
+#define RED_LED 46
 
-#define ORANGE_LED 10
+#define ORANGE_LED 47
 
-#define GREEN_LED 7
+#define GREEN_LED 48
 
-#define BLUE_LED 6
+#define BLUE_LED 49
 
 #define FSK_MODULATOR_TX 6
 
