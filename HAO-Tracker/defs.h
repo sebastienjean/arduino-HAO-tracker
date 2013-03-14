@@ -17,6 +17,7 @@
 #define DEF_h
 
 #include <GPS3D.h>
+#include <DS1302_RTC.h>
 
 #define SERIAL_DEBUG Serial
 
@@ -33,6 +34,8 @@
 #define HAO_NAME "POKEBALL"
 
 extern GPS3D nmeaGPS;
+
+extern DS1302_RTC RTC;
 #endif
 
 

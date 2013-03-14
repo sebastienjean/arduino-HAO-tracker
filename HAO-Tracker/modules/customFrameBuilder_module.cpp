@@ -93,7 +93,7 @@ char *appendSystemTime(char* customFrame)
  */
 char *appendRtcTime(char* customFrame)
 {
-  getRtcTime(customFrame);
+  RTC.getRtcTimeString(customFrame);
   return customFrame+strlen(customFrame);
 }
 

@@ -13,16 +13,28 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <Arduino.h>
+
+#include <DS1302_RTC.h>
+#include <DS1302.h>
+#include <stdio.h>
+#include <string.h>
+
+DS1302_RTC::DS1302_RTC(int ce_pin, int io_pin, int sclk_pin) : DS1302::DS1302(ce_pin, io_pin, sclk_pin)
+{
+}
 
 /**
- * Initializes RTC
- */
-void initRTC(void);
-
-/**
- * Retrieve local time.
+ * Returns local time.
  *
- * @param timeString an external buffer of at least 7 bytes used to get time as "hhmmss"
+ * @return local time as hhmmss
  */
-void getRtcTime(char *timeString);
+void DS1302_RTC::getRtcTimeString(char * timeString)
+{
+   strcpy(timeString,"000000");
+   Time time = DS1302::time();
+
+   snprintf(timeString, 7, "%02d%02d%02d", time.hr, time.min, time.sec);
+}
+
 

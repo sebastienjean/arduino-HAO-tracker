@@ -32,7 +32,7 @@
 #include <kiwiFrameBuilder_module.h>
 #include <customFrameBuilder_module.h>
 #include <logging_module.h>
-#include <rtc_module.h>
+#include <DS1302_RTC.h>
 
 
 // Software serial link used by GPS
@@ -52,6 +52,9 @@ FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX);
 
 // customFrameBuilder
 char customFrame[CUSTOM_FRAME_MAX_LENGTH];
+
+// RTC
+DS1302_RTC RTC(RTC_CE, RTC_IO, RTC_SCLK);
 
 /**
  * Initializes User switch.
@@ -115,8 +118,6 @@ void setup()
   showStatus(ORANGE_LED, logMessage("R", true));
 
   initGPS();
-
-  initRTC();
 
   allLEDsOff();
 }
