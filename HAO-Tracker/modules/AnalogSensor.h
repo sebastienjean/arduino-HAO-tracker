@@ -14,17 +14,29 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Inits sensors.
- */
-void initSensors(void);
+#ifndef ANALOG_SENSOR_h
+#define ANALOG_SENSOR_h
+
+class AnalogSensor
+{
+private:
+
+  int channel;
+
+public:
+
+  AnalogSensor(int channel);
+
+  /**
+   * Reads analog sensor value.
+   *
+   * @return analog sensor value
+   *
+   */
+  int read(void);
+
+};
+
+#endif
 
 
-/**
- * Reads a given sensor value.
- *
- * @param sensorNumber the number of the sensor to read
- * @return value of sensor <tt>sensorNumber</tt> if it exists, -1 else
- *
- */
-int readSensor(int sensorNumber);

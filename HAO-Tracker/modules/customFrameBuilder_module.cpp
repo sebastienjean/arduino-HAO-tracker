@@ -20,9 +20,10 @@
 #include <GPS3D.h>
 
 #include <customFrameBuilder_module.h>
-#include <analogSensors_module.h>
+#include <AnalogSensor.h>
+#include <AnalogSensors.h>
 #include <VoltageMonitor.h>
-#include <rtc_module.h>
+#include <DS1302_RTC.h>
 
 /**
  * Internal function used to append start-of-frame char to custom frame
@@ -105,14 +106,14 @@ char *appendRtcTime(char* customFrame)
  */
 char *appendAnalogSensorValues(char* customFrame)
 {
-  for (int i=1;i<=ANALOG_SENSORS_COUNT;i++)
+  for (int i=1;i<=sensors.getAmount();i++)
   {
       // append next sensor value
-      itoa(readSensor(i), customFrame, 10);
+      itoa(sensors.read(i), customFrame, 10);
       customFrame += strlen(customFrame);
 
       // separator (if not last)
-      if (i < ANALOG_SENSORS_COUNT)
+      if (i < sensors.getAmount())
       {
         customFrame = appendFieldSeparatorChar(customFrame);
       }

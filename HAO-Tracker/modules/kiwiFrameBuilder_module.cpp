@@ -16,7 +16,8 @@
 #include <Arduino.h>
 #include <defs.h>
 #include <kiwiFrameBuilder_module.h>
-#include <analogSensors_module.h>
+#include <AnalogSensor.h>
+#include <AnalogSensors.h>
 #include <VoltageMonitor.h>
 
 // kiwi frame
@@ -77,9 +78,9 @@ void buildKiwiFrame()
   }
 
   // channels : analog sensors
-  for (int i=1;(i<ANALOG_SENSORS_COUNT)&&(i<KIWI_FRAME_CHANNELS_AMOUNT);i++)
+  for (int i=1;(i<sensors.getAmount())&&(i<KIWI_FRAME_CHANNELS_AMOUNT);i++)
   {
-      setKiwiFrameChannelFieldFromAnalogReadValue(1,readSensor(i));
+      setKiwiFrameChannelFieldFromAnalogReadValue(1, sensors.read(i));
   }
 
   // voltage

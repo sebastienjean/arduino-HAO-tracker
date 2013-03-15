@@ -27,7 +27,8 @@
 #include <GPS3D.h>
 
 // modules
-#include <analogSensors_module.h>
+#include <AnalogSensor.h>
+#include <AnalogSensors.h>
 #include <Led.h>
 #include <Leds.h>
 #include <kiwiFrameBuilder_module.h>
@@ -58,6 +59,7 @@ char customFrame[CUSTOM_FRAME_MAX_LENGTH];
 DS1302_RTC RTC(RTC_CE_PIN, RTC_IO_PIN, RTC_SCLK_PIN);
 
 // LEDS
+// Todo rename variables (lower case)
 Led Red_LED(RED_LED_PIN);
 Led Orange_LED(ORANGE_LED_PIN);
 Led Green_LED(GREEN_LED_PIN);
@@ -65,6 +67,17 @@ Led Blue_LED(BLUE_LED_PIN);
 
 Led* ledArray[4] = {&Red_LED, &Orange_LED, &Green_LED, &Blue_LED};
 Leds All_Leds(ledArray, 4);
+
+// Analog Sensors
+AnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
+AnalogSensor absolutePressureAnalogSensor(ABSOLUTE_PRESSURE_ANALOG_SENSOR_CHANNEL);
+AnalogSensor externalTemperatureAnalogSensor(EXTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+AnalogSensor internalTemperatureAnalogSensor(INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+AnalogSensor* sensorsArray[4] = { &differentialPressureAnalogSensor,
+                                  &absolutePressureAnalogSensor,
+                                  &externalTemperatureAnalogSensor,
+                                  &internalTemperatureAnalogSensor};
+AnalogSensors sensors(sensorsArray, 4);
 
 /**
  * Initializes logging (SD).
@@ -121,8 +134,6 @@ void initGPS()
  */
 void setup()
 {
-  initSensors();
-
   All_Leds.on();
   delay(1000);
   All_Leds.off();

@@ -13,31 +13,21 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DEFS_h
-#define DEF_h
+#include <Arduino.h>
+#include <AnalogSensor.h>
 
-#include <GPS3D.h>
-#include <DS1302_RTC.h>
-#include <AnalogSensors.h>
+AnalogSensor::AnalogSensor(int channel)
+{
+  this->channel = channel;
+}
 
-#define SERIAL_DEBUG Serial
-
-#define SERIAL_NMEA_GPS_BAUDRATE 4800
-
-#define SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT 2000
-
-#define SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT 2000
-
-#define LOG_FILE_PATH "data.txt"
-
-#define HAO_NAME "POKEBALL"
-
-extern GPS3D nmeaGPS;
-
-extern DS1302_RTC RTC;
-
-extern AnalogSensors sensors;
-
-#endif
-
-
+/**
+ * Reads analog sensor value.
+ *
+ * @return analog sensor value
+ *
+ */
+int AnalogSensor::read(void)
+{
+  return analogRead(this->channel);
+}
