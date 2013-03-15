@@ -16,20 +16,22 @@
 #include <Arduino.h>
 #include <pins_arduino.h>
 #include <pins.h>
+#include <defs.h>
 #include <AnalogSensors.h>
+#include <AnalogSensor.h>
 
-  AnalogSensors::AnalogSensors(AnalogSensor* analogSensors[], int analogSensorsAmount)
+AnalogSensors::AnalogSensors(AnalogSensor* analogSensors[], int analogSensorsAmount)
+{
+  for (int i=0;(i<analogSensorsAmount)&&(i<NUM_ANALOG_INPUTS);i++)
   {
-    for (int i=0;(i<analogSensorsAmount)&&(i<NUM_ANALOG_INPUTS);i++)
-    {
-        this->analogSensors[i] = analogSensors[i];
-    }
-    if (analogSensorsAmount > NUM_ANALOG_INPUTS)
-    {
-        analogSensorsAmount = NUM_ANALOG_INPUTS;
-    }
-    this->analogSensorsAmount = analogSensorsAmount;
+      this->analogSensors[i] = analogSensors[i];
   }
+  if (analogSensorsAmount > NUM_ANALOG_INPUTS)
+  {
+      analogSensorsAmount = NUM_ANALOG_INPUTS;
+  }
+  this->analogSensorsAmount = analogSensorsAmount;
+}
 
   /**
    * Reads a given sensor value.
@@ -40,20 +42,11 @@
    */
   int AnalogSensors::read(int sensorNumber)
   {
-    switch (sensorNumber)
-      {
-        case 1: return analogRead(ABSOLUTE_PRESSURE_ANALOG_SENSOR_CHANNEL);
-
-        case 2: return analogRead(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
-
-        case 3: return analogRead(INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
-
-        case 4: return analogRead(EXTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
-
-        case 5: return analogRead(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
-
-        default: return -1;
-      }
+    if ((sensorNumber < 0)||(sensorNumber > getAmount()))
+    {
+        return -1;
+    }
+    return analogSensors[sensorNumber-1]->read();
   }
 
   /**
