@@ -45,8 +45,9 @@
       else
         logFile.print(message);
       logFile.close();
+      return true;
     }
-    return logFile;
+    return false;
   }
   /**
    * Erase log file content
