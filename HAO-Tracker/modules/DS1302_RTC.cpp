@@ -20,21 +20,17 @@
 #include <stdio.h>
 #include <string.h>
 
-DS1302_RTC::DS1302_RTC(int ce_pin, int io_pin, int sclk_pin) : DS1302::DS1302(ce_pin, io_pin, sclk_pin)
+DS1302_RTC::DS1302_RTC(int ce_pin, int io_pin, int sclk_pin) :
+    DS1302::DS1302(ce_pin, io_pin, sclk_pin)
 {
 }
 
-/**
- * Returns local time.
- *
- * @return local time as hhmmss
- */
-void DS1302_RTC::getRtcTimeString(char * timeString)
+void
+DS1302_RTC::getRtcTimeString(char * timeString)
 {
-   strcpy(timeString,"000000");
-   Time time = DS1302::time();
+  strcpy(timeString, "000000");
+  Time time = DS1302::time();
 
-   snprintf(timeString, 7, "%02d%02d%02d", time.hr, time.min, time.sec);
+  snprintf(timeString, 7, "%02d%02d%02d", time.hr, time.min, time.sec);
 }
-
 
