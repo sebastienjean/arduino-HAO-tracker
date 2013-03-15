@@ -20,16 +20,37 @@
 #include <Arduino.h>
 #include <Counter.h>
 
+/**
+ * Maximum amount of counters (half the EEPROM size)
+ */
 #define MAX_COUNTERS (E2END/2) +1
+
+/**
+ * This class wraps a set of persistent integer counters. The number of counters that can be grouped in an instance of this
+ * class depends on the platform EEPROM size (typically from 1kB to 4kB)
+ */
 class Counters
 {
 private:
 
+  /**
+   * Counters (pointers) contained in this set
+   */
   Counter* counters[MAX_COUNTERS];
+
+  /**
+   * Number of counters in this set
+   */
   int countersAmount;
 
 public:
 
+  /**
+   * Creates a new counters set containing existing counters
+   *
+   * @param counters an array containing counters to add to this set
+   * @param countersAmount the number of counters to add from <tt>counters</tt>
+   */
   Counters(Counter* counters[], int countersAmount);
 
   /**
@@ -39,7 +60,8 @@ public:
    * @return value of counter <tt>CounterNumber</tt> if it exists, -1 else
    *
    */
-  int read(int counterNumber);
+  int
+  read(int counterNumber);
 
   /**
    * Returns the amount of counters
@@ -47,9 +69,9 @@ public:
    * @return the amount of counters
    *
    */
-  int getAmount(void);
+  int
+  getAmount(void);
 };
 
 #endif
-
 

@@ -16,44 +16,28 @@
 #include <Arduino.h>
 #include <Counter.h>
 
-
 Counter::Counter(int baseAddress)
 {
   this->baseAddress = baseAddress;
 }
 
-/**
- * Reads counter value.
- *
- * @return counter value
- *
- */
-int Counter::read(void)
+int
+Counter::read(void)
 {
   // TODO implement this
   // see http://arduino.cc/en/Reference/WordCast
   return 0;
 }
 
-/**
- * Sets counter value.
- *
- * @param value counter value
- *
- */
-void Counter::set(int value)
+void
+Counter::set(int value)
 {
   // TODO implement this
   // see http://arduino.cc/en/Reference/LowByte and http://arduino.cc/en/Reference/HighByte
 }
 
-/**
- * Increments counter value.
- *
- * @param value the increment value
- *
- */
-void Counter::increment(int value)
+void
+Counter::increment(int value)
 {
-  // TODO implement this
+  this->set(this->read() + value);
 }

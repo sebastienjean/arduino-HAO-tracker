@@ -17,42 +17,31 @@
 #include <Counters.h>
 #include <Counter.h>
 
-  Counters::Counters(Counter* counters[], int countersAmount)
-  {
-    for (int i=0;(i<countersAmount)&&(i<MAX_COUNTERS);i++)
+Counters::Counters(Counter* counters[], int countersAmount)
+{
+  for (int i = 0; (i < countersAmount) && (i < MAX_COUNTERS); i++)
     {
-        this->counters[i] = counters[i];
+      this->counters[i] = counters[i];
     }
-    if (countersAmount > MAX_COUNTERS)
+  if (countersAmount > MAX_COUNTERS)
     {
-        countersAmount = MAX_COUNTERS;
+      countersAmount = MAX_COUNTERS;
     }
-    this->countersAmount = countersAmount;
-  }
+  this->countersAmount = countersAmount;
+}
 
-  /**
-   * Reads a given counter value.
-   *
-   * @param counterNumber the number of the counter to read
-   * @return value of counter <tt>CounterNumber</tt> if it exists, -1 else
-   *
-   */
-  int Counters::read(int counterNumber)
-  {
-    if ((counterNumber < 0)||(counterNumber > getAmount()))
+int
+Counters::read(int counterNumber)
+{
+  if ((counterNumber < 0) || (counterNumber > getAmount()))
     {
-        return -1;
+      return -1;
     }
-    return counters[counterNumber-1]->read();
-  }
+  return counters[counterNumber - 1]->read();
+}
 
-  /**
-   * Returns the amount of analog sensors
-   *
-   * @return the amount of analog sensors
-   *
-   */
-  int Counters::getAmount()
-  {
-    return this->countersAmount;
-  }
+int
+Counters::getAmount()
+{
+  return this->countersAmount;
+}

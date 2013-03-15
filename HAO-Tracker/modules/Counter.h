@@ -17,41 +17,51 @@
 #ifndef COUNTER_h
 #define COUNTER_h
 
+/**
+ * This class allows to handle a persistent integer counter, stored in Arduino internal EEPROM
+ */
 class Counter
 {
 private:
 
+  /**
+   * Counter base address
+   */
   int baseAddress;
 
 public:
 
+  /**
+   * Creates a new counter, bound to a given EEPROM address
+   *
+   * @param baseAddress counter base address
+   */
   Counter(int baseAddress);
 
   /**
    * Reads counter value.
    *
    * @return counter value
-   *
    */
-  int read(void);
+  int
+  read(void);
 
   /**
    * Sets counter value.
    *
    * @param value counter value
-   *
    */
-  void set(int value);
+  void
+  set(int value);
 
   /**
-   * Increments counter value.
+   * Increments counter value by a given amount.
    *
    * @param value the increment value
-   *
    */
-  void increment(int value);
+  void
+  increment(int value);
 };
 
 #endif
-
 
