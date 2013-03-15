@@ -84,7 +84,7 @@ AnalogSensors sensors(sensorsArray, 4);
 // Counters
 Counter frameCounter(FRAME_COUNTER_BASE_ADDRESS);
 Counter resetCounter(RESET_COUNTER_BASE_ADDRESS);
-Counter* countersArray[4] = { &frameCounter, &resetCounter};
+Counter* countersArray[2] = { &frameCounter, &resetCounter};
 Counters counters(countersArray, 2);
 
 /**
