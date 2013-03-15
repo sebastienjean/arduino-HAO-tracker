@@ -72,28 +72,27 @@ AnalogSensor* sensorsArray[4] = { &differentialPressureAnalogSensor,
 AnalogSensors sensors(sensorsArray, 4);
 
 // RTC
-DS1302_RTC RTC(RTC_CE_PIN, RTC_IO_PIN, RTC_SCLK_PIN);
+DS1302_RTC rtc(RTC_CE_PIN, RTC_IO_PIN, RTC_SCLK_PIN);
 
 // customFrameBuilder
 char customFrame[CUSTOM_FRAME_MAX_LENGTH];
-CustomFrameBuilder CUSTOM_FRAME_BUILDER(&counters, &sensors, &RTC, &nmeaGPS);
+CustomFrameBuilder customFrameBuilder(&counters, &sensors, &rtc, &nmeaGPS);
 
 // Kiwi Frame
 unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
-KiwiFrameBuilder KIWI_FRAME_BUILDER(&VOLTAGE_MONITOR, &sensors);
+KiwiFrameBuilder kiwiFrameBuilder(&VOLTAGE_MONITOR, &sensors);
 
 
 
 // LEDS
 // Todo rename variables (lower case)
-Led Red_LED(RED_LED_PIN);
-Led Orange_LED(ORANGE_LED_PIN);
-Led Green_LED(GREEN_LED_PIN);
-Led Blue_LED(BLUE_LED_PIN);
+Led red_LED(RED_LED_PIN);
+Led orange_LED(ORANGE_LED_PIN);
+Led green_LED(GREEN_LED_PIN);
+Led blue_LED(BLUE_LED_PIN);
 
-Led* ledArray[4] = {&Red_LED, &Orange_LED, &Green_LED, &Blue_LED};
-Leds All_Leds(ledArray, 4);
-
+Led* ledArray[4] = {&red_LED, &orange_LED, &green_LED, &blue_LED};
+Leds leds(ledArray, 4);
 
 /**
  * Initializes logging (SD).
@@ -101,7 +100,7 @@ Leds All_Leds(ledArray, 4);
  */
 boolean initLogging()
 {
-  LOGGER.begin(LOG_FILE_PATH, SD_CHIP_SELECT_PIN);
+  return LOGGER.begin(LOG_FILE_PATH, SD_CHIP_SELECT_PIN);
 }
 
 /**
@@ -150,9 +149,9 @@ void initGPS()
  */
 void setup()
 {
-  All_Leds.on();
+  leds.on();
   delay(1000);
-  All_Leds.off();
+  leds.off();
 
   initUserButton();
 
@@ -165,22 +164,22 @@ void setup()
   if (!initLogging())
   {
     SERIAL_DEBUG.println(F("KO"));
-    Orange_LED.showStatus(false);
+    orange_LED.showStatus(false);
   }
   else
   {
     SERIAL_DEBUG.println(F("OK"));
-    Orange_LED.showStatus(true);
+    orange_LED.showStatus(true);
 
     if (deleteLogFileIfUserClaimsTo())
     {
       SERIAL_DEBUG.println(F("SD Clear"));
-      All_Leds.quicklyMakeBlinkSeveralTimes(10);
-      Orange_LED.showStatus(true);
+      leds.quicklyMakeBlinkSeveralTimes(10);
+      orange_LED.showStatus(true);
     }
   }
 
-  Orange_LED.showStatus(LOGGER.logMessage("R", true));
+  orange_LED.showStatus(LOGGER.logMessage("R", true));
 
   initGPS();
 }
@@ -191,20 +190,20 @@ void setup()
 void loop()
 {
   // show loop start sequence
-  Red_LED.quicklyMakeBlinkSeveralTimes(1);
-  Green_LED.quicklyMakeBlinkSeveralTimes(1);
+  red_LED.quicklyMakeBlinkSeveralTimes(1);
+  green_LED.quicklyMakeBlinkSeveralTimes(1);
 
   // kiwi frame building
-  KIWI_FRAME_BUILDER.buildKiwiFrame(kiwiFrame);
+  kiwiFrameBuilder.buildKiwiFrame(kiwiFrame);
 
   // kiwi frame transmission
   fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
 
-  Green_LED.quicklyMakeBlinkSeveralTimes(2);
+  green_LED.quicklyMakeBlinkSeveralTimes(2);
   // Positioning data reading (and debug)
   nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer);
 
-  Blue_LED.showStatus(nmeaGPS.getFix());
+  blue_LED.showStatus(nmeaGPS.getFix());
 
   // NMEA sentences logging
   LOGGER.logMessage(nmeaRmcSentenceBuffer, false);
@@ -214,9 +213,9 @@ void loop()
   fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
   fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
 
-  Green_LED.quicklyMakeBlinkSeveralTimes(3);
+  green_LED.quicklyMakeBlinkSeveralTimes(3);
   // custom frame building
-  CUSTOM_FRAME_BUILDER.buildCustomFrame(customFrame);
+  customFrameBuilder.buildCustomFrame(customFrame);
 
   // custom frame debug
   SERIAL_DEBUG.print(customFrame);
@@ -227,7 +226,7 @@ void loop()
   // custom frame transmission
   fskModulator.modulateBytes(customFrame, strlen(customFrame));
 
-  Red_LED.quicklyMakeBlinkSeveralTimes(1);
+  red_LED.quicklyMakeBlinkSeveralTimes(1);
   delay(1000);
 }
 
