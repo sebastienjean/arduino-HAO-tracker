@@ -33,8 +33,8 @@
 #include <Leds.h>
 #include <Counter.h>
 #include <Counters.h>
-#include <kiwiFrameBuilder_module.h>
-#include <customFrameBuilder_module.h>
+#include <KiwiFrameBuilder.h>
+#include <CustomFrameBuilder.h>
 #include <Logger.h>
 #include <DS1302_RTC.h>
 
@@ -54,21 +54,11 @@ char nmeaGgaSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
 // FSK modulator
 FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX_PIN);
 
-// customFrameBuilder
-char customFrame[CUSTOM_FRAME_MAX_LENGTH];
-
-// RTC
-DS1302_RTC RTC(RTC_CE_PIN, RTC_IO_PIN, RTC_SCLK_PIN);
-
-// LEDS
-// Todo rename variables (lower case)
-Led Red_LED(RED_LED_PIN);
-Led Orange_LED(ORANGE_LED_PIN);
-Led Green_LED(GREEN_LED_PIN);
-Led Blue_LED(BLUE_LED_PIN);
-
-Led* ledArray[4] = {&Red_LED, &Orange_LED, &Green_LED, &Blue_LED};
-Leds All_Leds(ledArray, 4);
+// Counters
+Counter frameCounter(FRAME_COUNTER_BASE_ADDRESS);
+Counter resetCounter(RESET_COUNTER_BASE_ADDRESS);
+Counter* countersArray[2] = { &frameCounter, &resetCounter};
+Counters counters(countersArray, 2);
 
 // Analog Sensors
 AnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
@@ -81,11 +71,29 @@ AnalogSensor* sensorsArray[4] = { &differentialPressureAnalogSensor,
                                   &internalTemperatureAnalogSensor};
 AnalogSensors sensors(sensorsArray, 4);
 
-// Counters
-Counter frameCounter(FRAME_COUNTER_BASE_ADDRESS);
-Counter resetCounter(RESET_COUNTER_BASE_ADDRESS);
-Counter* countersArray[2] = { &frameCounter, &resetCounter};
-Counters counters(countersArray, 2);
+// RTC
+DS1302_RTC RTC(RTC_CE_PIN, RTC_IO_PIN, RTC_SCLK_PIN);
+
+// customFrameBuilder
+char customFrame[CUSTOM_FRAME_MAX_LENGTH];
+CustomFrameBuilder CUSTOM_FRAME_BUILDER(&counters, &sensors, &RTC, &nmeaGPS);
+
+// Kiwi Frame
+unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
+KiwiFrameBuilder KIWI_FRAME_BUILDER(&VOLTAGE_MONITOR, &sensors);
+
+
+
+// LEDS
+// Todo rename variables (lower case)
+Led Red_LED(RED_LED_PIN);
+Led Orange_LED(ORANGE_LED_PIN);
+Led Green_LED(GREEN_LED_PIN);
+Led Blue_LED(BLUE_LED_PIN);
+
+Led* ledArray[4] = {&Red_LED, &Orange_LED, &Green_LED, &Blue_LED};
+Leds All_Leds(ledArray, 4);
+
 
 /**
  * Initializes logging (SD).
@@ -187,7 +195,7 @@ void loop()
   Green_LED.quicklyMakeBlinkSeveralTimes(1);
 
   // kiwi frame building
-  buildKiwiFrame();
+  KIWI_FRAME_BUILDER.buildKiwiFrame(kiwiFrame);
 
   // kiwi frame transmission
   fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
@@ -208,7 +216,7 @@ void loop()
 
   Green_LED.quicklyMakeBlinkSeveralTimes(3);
   // custom frame building
-  buildCustomFrame(customFrame);
+  CUSTOM_FRAME_BUILDER.buildCustomFrame(customFrame);
 
   // custom frame debug
   SERIAL_DEBUG.print(customFrame);

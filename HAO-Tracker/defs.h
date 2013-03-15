@@ -36,14 +36,6 @@
 #define FRAME_COUNTER_BASE_ADDRESS 0x0000
 #define RESET_COUNTER_BASE_ADDRESS 0x0002
 
-extern GPS3D nmeaGPS;
-
-extern DS1302_RTC RTC;
-
-extern AnalogSensors sensors;
-
-extern Counters counters;
-
 #endif
 
 

@@ -15,13 +15,9 @@
  */
 #include <Arduino.h>
 #include <defs.h>
-#include <kiwiFrameBuilder_module.h>
-#include <AnalogSensor.h>
+#include <KiwiFrameBuilder.h>
 #include <AnalogSensors.h>
 #include <VoltageMonitor.h>
-
-// kiwi frame
-unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
 
 /**
  * Sets the content of a given kiwi frame channel field (fields 1 to 8), from an integer value supposed to be the
@@ -29,7 +25,7 @@ unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
  * @param fieldNumber the field number to set (in [1, 8])
  * @param analogReadValue the value to which the field has to be set
  */
-void setKiwiFrameChannelFieldFromAnalogReadValue(int fieldNumber, int analogReadValue)
+void KiwiFrameBuilder::setKiwiFrameChannelFieldFromAnalogReadValue(int fieldNumber, int analogReadValue)
 {
   if ((fieldNumber < 1) || (fieldNumber > 8)) return;
 
@@ -43,44 +39,52 @@ void setKiwiFrameChannelFieldFromAnalogReadValue(int fieldNumber, int analogRead
  * digital-to-analog conversion of an analog input (i.e. the return of a call to analogRead).
  * @param analogReadValue the value to which the field has to be set
  */
-void setKiwiFrameVoltageFieldFromAnalogReadValue(int analogReadValue)
+void KiwiFrameBuilder::setKiwiFrameVoltageFieldFromAnalogReadValue(int analogReadValue)
 {
-  kiwiFrame[9] = (unsigned char) (analogReadValue / 8);
-  if (kiwiFrame[9] == 0xFF)
-    kiwiFrame[9] = 0xFE;
+  this->kiwiFrame[9] = (unsigned char) (analogReadValue / 8);
+  if (this->kiwiFrame[9] == 0xFF)
+    this->kiwiFrame[9] = 0xFE;
 }
 
 /**
  * Computes and sets the kiwi frame checksum field (at offset KIWI_FRAME_LENGTH-1]
  * (all other fields are supposed to be set before a call to this function).
  */
-void computeKiwiFrameChecksum()
+void KiwiFrameBuilder::computeKiwiFrameChecksum()
 {
   unsigned char kiwiFrameChecksum;
   for (int cpt = 1; cpt < KIWI_FRAME_LENGTH - 1; cpt++)
-    kiwiFrameChecksum = (unsigned char) ((kiwiFrameChecksum + kiwiFrame[cpt]) % 256);
+    kiwiFrameChecksum = (unsigned char) ((kiwiFrameChecksum + this->kiwiFrame[cpt]) % 256);
 
   kiwiFrameChecksum = (unsigned char) (kiwiFrameChecksum / 2);
-  kiwiFrame[KIWI_FRAME_LENGTH-1] = kiwiFrameChecksum;
+  this->kiwiFrame[KIWI_FRAME_LENGTH-1] = kiwiFrameChecksum;
+}
+
+KiwiFrameBuilder::KiwiFrameBuilder(VoltageMonitor *voltageMonitor, AnalogSensors *sensors)
+{
+  this->voltageMonitor = voltageMonitor;
+  this->sensors = sensors;
 }
 
 /**
  * Builds kiwi frame (channel fields, voltage field, checksum) from values retrieved from sensors variables.
  */
-void buildKiwiFrame()
+void KiwiFrameBuilder::buildKiwiFrame(unsigned char *kiwiFrame)
 {
+  this->kiwiFrame = kiwiFrame;
+
   // start-of-frame
-  kiwiFrame[0] = 0xFF;
+  this->kiwiFrame[0] = 0xFF;
 
   for (int i=1;i<KIWI_FRAME_LENGTH;i++)
   {
-      kiwiFrame[i] = 0x00;
+      this->kiwiFrame[i] = 0x00;
   }
 
   // channels : analog sensors
-  for (int i=1;(i<sensors.getAmount())&&(i<KIWI_FRAME_CHANNELS_AMOUNT);i++)
+  for (int i=1;(i<this->sensors->getAmount())&&(i<KIWI_FRAME_CHANNELS_AMOUNT);i++)
   {
-      setKiwiFrameChannelFieldFromAnalogReadValue(1, sensors.read(i));
+      setKiwiFrameChannelFieldFromAnalogReadValue(1, this->sensors->read(i));
   }
 
   // voltage
@@ -89,3 +93,4 @@ void buildKiwiFrame()
   // checksum
   computeKiwiFrameChecksum();
 }
+
