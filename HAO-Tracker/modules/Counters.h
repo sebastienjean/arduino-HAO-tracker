@@ -13,36 +13,42 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DEFS_h
-#define DEF_h
 
-#include <GPS3D.h>
-#include <DS1302_RTC.h>
-#include <AnalogSensors.h>
-#include <Counters.h>
+#ifndef COUNTERS_h
+#define COUNTERS_h
 
-#define SERIAL_DEBUG Serial
+#include <Arduino.h>
+#include <Counter.h>
 
-#define SERIAL_NMEA_GPS_BAUDRATE 4800
+#define MAX_COUNTERS (E2END/2) +1
+class Counters
+{
+private:
 
-#define SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT 2000
+  Counter* counters[MAX_COUNTERS];
+  int countersAmount;
 
-#define SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT 2000
+public:
 
-#define LOG_FILE_PATH "data.txt"
+  Counters(Counter* counters[], int countersAmount);
 
-#define HAO_NAME "POKEBALL"
+  /**
+   * Reads a given counter value.
+   *
+   * @param counterNumber the number of the counter to read
+   * @return value of counter <tt>CounterNumber</tt> if it exists, -1 else
+   *
+   */
+  int read(int counterNumber);
 
-#define FRAME_COUNTER_BASE_ADDRESS 0x0000
-#define RESET_COUNTER_BASE_ADDRESS 0x0002
-
-extern GPS3D nmeaGPS;
-
-extern DS1302_RTC RTC;
-
-extern AnalogSensors sensors;
-
-extern Counters counters;
+  /**
+   * Returns the amount of counters
+   *
+   * @return the amount of counters
+   *
+   */
+  int getAmount(void);
+};
 
 #endif
 

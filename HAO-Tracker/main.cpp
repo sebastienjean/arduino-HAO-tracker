@@ -31,6 +31,8 @@
 #include <AnalogSensors.h>
 #include <Led.h>
 #include <Leds.h>
+#include <Counter.h>
+#include <Counters.h>
 #include <kiwiFrameBuilder_module.h>
 #include <customFrameBuilder_module.h>
 #include <Logger.h>
@@ -78,6 +80,12 @@ AnalogSensor* sensorsArray[4] = { &differentialPressureAnalogSensor,
                                   &externalTemperatureAnalogSensor,
                                   &internalTemperatureAnalogSensor};
 AnalogSensors sensors(sensorsArray, 4);
+
+// Counters
+Counter frameCounter(FRAME_COUNTER_BASE_ADDRESS);
+Counter resetCounter(RESET_COUNTER_BASE_ADDRESS);
+Counter* countersArray[4] = { &frameCounter, &resetCounter};
+Counters counters(countersArray, 2);
 
 /**
  * Initializes logging (SD).

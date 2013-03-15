@@ -13,36 +13,44 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DEFS_h
-#define DEF_h
 
-#include <GPS3D.h>
-#include <DS1302_RTC.h>
-#include <AnalogSensors.h>
-#include <Counters.h>
+#ifndef COUNTER_h
+#define COUNTER_h
 
-#define SERIAL_DEBUG Serial
+class Counter
+{
+private:
 
-#define SERIAL_NMEA_GPS_BAUDRATE 4800
+  int baseAddress;
 
-#define SERIAL_NMEA_GPS_READING_MILLIS_TIMEOUT 2000
+public:
 
-#define SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT 2000
+  Counter(int baseAddress);
 
-#define LOG_FILE_PATH "data.txt"
+  /**
+   * Reads counter value.
+   *
+   * @return counter value
+   *
+   */
+  int read(void);
 
-#define HAO_NAME "POKEBALL"
+  /**
+   * Sets counter value.
+   *
+   * @param value counter value
+   *
+   */
+  void set(int value);
 
-#define FRAME_COUNTER_BASE_ADDRESS 0x0000
-#define RESET_COUNTER_BASE_ADDRESS 0x0002
-
-extern GPS3D nmeaGPS;
-
-extern DS1302_RTC RTC;
-
-extern AnalogSensors sensors;
-
-extern Counters counters;
+  /**
+   * Increments counter value.
+   *
+   * @param value the increment value
+   *
+   */
+  void increment(int value);
+};
 
 #endif
 

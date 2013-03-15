@@ -74,6 +74,28 @@ char * appendHaoName(char *customFrame)
 }
 
 /**
+ * Internal function used to append counters to custom frame
+ *
+ * @param customFrame a pointer on an external buffer where to append counters
+ * @return a pointer to the external buffer where to add the next custom frame character
+ */
+char * appendCounters(char *customFrame)
+{
+  for (int i=1;i<=counters.getAmount();i++)
+    {
+        // append next counter value
+        itoa(counters.read(i), customFrame, 10);
+        customFrame += strlen(customFrame);
+
+        // separator (if not last)
+        if (i < counters.getAmount())
+        {
+          customFrame = appendFieldSeparatorChar(customFrame);
+        }
+    }
+  return customFrame;
+}
+/**
  * Internal function used to append system time (seconds since last reset) to custom frame
  *
  * @param customFrame a pointer on an external buffer where to append system time
@@ -217,6 +239,12 @@ void buildCustomFrame(char *customFrame)
 
   // HAO name
   customFrame = appendHaoName(customFrame);
+
+  // separator
+  customFrame = appendFieldSeparatorChar(customFrame);
+
+  // counters
+  customFrame = appendCounters(customFrame);
 
   // separator
   customFrame = appendFieldSeparatorChar(customFrame);
