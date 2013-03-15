@@ -157,14 +157,15 @@ void setup()
     Orange_LED.showStatus(true);
 
     if (deleteLogFileIfUserClaimsTo())
+    {
       SERIAL_DEBUG.println(F("SD Clear"));
+      All_Leds.quicklyMakeBlinkSeveralTimes(10);
+    }
   }
 
   Orange_LED.showStatus(LOGGER.logMessage("R", true));
 
   initGPS();
-
-  All_Leds.off();
 }
 
 /**
