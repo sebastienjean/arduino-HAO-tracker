@@ -17,39 +17,54 @@
 #ifndef LED_h
 #define LED_h
 
+/**
+ * This class allows to handle a LED, attached to a given IO pin.
+ */
 class Led
 {
 private:
 
+  /**
+   * IO pin to which the LED is attached.
+   */
   int pin;
 
 public:
 
+  /**
+   * Creates a LED attached to a given IO pin.
+   *
+   * @param pin IO pin to which the LED is attached
+   */
   Led(int pin);
 
   /**
    * Turns the LED on.
-   *
    */
-  void on(void);
+  void
+  on(void);
 
   /**
    * Turns the LED off.
-   *
    */
-  void off(void);
+  void
+  off(void);
 
   /**
-   * Displays status (OK/KO) using the LED
+   * Displays status (OK/KO = on/off) using the LED
+   *
    * @param status the status to display (OK/KO)
    */
-  void showStatus(boolean status);
+  void
+  showStatus(boolean status);
 
   /**
    * Blinks the LED at 5Hz a given number of times.
+   *
    * @param times the number of times the LED should blink
    */
-  void quicklyMakeBlinkSeveralTimes(int times);
+  void
+  quicklyMakeBlinkSeveralTimes(int times);
 
 };
 

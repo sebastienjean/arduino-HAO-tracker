@@ -15,53 +15,40 @@
  */
 #include <Arduino.h>
 
-#include <led.h>
+#include <Led.h>
 
+Led::Led(int pin)
+{
+  this->pin = pin;
+  pinMode(this->pin, OUTPUT);
+}
 
-  Led::Led(int pin)
-  {
-    this->pin = pin;
-    pinMode(this->pin, OUTPUT);
-  }
+void
+Led::on()
+{
+  digitalWrite(this->pin, HIGH);
+}
 
-  /**
-   * Turns the LED on.
-   *
-   */
-  void Led::on()
-  {
-    digitalWrite(this->pin, HIGH);
-  }
+void
+Led::off()
+{
+  digitalWrite(this->pin, LOW);
+}
 
-  /**
-   * Turns the LED off.
-   *
-   */
-  void Led::off()
-  {
-    digitalWrite(this->pin, LOW);
-  }
+void
+Led::showStatus(boolean status)
+{
+  digitalWrite(this->pin, status);
+}
 
-  /**
-   * Displays status (OK/KO) using the LED
-   * @param status the status to display (OK/KO)
-   */
-  void Led::showStatus(boolean status)
-  {
-    digitalWrite(this->pin, status);
-  }
-
-  /**
-   * Blinks the LED at 5Hz a given number of times.
-   * @param times the number of times the LED should blink
-   */
-  void Led::quicklyMakeBlinkSeveralTimes(int times)
-  {
-    for (int i=0;i<times;i++)
+void
+Led::quicklyMakeBlinkSeveralTimes(int times)
+{
+  for (int i = 0; i < times; i++)
     {
       this->on();
       delay(100);
       this->off();
       delay(100);
     }
-  }
+}

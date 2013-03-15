@@ -17,56 +17,46 @@
 
 #include <Leds.h>
 
-  Leds::Leds(Led* leds[], int ledsAmount)
-  {
-    for (int i=0;(i<ledsAmount)&&(i<MAX_LEDS);i++)
+Leds::Leds(Led* leds[], int ledsAmount)
+{
+  for (int i = 0; (i < ledsAmount) && (i < MAX_LEDS); i++)
     {
-        this->leds[i] = leds[i];
+      this->leds[i] = leds[i];
     }
-    if (ledsAmount > MAX_LEDS)
+  if (ledsAmount > MAX_LEDS)
     {
-        ledsAmount = MAX_LEDS;
+      ledsAmount = MAX_LEDS;
     }
-    this->ledsAmount = ledsAmount;
-  }
+  this->ledsAmount = ledsAmount;
+}
 
-  /**
-   * Turns alls LEDs on.
-   *
-   */
-  void Leds::on()
-  {
-    for (int i=0; i<this->ledsAmount;i++)
+void
+Leds::on()
+{
+  for (int i = 0; i < this->ledsAmount; i++)
     {
-        (this->leds[i])->on();
+      (this->leds[i])->on();
     }
-  }
+}
 
-  /**
-   * Turns alls LEDs off.
-   *
-   */
-  void Leds::off()
-  {
-    for (int i=0; i<this->ledsAmount;i++)
+void
+Leds::off()
+{
+  for (int i = 0; i < this->ledsAmount; i++)
     {
-        (this->leds[i])->off();
+      (this->leds[i])->off();
     }
-  }
+}
 
-  /**
-   * Blinks all LEDs at 5Hz a given number of times.
-   * @param times the number of times LEDs should blink
-   */
-  void Leds::quicklyMakeBlinkSeveralTimes(int times)
-  {
-    for (int i=0;i<times;i++)
+void
+Leds::quicklyMakeBlinkSeveralTimes(int times)
+{
+  for (int i = 0; i < times; i++)
     {
       this->on();
       delay(100);
       this->off();
       delay(100);
     }
-  }
-
+}
 

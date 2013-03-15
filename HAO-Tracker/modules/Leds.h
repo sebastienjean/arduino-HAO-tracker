@@ -18,36 +18,57 @@
 #define LEDS_h
 
 #include <Led.h>
+
+/**
+ * Maximum amount of LEDs
+ */
 #define MAX_LEDS 10
 
+/**
+ * This class wraps a set of LEDs.
+ */
 class Leds
 {
 private:
 
+  /**
+   * LEDs (pointers) contained in this set
+   */
   Led* leds[MAX_LEDS];
+
+  /**
+   * Number of LEDs in this set
+   */
   int ledsAmount;
 
 public:
 
+  /**
+   * Creates a new LEDs set containing existing LEDs
+   *
+   * @param leds an array containing LEDs to add to this set
+   * @param ledsAmount the number of LEDs to add from <tt>leds</tt>
+   */
   Leds(Led* leds[], int ledsAmount);
 
   /**
    * Turns alls LEDs on.
-   *
    */
-  void on(void);
+  void
+  on(void);
 
   /**
    * Turns alls LEDs off.
-   *
    */
-  void off(void);
+  void
+  off(void);
 
   /**
    * Blinks all LEDs at 5Hz a given number of times.
    * @param times the number of times LEDs should blink
    */
-  void quicklyMakeBlinkSeveralTimes(int times);
+  void
+  quicklyMakeBlinkSeveralTimes(int times);
 
 };
 
