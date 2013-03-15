@@ -21,13 +21,8 @@ AnalogSensor::AnalogSensor(int channel)
   this->channel = channel;
 }
 
-/**
- * Reads analog sensor value.
- *
- * @return analog sensor value
- *
- */
-int AnalogSensor::read(void)
+int
+AnalogSensor::read(void)
 {
   return analogRead(this->channel);
 }

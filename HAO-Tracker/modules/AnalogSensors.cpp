@@ -15,47 +15,35 @@
  */
 #include <Arduino.h>
 #include <pins_arduino.h>
-#include <pins.h>
-#include <defs.h>
 #include <AnalogSensors.h>
 #include <AnalogSensor.h>
 
-AnalogSensors::AnalogSensors(AnalogSensor* analogSensors[], int analogSensorsAmount)
+AnalogSensors::AnalogSensors(AnalogSensor* analogSensors[],
+    int analogSensorsAmount)
 {
-  for (int i=0;(i<analogSensorsAmount)&&(i<NUM_ANALOG_INPUTS);i++)
-  {
+  for (int i = 0; (i < analogSensorsAmount) && (i < NUM_ANALOG_INPUTS); i++)
+    {
       this->analogSensors[i] = analogSensors[i];
-  }
+    }
   if (analogSensorsAmount > NUM_ANALOG_INPUTS)
-  {
+    {
       analogSensorsAmount = NUM_ANALOG_INPUTS;
-  }
+    }
   this->analogSensorsAmount = analogSensorsAmount;
 }
 
-  /**
-   * Reads a given sensor value.
-   *
-   * @param sensorNumber the number of the sensor to read
-   * @return value of sensor <tt>sensorNumber</tt> if it exists, -1 else
-   *
-   */
-  int AnalogSensors::read(int sensorNumber)
-  {
-    if ((sensorNumber < 0)||(sensorNumber > getAmount()))
+int
+AnalogSensors::read(int sensorNumber)
+{
+  if ((sensorNumber < 0) || (sensorNumber > getAmount()))
     {
-        return -1;
+      return -1;
     }
-    return analogSensors[sensorNumber-1]->read();
-  }
+  return analogSensors[sensorNumber - 1]->read();
+}
 
-  /**
-   * Returns the amount of analog sensors
-   *
-   * @return the amount of analog sensors
-   *
-   */
-  int AnalogSensors::getAmount()
-  {
-    return this->analogSensorsAmount;
-  }
+int
+AnalogSensors::getAmount()
+{
+  return this->analogSensorsAmount;
+}

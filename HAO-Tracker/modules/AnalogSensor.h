@@ -17,26 +17,36 @@
 #ifndef ANALOG_SENSOR_h
 #define ANALOG_SENSOR_h
 
+/**
+ * This class allows to handle an analog sensor, attached to a given analog channel (A0 ...)
+ */
 class AnalogSensor
 {
 private:
 
+  /**
+   * Analog channel to which the sensor is attached.
+   */
   int channel;
 
 public:
 
+  /**
+   * Creates a sensor attached to a given channel.
+   *
+   * @param channel analog channel to which the sensor is attached
+   */
   AnalogSensor(int channel);
 
   /**
    * Reads analog sensor value.
    *
    * @return analog sensor value
-   *
    */
-  int read(void);
+  int
+  read(void);
 
 };
 
 #endif
-
 
