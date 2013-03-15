@@ -102,13 +102,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Nano328P/SD.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino-ds1302/Nano328P/DS1302.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SoftwareSerial/Nano328P/SoftwareSerial.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/analogSensors_module.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/leds_module.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/kiwiFrameBuilder_module.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/DS1302_RTC.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/customFrameBuilder_module.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/logging_module.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Nano328P/modules/VoltageMonitor.o}&quot;"/>
 								</option>
 								<inputType id="de.innot.avreclipse.tool.cpplinker.input.1424867908" name="OBJ Files" superClass="de.innot.avreclipse.tool.cpplinker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -231,13 +224,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/SdFile.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/SdVolume.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino-ds1302/Mega2560/DS1302.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/VoltageMonitor.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/analogSensors_module.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/leds_module.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/kiwiFrameBuilder_module.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/customFrameBuilder_module.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/logging_module.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Mega2560/modules/DS1302_RTC.o}&quot;"/>
 								</option>
 								<inputType id="de.innot.avreclipse.tool.cpplinker.input.158647553" name="OBJ Files" superClass="de.innot.avreclipse.tool.cpplinker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
