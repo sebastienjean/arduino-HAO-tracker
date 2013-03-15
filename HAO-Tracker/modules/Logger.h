@@ -14,22 +14,34 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Initializes logging (SD).
- * @return logging initialization success status
- */
-boolean initLogging(void);
+#ifndef LOGGER_h
+#define LOGGER_h
 
-/**
- * Logs a message.
- * @param message the string to be logged
- * @param newLine line termination characters appending (if true)
- * @return logging success status
- */
-boolean logMessage(char *message, boolean newLine);
+class Logger
+{
+private:
 
-/**
- * Waits one second for user to decide if log file has to be deleted, deletes it if needed.
- * @return log file has been deletion status
- */
-boolean deleteLogFileIfUserClaimsTo(void);
+  char *filePath;
+
+public:
+
+  boolean begin(char *path, int sd_CE_Pin);
+
+  /**
+   * Logs a message.
+   * @param message the string to be logged
+   * @param newLine line termination characters appending (if true)
+   * @return logging success status
+   */
+  boolean logMessage(char *message, boolean newLine);
+
+  /**
+   * Erase log file content
+   * @return log file deletion status
+   */
+  boolean reset(void);
+};
+
+extern Logger LOGGER;
+#endif
+

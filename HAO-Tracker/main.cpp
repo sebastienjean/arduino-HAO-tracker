@@ -14,16 +14,16 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Arduino.h>
-#include <SD.h>
-#include <GPS.h>
 #include <pins.h>
 #include <defs.h>
+
+// libs
 #if defined(GPS_SERIAL_RX_PIN)
 #include <SoftwareSerial.h>
 #endif
-
-// libs
+#include <SD.h>
 #include <FSK600BaudTA900TB1500Mod.h>
+#include <GPS.h>
 #include <GPS3D.h>
 
 // modules
@@ -32,7 +32,7 @@
 #include <Leds.h>
 #include <kiwiFrameBuilder_module.h>
 #include <customFrameBuilder_module.h>
-#include <logging_module.h>
+#include <Logger.h>
 #include <DS1302_RTC.h>
 
 
@@ -65,6 +65,31 @@ Led Blue_LED(BLUE_LED_PIN);
 
 Led* ledArray[4] = {&Red_LED, &Orange_LED, &Green_LED, &Blue_LED};
 Leds All_Leds(ledArray, 4);
+
+/**
+ * Initializes logging (SD).
+ * @return logging initialization success status
+ */
+boolean initLogging()
+{
+  LOGGER.begin(LOG_FILE_PATH, SD_CHIP_SELECT_PIN);
+}
+
+/**
+ * Waits one second for user to decide if log file has to be deleted, deletes it if needed.
+ * @return log file has been deletion status
+ */
+boolean deleteLogFileIfUserClaimsTo()
+{
+  delay(1000);
+
+  if (digitalRead(USER_BUTTON_PIN) == LOW)
+  {
+      return LOGGER.reset();
+  }
+  return false;
+}
+
 /**
  * Initializes User switch.
  */
@@ -124,7 +149,7 @@ void setup()
       SERIAL_DEBUG.println(F("SD Clear"));
   }
 
-  Orange_LED.showStatus(logMessage("R", true));
+  Orange_LED.showStatus(LOGGER.logMessage("R", true));
 
   initGPS();
 
@@ -153,8 +178,8 @@ void loop()
   Blue_LED.showStatus(nmeaGPS.getFix());
 
   // NMEA sentences logging
-  logMessage(nmeaRmcSentenceBuffer, false);
-  logMessage(nmeaGgaSentenceBuffer, false);
+  LOGGER.logMessage(nmeaRmcSentenceBuffer, false);
+  LOGGER.logMessage(nmeaGgaSentenceBuffer, false);
 
   // NMEA sentences transmission
   fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
@@ -168,7 +193,7 @@ void loop()
   SERIAL_DEBUG.print(customFrame);
 
   // custom frame logging
-  logMessage(customFrame, false);
+  LOGGER.logMessage(customFrame, false);
 
   // custom frame transmission
   fskModulator.modulateBytes(customFrame, strlen(customFrame));
