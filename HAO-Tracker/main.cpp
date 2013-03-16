@@ -14,19 +14,21 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Arduino.h>
+
+// Globals includes
 #include <pins.h>
 #include <defs.h>
 
-// libs
-#if defined(GPS_SERIAL_RX_PIN)
-#include <SoftwareSerial.h>
-#endif
+// Libs includes
 #include <SD.h>
 #include <FSK600BaudTA900TB1500Mod.h>
 #include <GPS.h>
 #include <GPS3D.h>
+#if defined(GPS_SERIAL_RX_PIN)
+#include <SoftwareSerial.h>
+#endif
 
-// modules
+// Modules includes
 #include <AnalogSensor.h>
 #include <AnalogSensors.h>
 #include <Led.h>
@@ -38,109 +40,138 @@
 #include <Logger.h>
 #include <DS1302_RTC.h>
 
-
-// Software serial link used by GPS
+// -----------------------
+// GPS related definitions
+// -----------------------
 #if defined(GPS_SERIAL_RX_PIN)
 SoftwareSerial serialNmeaGPSPort(GPS_SERIAL_RX_PIN, GPS_SERIAL_TX_PIN);
 #else
 #define serialNmeaGPSPort Serial1
 #endif
 
-// GPS
 GPS3D nmeaGPS(&serialNmeaGPSPort, &SERIAL_DEBUG);
 char nmeaRmcSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
 char nmeaGgaSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
 
-// FSK modulator
+// ---------------------------------
+// FSK modulator related definitions
+// ---------------------------------
 FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX_PIN);
 
-// Counters
+// ----------------------------
+// Counters related definitions
+// ----------------------------
 Counter frameCounter(FRAME_COUNTER_BASE_ADDRESS);
 Counter resetCounter(RESET_COUNTER_BASE_ADDRESS);
-Counter* countersArray[2] = { &frameCounter, &resetCounter};
+Counter* countersArray[2] =
+  { &frameCounter, &resetCounter };
 Counters counters(countersArray, 2);
 
-// Analog Sensors
-AnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
-AnalogSensor absolutePressureAnalogSensor(ABSOLUTE_PRESSURE_ANALOG_SENSOR_CHANNEL);
-AnalogSensor externalTemperatureAnalogSensor(EXTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
-AnalogSensor internalTemperatureAnalogSensor(INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
-AnalogSensor* sensorsArray[4] = { &differentialPressureAnalogSensor,
-                                  &absolutePressureAnalogSensor,
-                                  &externalTemperatureAnalogSensor,
-                                  &internalTemperatureAnalogSensor};
+// ----------------------------------
+// Analog sensors related definitions
+// ----------------------------------
+// main sensors
+AnalogSensor differentialPressureAnalogSensor(
+    DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
+AnalogSensor absolutePressureAnalogSensor(
+    ABSOLUTE_PRESSURE_ANALOG_SENSOR_CHANNEL);
+AnalogSensor externalTemperatureAnalogSensor(
+    EXTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+AnalogSensor internalTemperatureAnalogSensor(
+    INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+AnalogSensor* sensorsArray[4] =
+  { &differentialPressureAnalogSensor, &absolutePressureAnalogSensor,
+      &externalTemperatureAnalogSensor, &internalTemperatureAnalogSensor };
 AnalogSensors sensors(sensorsArray, 4);
 
-// Voltage monitor
+// voltage sensor
 // N.B. this analog sensor is handled seperately from the others since kiwi frame does
 AnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 
-// RTC
+// -----------------------------------
+// Real Time Clock related definitions
+// -----------------------------------
 DS1302_RTC rtc(RTC_CE_PIN, RTC_IO_PIN, RTC_SCLK_PIN);
 
-// customFrameBuilder
+// --------------------------------
+// Custom frame related definitions
+// --------------------------------
 char customFrame[CUSTOM_FRAME_MAX_LENGTH];
-CustomFrameBuilder customFrameBuilder(&counters, &sensors, &voltage, &rtc, &nmeaGPS);
+CustomFrameBuilder customFrameBuilder(&counters, &sensors, &voltage, &rtc,
+    &nmeaGPS);
 
-// Kiwi Frame
+// ------------------------------
+// KIWI frame related definitions
+// ------------------------------
 unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
 KiwiFrameBuilder kiwiFrameBuilder(&sensors, &voltage);
 
-// LEDS
-// Todo rename variables (lower case)
+// ------------------------
+// LEDs related definitions
+// ------------------------
 Led red_LED(RED_LED_PIN);
 Led orange_LED(ORANGE_LED_PIN);
 Led green_LED(GREEN_LED_PIN);
 Led blue_LED(BLUE_LED_PIN);
 
-Led* ledArray[4] = {&red_LED, &orange_LED, &green_LED, &blue_LED};
+Led* ledArray[4] =
+  { &red_LED, &orange_LED, &green_LED, &blue_LED };
 Leds leds(ledArray, 4);
 
 /**
- * Initializes logging (SD).
+ * Internal function used to initialize logging (SD).
+ *
  * @return logging initialization success status
  */
-boolean initLogging()
+boolean
+initLogging()
 {
   return LOGGER.begin(LOG_FILE_PATH, SD_CHIP_SELECT_PIN);
 }
 
 /**
- * Waits one second for user to decide if log file has to be deleted, deletes it if needed.
+ * Internal function used to clear log file.
+ * Waiting one second for user to decide if log file has to be deleted, deletes it if needed.
+ *
  * @return log file has been deletion status
  */
-boolean deleteLogFileIfUserClaimsTo()
+boolean
+deleteLogFileIfUserClaimsTo()
 {
   delay(1000);
 
   if (digitalRead(USER_BUTTON_PIN) == LOW)
-  {
+    {
       return LOGGER.reset();
-  }
+    }
   return false;
 }
 
 /**
- * Initializes User switch.
+ * Internal function used to initialize user switch
  */
-void initUserButton()
+void
+initUserButton()
 {
   pinMode(USER_BUTTON_PIN, INPUT);
   digitalWrite(USER_BUTTON_PIN, HIGH);
 }
 
 /**
- * Initializes serial debug communication.
+ * Internal function used to initialize debug
  */
-void initSerialDebug()
+void
+initDebugSerial()
 {
+  // TODO declare baudrate in defs.h
   SERIAL_DEBUG.begin(600);
 }
 
 /**
- * Initializes GPS.
+ * Internal function used to initialize GPS serial
  */
-void initGPS()
+void
+initGpsSerial()
 {
   // GPS on software serial at 4800 Baud
   serialNmeaGPSPort.begin(SERIAL_NMEA_GPS_BAUDRATE);
@@ -149,7 +180,8 @@ void initGPS()
 /**
  * Arduino's setup function, called once at startup, after init
  */
-void setup()
+void
+setup()
 {
   leds.on();
   delay(1000);
@@ -157,39 +189,40 @@ void setup()
 
   initUserButton();
 
-  initSerialDebug();
+  initDebugSerial();
 
   SERIAL_DEBUG.println(F("R"));
 
   SERIAL_DEBUG.print(F("SD Init..."));
 
   if (!initLogging())
-  {
-    SERIAL_DEBUG.println(F("KO"));
-    orange_LED.showStatus(false);
-  }
-  else
-  {
-    SERIAL_DEBUG.println(F("OK"));
-    orange_LED.showStatus(true);
-
-    if (deleteLogFileIfUserClaimsTo())
     {
-      SERIAL_DEBUG.println(F("SD Clear"));
-      leds.quicklyMakeBlinkSeveralTimes(10);
-      orange_LED.showStatus(true);
+      SERIAL_DEBUG.println(F("KO"));
+      orange_LED.showStatus(false);
     }
-  }
+  else
+    {
+      SERIAL_DEBUG.println(F("OK"));
+      orange_LED.showStatus(true);
+
+      if (deleteLogFileIfUserClaimsTo())
+        {
+          SERIAL_DEBUG.println(F("SD Clear"));
+          leds.quicklyMakeBlinkSeveralTimes(10);
+          orange_LED.showStatus(true);
+        }
+    }
 
   orange_LED.showStatus(LOGGER.logMessage("R", true));
 
-  initGPS();
+  initGpsSerial();
 }
 
 /**
  * Arduino's loop function, called in loop (incredible, isn't it ?)
  */
-void loop()
+void
+loop()
 {
   // show loop start sequence
   red_LED.quicklyMakeBlinkSeveralTimes(1);
@@ -212,8 +245,10 @@ void loop()
   LOGGER.logMessage(nmeaGgaSentenceBuffer, false);
 
   // NMEA sentences transmission
-  fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
-  fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
+  fskModulator.modulateBytes(nmeaRmcSentenceBuffer,
+      strlen(nmeaRmcSentenceBuffer));
+  fskModulator.modulateBytes(nmeaGgaSentenceBuffer,
+      strlen(nmeaRmcSentenceBuffer));
 
   green_LED.quicklyMakeBlinkSeveralTimes(3);
   // custom frame building
@@ -236,7 +271,8 @@ void loop()
  * Application's main (what else to say?)
  * @return (never)
  */
-int main(void)
+int
+main(void)
 {
   init();
 
