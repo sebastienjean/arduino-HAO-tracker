@@ -15,202 +15,172 @@
  */
 #include <Arduino.h>
 #include <stdlib.h>
+
 #include <defs.h>
+#include <CustomFrameBuilder.h>
+
 #include <GPS2D.h>
 #include <GPS3D.h>
-
-#include <CustomFrameBuilder.h>
 #include <AnalogSensor.h>
 #include <AnalogSensors.h>
 #include <Counters.h>
 #include <DS1302_RTC.h>
 
-/**
- * Internal function used to append start-of-frame char to custom frame
- *
- * @param customFrame a pointer on an external buffer where to append the start-of-frame character
- */
-void CustomFrameBuilder::appendStartOfFrameChar()
+void
+CustomFrameBuilder::appendStartOfFrameChar()
 {
   this->whereToAppend[0] = CUSTOM_FRAME_START_OF_FRAME_CHAR;
   this->whereToAppend++;
 }
 
-/**
- * Internal function used to append field separator char to custom frame
- *
- */
-void CustomFrameBuilder::appendFieldSeparatorChar()
+void
+CustomFrameBuilder::appendFieldSeparatorChar()
 {
   this->whereToAppend++[0] = CUSTOM_FRAME_FIELD_SEPARATOR_CHAR;
 }
 
-/**
- * Internal function used to append end-of-frame string to custom frame
- *
- */
-void CustomFrameBuilder::appendEndOfFrameString()
+void
+CustomFrameBuilder::appendEndOfFrameString()
 {
   strcpy(this->whereToAppend, CUSTOM_FRAME_END_OF_FRAME_STRING);
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
-/**
- * Internal function used to append HAO name to custom frame
- *
- */
-void CustomFrameBuilder::appendHaoName()
+void
+CustomFrameBuilder::appendHaoName()
 {
   strcpy(this->whereToAppend, HAO_NAME);
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
-/**
- * Internal function used to append counters to custom frame
- *
- */
-void CustomFrameBuilder::appendCounters()
+void
+CustomFrameBuilder::appendCounters()
 {
-  for (int i=1;i<=this->counters->getAmount();i++)
+  for (int i = 1; i <= this->counters->getAmount(); i++)
     {
-        // append next counter value
-        itoa(this->counters->read(i), this->whereToAppend, 10);
-        this->whereToAppend += strlen(this->whereToAppend);
+      // append next counter value
+      itoa(this->counters->read(i), this->whereToAppend, 10);
+      this->whereToAppend += strlen(this->whereToAppend);
 
-        // separator (if not last)
-        if (i < this->counters->getAmount())
+      // separator (if not last)
+      if (i < this->counters->getAmount())
         {
           this->appendFieldSeparatorChar();
         }
     }
 }
 
-/**
- * Internal function used to append system time (seconds since last reset) to custom frame
- *
- */
-void CustomFrameBuilder::appendSystemTime()
+void
+CustomFrameBuilder::appendSystemTime()
 {
   // seconds elapsed since last reset, as a decimal coded ASCII string
   itoa(millis() / 1000, this->whereToAppend, 10);
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
-/**
- * Internal function used to append RTC time to custom frame
- *
- */
-void CustomFrameBuilder::appendRtcTime()
+void
+CustomFrameBuilder::appendRtcTime()
 {
   this->rtc->getRtcTimeString(this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
-/**
- * Internal function used to append analog sensor values to custom frame
- *
- */
-void CustomFrameBuilder::appendAnalogSensorValues()
+void
+CustomFrameBuilder::appendAnalogSensorValues()
 {
-  for (int i=1;i<=this->sensors->getAmount();i++)
-  {
+  for (int i = 1; i <= this->sensors->getAmount(); i++)
+    {
       // append next sensor value
       itoa(this->sensors->read(i), this->whereToAppend, 10);
       this->whereToAppend += strlen(this->whereToAppend);
 
       // separator (if not last)
       if (i < this->sensors->getAmount())
-      {
-       this->appendFieldSeparatorChar();
-      }
-  }
+        {
+          this->appendFieldSeparatorChar();
+        }
+    }
 }
 
-/**
- * Internal function used to append analog sensor values to custom frame
- *
- */
-void CustomFrameBuilder::appendVoltage()
+void
+CustomFrameBuilder::appendVoltage()
 {
   itoa(this->voltage->read(), this->whereToAppend, 10);
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
-/**
- * Internal function used to append positioning data to custom frame
- *
- */
-void CustomFrameBuilder::appendPositioningData()
+void
+CustomFrameBuilder::appendPositioningData()
 {
   // time of fix
-  strncpy(this->whereToAppend, this->gps->getTimeOfFix(),6);
+  strncpy(this->whereToAppend, this->gps->getTimeOfFix(), 6);
   this->whereToAppend += 6;
 
   // separator
- this->appendFieldSeparatorChar();
+  this->appendFieldSeparatorChar();
 
   // fix
   if (this->gps->getFix())
-  {
-      this->whereToAppend++[0]='A';
-  }
+    {
+      this->whereToAppend++[0] = 'A';
+    }
   else
-  {
-      this->whereToAppend++[0]='V';
-  }
+    {
+      this->whereToAppend++[0] = 'V';
+    }
 
   // separator
   this->appendFieldSeparatorChar();
 
   // longitude
-  dtostrf(this->gps->getLongitude(),2,3,this->whereToAppend);
+  dtostrf(this->gps->getLongitude(), 2, 3, this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 
   // separator
   this->appendFieldSeparatorChar();
 
   // latitude
-  dtostrf(this->gps->getLatitude(),2,3,this->whereToAppend);
+  dtostrf(this->gps->getLatitude(), 2, 3, this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 
   // separator
   this->appendFieldSeparatorChar();
 
   // altitude
-  dtostrf(this->gps->getAltitude(),2,1,this->whereToAppend);
+  dtostrf(this->gps->getAltitude(), 2, 1, this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 
   // separator
   this->appendFieldSeparatorChar();
 
   // speed
-  dtostrf(this->gps->getSpeedOverGround(),2,1,this->whereToAppend);
+  dtostrf(this->gps->getSpeedOverGround(), 2, 1, this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 
   // separator
   this->appendFieldSeparatorChar();
 
   // course
-  dtostrf(this->gps->getCourseOverGround(),2,1,this->whereToAppend);
+  dtostrf(this->gps->getCourseOverGround(), 2, 1, this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 
   // separator
   this->appendFieldSeparatorChar();
 
   // satellites in use
-  itoa(this->gps->getSatellitesInUse(),this->whereToAppend,10);
+  itoa(this->gps->getSatellitesInUse(), this->whereToAppend, 10);
   this->whereToAppend += strlen(this->whereToAppend);
 
   // separator
   this->appendFieldSeparatorChar();
 
   // HDOP
-  dtostrf(this->gps->getHDOP(),2,1,this->whereToAppend);
+  dtostrf(this->gps->getHDOP(), 2, 1, this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
-
-CustomFrameBuilder::CustomFrameBuilder(Counters *counters, AnalogSensors *sensors, AnalogSensor *voltage, DS1302_RTC *rtc, GPS3D *gps)
+CustomFrameBuilder::CustomFrameBuilder(Counters *counters,
+    AnalogSensors *sensors, AnalogSensor *voltage, DS1302_RTC *rtc, GPS3D *gps)
 {
   this->counters = counters;
   this->rtc = rtc;
@@ -219,10 +189,8 @@ CustomFrameBuilder::CustomFrameBuilder(Counters *counters, AnalogSensors *sensor
   this->voltage = voltage;
 }
 
-/**
- * Builds custom frame (time, location, sensor data, ...)
- */
-void CustomFrameBuilder::buildCustomFrame(char *customFrame)
+void
+CustomFrameBuilder::buildCustomFrame(char *customFrame)
 {
   this->whereToAppend = customFrame;
 

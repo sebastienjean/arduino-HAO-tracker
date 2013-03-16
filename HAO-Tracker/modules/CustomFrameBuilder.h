@@ -19,93 +19,152 @@
 
 #include <Counters.h>
 #include <DS1302_RTC.h>
+#include <AnalogSensor.h>
 #include <AnalogSensors.h>
 #include <GPS3D.h>
 
+/**
+ * Maximum length of custom frame
+ */
 #define CUSTOM_FRAME_MAX_LENGTH 150
 
+/**
+ * Custom frame field separator character
+ */
 #define CUSTOM_FRAME_FIELD_SEPARATOR_CHAR ','
+
+/**
+ * Custom frame start-of-frame character
+ */
 
 #define CUSTOM_FRAME_START_OF_FRAME_CHAR '#'
 
+/**
+ * Custom frame end-of-frame string
+ */
+
 #define CUSTOM_FRAME_END_OF_FRAME_STRING "\r\n"
 
-
+/**
+ * This class allows to build custom frame to be sent by the HAO, retrieving data from sensors, RTC, GPS, ...
+ */
 class CustomFrameBuilder
 {
-private :
+private:
 
+  /**
+   * Internal pointer used to maintain insertion point of next character in string when building it
+   */
   char *whereToAppend;
 
+  /**
+   * Pointer to counters
+   */
   Counters *counters;
 
+  /**
+   * Pointer to Real Time Clock
+   */
   DS1302_RTC *rtc;
 
+  /**
+   * Pointer to sensors
+   */
   AnalogSensors *sensors;
 
+  /**
+   * Pointer to voltage sensor
+   */
   AnalogSensor *voltage;
 
+  /**
+   * Pointer to GPS
+   */
   GPS3D *gps;
 
-  void appendStartOfFrameChar(void);
+  /**
+   * Internal function used to append start-of-frame char to custom frame
+   *
+   */
+  void
+  appendStartOfFrameChar(void);
 
   /**
    * Internal function used to append field separator char to custom frame
    *
    */
-  void appendFieldSeparatorChar(void);
+  void
+  appendFieldSeparatorChar(void);
 
   /**
    * Internal function used to append end-of-frame string to custom frame
    *
    */
-  void appendEndOfFrameString(void);
+  void
+  appendEndOfFrameString(void);
 
   /**
    * Internal function used to append HAO name to custom frame
    *
    */
-  void appendHaoName(void);
+  void
+  appendHaoName(void);
 
   /**
    * Internal function used to append counters to custom frame
    *
    */
-  void appendCounters(void);
+  void
+  appendCounters(void);
 
   /**
    * Internal function used to append system time (seconds since last reset) to custom frame
    *
    */
-   void appendSystemTime(void);
+  void
+  appendSystemTime(void);
 
   /**
    * Internal function used to append RTC time to custom frame
    *
    */
-  void appendRtcTime(void);
+  void
+  appendRtcTime(void);
 
   /**
    * Internal function used to append analog sensor values to custom frame
    *
    */
-  void appendAnalogSensorValues(void);
+  void
+  appendAnalogSensorValues(void);
 
   /**
-   * Internal function used to append analog sensor values to custom frame
+   * Internal function used to append voltage value to custom frame
    *
    */
-  void appendVoltage(void);
+  void
+  appendVoltage(void);
 
   /**
    * Internal function used to append positioning data to custom frame
    *
    */
-  void appendPositioningData(void);
+  void
+  appendPositioningData(void);
 
-  public:
+public:
 
-  CustomFrameBuilder(Counters *counters, AnalogSensors *sensors, AnalogSensor *voltage, DS1302_RTC *rtc, GPS3D *gps);
+  /**
+   * Creates a new frame builder retrieving data from given providers
+   *
+   * @param counters counter data provider
+   * @param sensors analog sensor data provider
+   * @param voltage voltage data provider
+   * @param rtc timing data provider
+   * @param gps positioning data provider
+   */
+  CustomFrameBuilder(Counters *counters, AnalogSensors *sensors,
+      AnalogSensor *voltage, DS1302_RTC *rtc, GPS3D *gps);
 
   /**
    * Builds custom frame (time, location, sensor data, ...)
@@ -114,10 +173,9 @@ private :
    * to store custom frame bytes
    *
    */
-  void buildCustomFrame(char *customFrame);
+  void
+  buildCustomFrame(char *customFrame);
 };
 
 #endif
-
-
 
