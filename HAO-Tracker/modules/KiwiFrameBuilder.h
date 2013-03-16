@@ -23,47 +23,70 @@
 #define KIWI_FRAME_LENGTH 11
 #define KIWI_FRAME_CHANNELS_AMOUNT 8
 
+/**
+ * This class allows to build KIWI (CNES/Planete-Sciences legacy format) frame to be sent by the HAO, retrieving data from sensors, RTC, GPS, ...
+ */
 class KiwiFrameBuilder
 {
 private:
 
+  /**
+   * Internal pointer on kiwi frame buffer used across several internal functions
+   */
   unsigned char *kiwiFrame;
 
+  /**
+   * Pointer to sensors
+   */
   AnalogSensors *sensors;
 
+  /**
+   * Pointer to voltage sensor
+   */
   AnalogSensor *voltage;
 
   /**
-   * Sets the content of a given kiwi frame channel field (fields 1 to 8), from an integer value supposed to be the
-   * digital-to-analog conversion of an analog input (i.e. the return of a call to analogRead).
+   * Sets the content of a given kiwi frame channel field (fields 1 to 8), from an analog sensor value
+   *
    * @param fieldNumber the field number to set (in [1, 8])
-   * @param analogReadValue the value to which the field has to be set
+   * @param value sensor value
    */
-  void setKiwiFrameChannelFieldFromAnalogReadValue(int fieldNumber, int analogReadValue);
+  void
+  setKiwiFrameChannelField(int fieldNumber, int value);
+
   /**
-   * Sets the content of a the kiwi frame voltage field (field 9), from an int value supposed to be the
-   * digital-to-analog conversion of an analog input (i.e. the return of a call to analogRead).
-   * @param analogReadValue the value to which the field has to be set
+   * Sets the content of a the kiwi frame voltage field (field 9), from a voltage sensor value
+   *
+   * @param value voltage sensor value
    */
-  void setKiwiFrameVoltageFieldFromAnalogReadValue(int analogReadValue);
+  void
+  setKiwiFrameVoltageField(int value);
 
   /**
    * Computes and sets the kiwi frame checksum field (at offset KIWI_FRAME_LENGTH-1]
    * (all other fields are supposed to be set before a call to this function).
    */
-  void computeKiwiFrameChecksum();
+  void
+  computeKiwiFrameChecksum();
 
-  public:
+public:
 
+  /**
+   * Creates a new kiwi frame builder retrieving data from given providers.
+   *
+   * @param sensors analog sensor data provider
+   * @param voltage voltage data provider
+   */
   KiwiFrameBuilder(AnalogSensors *sensors, AnalogSensor *voltage);
 
   /**
-   * Builds kiwi frame (channel fields, voltage field, checksum) from values retrieved from sensors variables.
+   * Builds kiwi frame (channel fields, voltage field, checksum) from values retrieved from data providers.
+   * @param kiwiFrame an external buffer of at least <tt>KIWI_FRAME_LENGTH</tt> bytes,
+   * to store kiwi frame bytes
    */
-  void buildKiwiFrame(unsigned char *kiwiFrame);
+  void
+  buildKiwiFrame(unsigned char *kiwiFrame);
 };
 
 #endif
-
-
 
