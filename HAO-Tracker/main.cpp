@@ -163,8 +163,7 @@ initUserButton()
 void
 initDebugSerial()
 {
-  // TODO declare baudrate in defs.h
-  SERIAL_DEBUG.begin(600);
+  SERIAL_DEBUG.begin(SERIAL_DEBUG_BAUDRATE);
 }
 
 /**
@@ -173,7 +172,6 @@ initDebugSerial()
 void
 initGpsSerial()
 {
-  // GPS on software serial at 4800 Baud
   serialNmeaGPSPort.begin(SERIAL_NMEA_GPS_BAUDRATE);
 }
 
