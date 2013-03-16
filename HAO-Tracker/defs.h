@@ -16,11 +16,6 @@
 #ifndef DEFS_h
 #define DEFS_h
 
-#include <GPS3D.h>
-#include <DS1302_RTC.h>
-#include <AnalogSensors.h>
-#include <Counters.h>
-
 /**
  * Serial used for debug
  */
