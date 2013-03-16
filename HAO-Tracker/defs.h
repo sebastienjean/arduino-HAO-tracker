@@ -14,7 +14,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef DEFS_h
-#define DEF_h
+#define DEFS_h
 
 #include <GPS3D.h>
 #include <DS1302_RTC.h>
