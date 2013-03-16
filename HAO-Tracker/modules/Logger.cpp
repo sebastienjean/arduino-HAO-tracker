@@ -14,31 +14,26 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Arduino.h>
-#include <pins.h>
 #include <SD.h>
 
 #include <Logger.h>
 
 // log File
-  char * filePath;
+char * filePath;
 
+boolean
+Logger::begin(char * filePath, int sd_CS_Pin)
+{
+  this->filePath = filePath;
+  pinMode(sd_CS_Pin, OUTPUT);
+  return SD.begin(sd_CS_Pin);
+}
 
-  boolean Logger::begin(char * filePath, int sd_CS_Pin)
-  {
-    this->filePath = filePath;
-    pinMode(SD_CARD_CHIP_SELECT_PIN, OUTPUT);
-    return SD.begin(SD_CARD_CHIP_SELECT_PIN);
-  }
-  /**
-   * Logs a message.
-   * @param message the string to be logged
-   * @param newLine line termination characters appending (if true)
-   * @return logging success status
-   */
-  boolean Logger::logMessage(char *message, boolean newLine)
-  {
-    File logFile = SD.open(this->filePath, FILE_WRITE);
-    if (logFile)
+boolean
+Logger::logMessage(char *message, boolean newLine)
+{
+  File logFile = SD.open(this->filePath, FILE_WRITE);
+  if (logFile)
     {
       if (newLine)
         logFile.println(message);
@@ -47,15 +42,13 @@
       logFile.close();
       return true;
     }
-    return false;
-  }
-  /**
-   * Erase log file content
-   * @return log file deletion status
-   */
-  boolean Logger::reset(void)
-  {
-    return SD.remove(this->filePath);
-  }
+  return false;
+}
 
-  Logger LOGGER;
+boolean
+Logger::reset(void)
+{
+  return SD.remove(this->filePath);
+}
+
+Logger LOGGER;
