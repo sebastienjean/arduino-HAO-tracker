@@ -22,7 +22,6 @@
 #include <CustomFrameBuilder.h>
 #include <AnalogSensor.h>
 #include <AnalogSensors.h>
-#include <VoltageMonitor.h>
 #include <Counters.h>
 #include <DS1302_RTC.h>
 
@@ -133,7 +132,7 @@ void CustomFrameBuilder::appendAnalogSensorValues()
  */
 void CustomFrameBuilder::appendVoltage()
 {
-  itoa(VOLTAGE_MONITOR.readVoltage(), this->whereToAppend, 10);
+  itoa(this->voltage->read(), this->whereToAppend, 10);
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
@@ -211,12 +210,13 @@ void CustomFrameBuilder::appendPositioningData()
 }
 
 
-CustomFrameBuilder::CustomFrameBuilder(Counters *counters, AnalogSensors *sensors, DS1302_RTC *rtc, GPS3D *gps)
+CustomFrameBuilder::CustomFrameBuilder(Counters *counters, AnalogSensors *sensors, AnalogSensor *voltage, DS1302_RTC *rtc, GPS3D *gps)
 {
   this->counters = counters;
   this->rtc = rtc;
   this->sensors = sensors;
   this->gps = gps;
+  this->voltage = voltage;
 }
 
 /**

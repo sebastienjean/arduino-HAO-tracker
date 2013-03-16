@@ -43,6 +43,8 @@ private :
 
   AnalogSensors *sensors;
 
+  AnalogSensor *voltage;
+
   GPS3D *gps;
 
   void appendStartOfFrameChar(void);
@@ -103,7 +105,7 @@ private :
 
   public:
 
-  CustomFrameBuilder(Counters *counters, AnalogSensors *sensors, DS1302_RTC *rtc, GPS3D *gps);
+  CustomFrameBuilder(Counters *counters, AnalogSensors *sensors, AnalogSensor *voltage, DS1302_RTC *rtc, GPS3D *gps);
 
   /**
    * Builds custom frame (time, location, sensor data, ...)

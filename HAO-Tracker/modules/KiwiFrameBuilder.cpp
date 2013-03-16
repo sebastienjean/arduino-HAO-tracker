@@ -16,8 +16,9 @@
 #include <Arduino.h>
 #include <defs.h>
 #include <KiwiFrameBuilder.h>
+#include <AnalogSensor.h>
 #include <AnalogSensors.h>
-#include <VoltageMonitor.h>
+
 
 /**
  * Sets the content of a given kiwi frame channel field (fields 1 to 8), from an integer value supposed to be the
@@ -60,10 +61,10 @@ void KiwiFrameBuilder::computeKiwiFrameChecksum()
   this->kiwiFrame[KIWI_FRAME_LENGTH-1] = kiwiFrameChecksum;
 }
 
-KiwiFrameBuilder::KiwiFrameBuilder(VoltageMonitor *voltageMonitor, AnalogSensors *sensors)
+KiwiFrameBuilder::KiwiFrameBuilder(AnalogSensors *sensors, AnalogSensor *voltage)
 {
-  this->voltageMonitor = voltageMonitor;
   this->sensors = sensors;
+  this->voltage = voltage;
 }
 
 /**
@@ -88,7 +89,7 @@ void KiwiFrameBuilder::buildKiwiFrame(unsigned char *kiwiFrame)
   }
 
   // voltage
-  setKiwiFrameVoltageFieldFromAnalogReadValue(VOLTAGE_MONITOR.readVoltage());
+  setKiwiFrameVoltageFieldFromAnalogReadValue(this->voltage->read());
 
   // checksum
   computeKiwiFrameChecksum();

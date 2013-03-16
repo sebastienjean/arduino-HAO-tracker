@@ -71,18 +71,20 @@ AnalogSensor* sensorsArray[4] = { &differentialPressureAnalogSensor,
                                   &internalTemperatureAnalogSensor};
 AnalogSensors sensors(sensorsArray, 4);
 
+// Voltage monitor
+// N.B. this analog sensor is handled seperately from the others since kiwi frame does
+AnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
+
 // RTC
 DS1302_RTC rtc(RTC_CE_PIN, RTC_IO_PIN, RTC_SCLK_PIN);
 
 // customFrameBuilder
 char customFrame[CUSTOM_FRAME_MAX_LENGTH];
-CustomFrameBuilder customFrameBuilder(&counters, &sensors, &rtc, &nmeaGPS);
+CustomFrameBuilder customFrameBuilder(&counters, &sensors, &voltage, &rtc, &nmeaGPS);
 
 // Kiwi Frame
 unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
-KiwiFrameBuilder kiwiFrameBuilder(&VOLTAGE_MONITOR, &sensors);
-
-
+KiwiFrameBuilder kiwiFrameBuilder(&sensors, &voltage);
 
 // LEDS
 // Todo rename variables (lower case)

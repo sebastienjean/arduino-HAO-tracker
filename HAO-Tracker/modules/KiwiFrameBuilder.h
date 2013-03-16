@@ -17,7 +17,7 @@
 #ifndef KIWI_FRAME_BUILDER_h
 #define KIWI_FRAME_BUILDER_h
 
-#include <VoltageMonitor.h>
+#include <AnalogSensor.h>
 #include <AnalogSensors.h>
 
 #define KIWI_FRAME_LENGTH 11
@@ -28,8 +28,10 @@ class KiwiFrameBuilder
 private:
 
   unsigned char *kiwiFrame;
-  VoltageMonitor *voltageMonitor;
+
   AnalogSensors *sensors;
+
+  AnalogSensor *voltage;
 
   /**
    * Sets the content of a given kiwi frame channel field (fields 1 to 8), from an integer value supposed to be the
@@ -53,7 +55,7 @@ private:
 
   public:
 
-  KiwiFrameBuilder(VoltageMonitor *voltageMonitor, AnalogSensors *sensors);
+  KiwiFrameBuilder(AnalogSensors *sensors, AnalogSensor *voltage);
 
   /**
    * Builds kiwi frame (channel fields, voltage field, checksum) from values retrieved from sensors variables.
