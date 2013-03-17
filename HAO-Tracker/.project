@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>HaoTracker</name>
+	<name>HAO-Tracker</name>
 	<comment></comment>
 	<projects>
 		<project>ArduinoCore</project>
