@@ -13,6 +13,8 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef PINS_MEGA_h
+#define PINS_MEGA_h
 
 #define USER_BUTTON_PIN 5
 
@@ -43,3 +45,5 @@
 #define RTC_IO_PIN   9
 
 #define RTC_SCLK_PIN 10
+
+#endif

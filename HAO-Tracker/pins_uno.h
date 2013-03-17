@@ -14,6 +14,9 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef PINS_UNO_h
+#define PINS_UNO_h
+
 #define USER_BUTTON_PIN 5
 
 #define RED_LED_PIN 9
@@ -48,3 +51,5 @@
 #define RTC_IO_PIN   9
 
 #define RTC_SCLK_PIN 10
+
+#endif
