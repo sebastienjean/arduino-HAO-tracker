@@ -18,7 +18,8 @@
 #define COUNTERS_h
 
 #include <Arduino.h>
-#include <Counter.h>
+
+#include "Counter.h"
 
 /**
  * Maximum amount of counters (half the EEPROM size)

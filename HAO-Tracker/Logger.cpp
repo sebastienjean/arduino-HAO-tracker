@@ -14,34 +14,41 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Arduino.h>
-#include <Counters.h>
-#include <Counter.h>
+#include <SD.h>
 
-Counters::Counters(Counter* counters[], int countersAmount)
+#include "Logger.h"
+
+// log File
+char * filePath;
+
+boolean
+Logger::begin(char * filePath, int sd_CS_Pin)
 {
-  for (int i = 0; (i < countersAmount) && (i < MAX_COUNTERS); i++)
-    {
-      this->counters[i] = counters[i];
-    }
-  if (countersAmount > MAX_COUNTERS)
-    {
-      countersAmount = MAX_COUNTERS;
-    }
-  this->countersAmount = countersAmount;
+  this->filePath = filePath;
+  pinMode(sd_CS_Pin, OUTPUT);
+  return SD.begin(sd_CS_Pin);
 }
 
-int
-Counters::read(int counterNumber)
+boolean
+Logger::logMessage(char *message, boolean newLine)
 {
-  if ((counterNumber < 0) || (counterNumber > getAmount()))
+  File logFile = SD.open(this->filePath, FILE_WRITE);
+  if (logFile)
     {
-      return -1;
+      if (newLine)
+        logFile.println(message);
+      else
+        logFile.print(message);
+      logFile.close();
+      return true;
     }
-  return counters[counterNumber - 1]->read();
+  return false;
 }
 
-int
-Counters::getAmount()
+boolean
+Logger::reset(void)
 {
-  return this->countersAmount;
+  return SD.remove(this->filePath);
 }
+
+Logger LOGGER;

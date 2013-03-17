@@ -33,7 +33,7 @@ environment/project/de.innot.avreclipse.configuration.app.release.1602708466/AVR
 environment/project/de.innot.avreclipse.configuration.app.release.1602708466/append=true
 environment/project/de.innot.avreclipse.configuration.app.release.1602708466/appendContributed=true
 indexer/filesToParseUpFront=
-indexer/indexAllFiles=true
+indexer/indexAllFiles=false
 indexer/indexOnOpen=false
 indexer/indexUnusedHeadersWithAlternateLang=false
 indexer/indexUnusedHeadersWithDefaultLang=false

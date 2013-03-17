@@ -15,22 +15,40 @@
  */
 #include <Arduino.h>
 
-#include <DS1302_RTC.h>
-#include <DS1302.h>
-#include <stdio.h>
-#include <string.h>
+#include "Led.h"
 
-DS1302_RTC::DS1302_RTC(int ce_pin, int io_pin, int sclk_pin) :
-    DS1302::DS1302(ce_pin, io_pin, sclk_pin)
+Led::Led(int pin)
 {
+  this->pin = pin;
+  pinMode(this->pin, OUTPUT);
 }
 
 void
-DS1302_RTC::getRtcTimeString(char * timeString)
+Led::on()
 {
-  strcpy(timeString, "000000");
-  Time time = DS1302::time();
-
-  snprintf(timeString, 7, "%02d%02d%02d", time.hr, time.min, time.sec);
+  digitalWrite(this->pin, HIGH);
 }
 
+void
+Led::off()
+{
+  digitalWrite(this->pin, LOW);
+}
+
+void
+Led::showStatus(boolean status)
+{
+  digitalWrite(this->pin, status);
+}
+
+void
+Led::quicklyMakeBlinkSeveralTimes(int times)
+{
+  for (int i = 0; i < times; i++)
+    {
+      this->on();
+      delay(100);
+      this->off();
+      delay(100);
+    }
+}

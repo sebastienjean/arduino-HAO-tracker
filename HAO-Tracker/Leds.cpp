@@ -14,30 +14,50 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Arduino.h>
-#include <Counter.h>
 
-Counter::Counter(int baseAddress)
-{
-  this->baseAddress = baseAddress;
-}
+#include "Leds.h"
+#include "Led.h"
 
-int
-Counter::read(void)
+Leds::Leds(Led* leds[], int ledsAmount)
 {
-  // TODO implement this
-  // see http://arduino.cc/en/Reference/WordCast
-  return 0;
-}
-
-void
-Counter::set(int value)
-{
-  // TODO implement this
-  // see http://arduino.cc/en/Reference/LowByte and http://arduino.cc/en/Reference/HighByte
+  for (int i = 0; (i < ledsAmount) && (i < MAX_LEDS); i++)
+    {
+      this->leds[i] = leds[i];
+    }
+  if (ledsAmount > MAX_LEDS)
+    {
+      ledsAmount = MAX_LEDS;
+    }
+  this->ledsAmount = ledsAmount;
 }
 
 void
-Counter::increment(int value)
+Leds::on()
 {
-  this->set(this->read() + value);
+  for (int i = 0; i < this->ledsAmount; i++)
+    {
+      (this->leds[i])->on();
+    }
 }
+
+void
+Leds::off()
+{
+  for (int i = 0; i < this->ledsAmount; i++)
+    {
+      (this->leds[i])->off();
+    }
+}
+
+void
+Leds::quicklyMakeBlinkSeveralTimes(int times)
+{
+  for (int i = 0; i < times; i++)
+    {
+      this->on();
+      delay(100);
+      this->off();
+      delay(100);
+    }
+}
+

@@ -18,7 +18,8 @@
 #define ANALOG_SENSORS_h
 
 #include <pins_arduino.h>
-#include <AnalogSensor.h>
+
+#include "AnalogSensor.h"
 
 /**
  * This class wraps a set of analog sensors. The number of sensors that can be grouped in an instance of this

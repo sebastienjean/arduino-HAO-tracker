@@ -15,8 +15,9 @@
  */
 #include <Arduino.h>
 #include <pins_arduino.h>
-#include <AnalogSensors.h>
-#include <AnalogSensor.h>
+
+#include "AnalogSensors.h"
+#include "AnalogSensor.h"
 
 AnalogSensors::AnalogSensors(AnalogSensor* analogSensors[],
     int analogSensorsAmount)

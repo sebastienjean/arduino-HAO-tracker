@@ -14,11 +14,12 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Arduino.h>
-#include <defs.h>
-#include <KiwiFrameBuilder.h>
 
-#include <AnalogSensor.h>
-#include <AnalogSensors.h>
+#include "defs.h"
+#include "KiwiFrameBuilder.h"
+
+#include "AnalogSensor.h"
+#include "AnalogSensors.h"
 
 void
 KiwiFrameBuilder::setKiwiFrameChannelField(int fieldNumber, int value)

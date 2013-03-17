@@ -19,13 +19,13 @@
 
 #define USER_BUTTON_PIN 5
 
-#define RED_LED_PIN 9
+#define RED_LED_PIN 3
 
-#define ORANGE_LED_PIN 10
+#define ORANGE_LED_PIN 4
 
-#define GREEN_LED_PIN 7
+#define GREEN_LED_PIN 11
 
-#define BLUE_LED_PIN 6
+#define BLUE_LED_PIN 12
 
 #define FSK_MODULATOR_TX_PIN 6
 

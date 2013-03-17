@@ -14,41 +14,23 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Arduino.h>
-#include <SD.h>
+#include <DS1302.h>
+#include <stdio.h>
+#include <string.h>
 
-#include <Logger.h>
+#include "DS1302_RTC.h"
 
-// log File
-char * filePath;
-
-boolean
-Logger::begin(char * filePath, int sd_CS_Pin)
+DS1302_RTC::DS1302_RTC(int ce_pin, int io_pin, int sclk_pin) :
+    DS1302::DS1302(ce_pin, io_pin, sclk_pin)
 {
-  this->filePath = filePath;
-  pinMode(sd_CS_Pin, OUTPUT);
-  return SD.begin(sd_CS_Pin);
 }
 
-boolean
-Logger::logMessage(char *message, boolean newLine)
+void
+DS1302_RTC::getRtcTimeString(char * timeString)
 {
-  File logFile = SD.open(this->filePath, FILE_WRITE);
-  if (logFile)
-    {
-      if (newLine)
-        logFile.println(message);
-      else
-        logFile.print(message);
-      logFile.close();
-      return true;
-    }
-  return false;
+  strcpy(timeString, "000000");
+  Time time = DS1302::time();
+
+  snprintf(timeString, 7, "%02d%02d%02d", time.hr, time.min, time.sec);
 }
 
-boolean
-Logger::reset(void)
-{
-  return SD.remove(this->filePath);
-}
-
-Logger LOGGER;

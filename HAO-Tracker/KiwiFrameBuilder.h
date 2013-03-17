@@ -17,10 +17,17 @@
 #ifndef KIWI_FRAME_BUILDER_h
 #define KIWI_FRAME_BUILDER_h
 
-#include <AnalogSensor.h>
-#include <AnalogSensors.h>
+#include "AnalogSensor.h"
+#include "AnalogSensors.h"
 
+/**
+ * Kiwi frame length
+ */
 #define KIWI_FRAME_LENGTH 11
+
+/**
+ * Number of KIWI frame fields available for sensor data
+ */
 #define KIWI_FRAME_CHANNELS_AMOUNT 8
 
 /**

@@ -15,40 +15,30 @@
  */
 #include <Arduino.h>
 
-#include <Led.h>
+#include "Counter.h"
 
-Led::Led(int pin)
+Counter::Counter(int baseAddress)
 {
-  this->pin = pin;
-  pinMode(this->pin, OUTPUT);
+  this->baseAddress = baseAddress;
+}
+
+int
+Counter::read(void)
+{
+  // TODO implement this
+  // see http://arduino.cc/en/Reference/WordCast
+  return 0;
 }
 
 void
-Led::on()
+Counter::set(int value)
 {
-  digitalWrite(this->pin, HIGH);
+  // TODO implement this
+  // see http://arduino.cc/en/Reference/LowByte and http://arduino.cc/en/Reference/HighByte
 }
 
 void
-Led::off()
+Counter::increment(int value)
 {
-  digitalWrite(this->pin, LOW);
-}
-
-void
-Led::showStatus(boolean status)
-{
-  digitalWrite(this->pin, status);
-}
-
-void
-Led::quicklyMakeBlinkSeveralTimes(int times)
-{
-  for (int i = 0; i < times; i++)
-    {
-      this->on();
-      delay(100);
-      this->off();
-      delay(100);
-    }
+  this->set(this->read() + value);
 }

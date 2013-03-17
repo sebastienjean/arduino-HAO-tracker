@@ -14,15 +14,35 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Arduino.h>
-#include <AnalogSensor.h>
 
-AnalogSensor::AnalogSensor(int channel)
+#include "Counters.h"
+#include "Counter.h"
+
+Counters::Counters(Counter* counters[], int countersAmount)
 {
-  this->channel = channel;
+  for (int i = 0; (i < countersAmount) && (i < MAX_COUNTERS); i++)
+    {
+      this->counters[i] = counters[i];
+    }
+  if (countersAmount > MAX_COUNTERS)
+    {
+      countersAmount = MAX_COUNTERS;
+    }
+  this->countersAmount = countersAmount;
 }
 
 int
-AnalogSensor::read(void)
+Counters::read(int counterNumber)
 {
-  return analogRead(this->channel);
+  if ((counterNumber < 0) || (counterNumber > getAmount()))
+    {
+      return -1;
+    }
+  return counters[counterNumber - 1]->read();
+}
+
+int
+Counters::getAmount()
+{
+  return this->countersAmount;
 }

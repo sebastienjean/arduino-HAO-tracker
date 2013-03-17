@@ -15,48 +15,15 @@
  */
 #include <Arduino.h>
 
-#include <Leds.h>
+#include "AnalogSensor.h"
 
-Leds::Leds(Led* leds[], int ledsAmount)
+AnalogSensor::AnalogSensor(int channel)
 {
-  for (int i = 0; (i < ledsAmount) && (i < MAX_LEDS); i++)
-    {
-      this->leds[i] = leds[i];
-    }
-  if (ledsAmount > MAX_LEDS)
-    {
-      ledsAmount = MAX_LEDS;
-    }
-  this->ledsAmount = ledsAmount;
+  this->channel = channel;
 }
 
-void
-Leds::on()
+int
+AnalogSensor::read(void)
 {
-  for (int i = 0; i < this->ledsAmount; i++)
-    {
-      (this->leds[i])->on();
-    }
+  return analogRead(this->channel);
 }
-
-void
-Leds::off()
-{
-  for (int i = 0; i < this->ledsAmount; i++)
-    {
-      (this->leds[i])->off();
-    }
-}
-
-void
-Leds::quicklyMakeBlinkSeveralTimes(int times)
-{
-  for (int i = 0; i < times; i++)
-    {
-      this->on();
-      delay(100);
-      this->off();
-      delay(100);
-    }
-}
-

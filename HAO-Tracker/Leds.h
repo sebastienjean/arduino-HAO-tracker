@@ -17,7 +17,7 @@
 #ifndef LEDS_h
 #define LEDS_h
 
-#include <Led.h>
+#include "Led.h"
 
 /**
  * Maximum amount of LEDs
