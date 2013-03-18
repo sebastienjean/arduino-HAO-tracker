@@ -43,7 +43,7 @@ KiwiFrameBuilder::setKiwiFrameVoltageField(int value)
 void
 KiwiFrameBuilder::computeKiwiFrameChecksum()
 {
-  unsigned char kiwiFrameChecksum;
+  unsigned char kiwiFrameChecksum = 0;
   for (int cpt = 1; cpt < KIWI_FRAME_LENGTH - 1; cpt++)
     kiwiFrameChecksum = (unsigned char) ((kiwiFrameChecksum
         + this->kiwiFrame[cpt]) % 256);
@@ -74,9 +74,9 @@ KiwiFrameBuilder::buildKiwiFrame(unsigned char *kiwiFrame)
 
   // channels : analog sensors
   for (int i = 1;
-      (i < this->sensors->getAmount()) && (i < KIWI_FRAME_CHANNELS_AMOUNT); i++)
+      (i <= this->sensors->getAmount()) && (i < KIWI_FRAME_CHANNELS_AMOUNT); i++)
     {
-      setKiwiFrameChannelField(1, this->sensors->read(i));
+      setKiwiFrameChannelField(i, this->sensors->read(i));
     }
 
   // voltage
