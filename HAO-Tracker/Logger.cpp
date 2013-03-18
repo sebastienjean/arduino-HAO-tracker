@@ -18,9 +18,6 @@
 
 #include "Logger.h"
 
-// log File
-char * filePath;
-
 boolean
 Logger::begin(char * filePath, int sd_CS_Pin)
 {
