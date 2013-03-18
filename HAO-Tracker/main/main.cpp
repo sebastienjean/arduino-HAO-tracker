@@ -234,6 +234,7 @@ loop()
   fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
 
   green_LED.quicklyMakeBlinkSeveralTimes(2);
+
   // Positioning data reading (and debug)
   nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer);
 
@@ -242,14 +243,17 @@ loop()
   // NMEA sentences logging
   LOGGER.logMessage(nmeaRmcSentenceBuffer, false);
   LOGGER.logMessage(nmeaGgaSentenceBuffer, false);
+  delay(500);
 
   // NMEA sentences transmission
   fskModulator.modulateBytes(nmeaRmcSentenceBuffer,
       strlen(nmeaRmcSentenceBuffer));
+
   fskModulator.modulateBytes(nmeaGgaSentenceBuffer,
-      strlen(nmeaRmcSentenceBuffer));
+      strlen(nmeaGgaSentenceBuffer));
 
   green_LED.quicklyMakeBlinkSeveralTimes(3);
+
   // custom frame building
   customFrameBuilder.buildCustomFrame(customFrame);
 
@@ -258,6 +262,7 @@ loop()
 
   // custom frame logging
   LOGGER.logMessage(customFrame, false);
+  delay(500);
 
   // custom frame transmission
   fskModulator.modulateBytes(customFrame, strlen(customFrame));
