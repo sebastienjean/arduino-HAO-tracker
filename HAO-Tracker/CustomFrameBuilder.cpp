@@ -28,8 +28,7 @@
 void
 CustomFrameBuilder::appendStartOfFrameChar()
 {
-  this->whereToAppend[0] = CUSTOM_FRAME_START_OF_FRAME_CHAR;
-  this->whereToAppend++;
+  this->whereToAppend++[0] = CUSTOM_FRAME_START_OF_FRAME_CHAR;
 }
 
 void
