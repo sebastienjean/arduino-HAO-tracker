@@ -13,8 +13,8 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef PINS_MEGA_h
-#define PINS_MEGA_h
+#ifndef PINS_h
+#define PINS_h
 
 #define USER_BUTTON_PIN 5
 
