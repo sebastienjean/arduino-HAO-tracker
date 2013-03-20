@@ -46,3 +46,23 @@ Counters::getAmount()
 {
   return this->countersAmount;
 }
+
+void
+Counters::reset()
+{
+  for (int i = 0; (i < countersAmount) && (i < MAX_COUNTERS); i++)
+      {
+        this->counters[i]->set(0);
+      }
+
+}
+
+Counter *
+Counters::get(int counterNumber)
+{
+  if ((counterNumber < 1) || (counterNumber > countersAmount))
+    {
+      return NULL;
+    }
+  return this->counters[counterNumber-1];
+}

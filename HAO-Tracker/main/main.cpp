@@ -141,8 +141,14 @@ deleteLogFileIfUserClaimsTo()
 {
   delay(1000);
 
+  // implementation of the reset counter
+  int counter = counters.get(2)->read();
+  counters.get(2)->set(counter+1);
+
   if (digitalRead(USER_BUTTON_PIN) == LOW)
     {
+      // reset all counters (->0)
+      counters.reset();
       return LOGGER.reset();
     }
   return false;
@@ -269,6 +275,10 @@ loop()
 
   red_LED.quicklyMakeBlinkSeveralTimes(1);
   delay(1000);
+
+  // implementation of the frame counter
+  int counter = counters.get(1)->read();
+  counters.get(1)->set(counter+1);
 }
 
 /**

@@ -43,7 +43,7 @@ public:
    *
    * @return counter value
    */
-  int
+  unsigned int
   read(void);
 
   /**
@@ -52,7 +52,7 @@ public:
    * @param value counter value
    */
   void
-  set(int value);
+  set(unsigned int value);
 
   /**
    * Increments counter value by a given amount.
@@ -60,7 +60,7 @@ public:
    * @param value the increment value
    */
   void
-  increment(int value);
+  increment(unsigned int value);
 };
 
 #endif

@@ -72,6 +72,20 @@ public:
    */
   int
   getAmount(void);
+
+  /*
+   * Resets all counters of EEPROM
+   *
+   */
+  void
+  reset();
+
+  /*
+   * returns a pointer of counter
+   * @counterNumber : number of the counter.
+   */
+  Counter *
+  get(int counterNumber);
 };
 
 #endif

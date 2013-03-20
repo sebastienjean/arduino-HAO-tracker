@@ -16,29 +16,32 @@
 #include <Arduino.h>
 
 #include "Counter.h"
+#include <EEPROM.h>
 
 Counter::Counter(int baseAddress)
 {
   this->baseAddress = baseAddress;
 }
 
-int
+unsigned int
 Counter::read(void)
 {
-  // TODO implement this
-  // see http://arduino.cc/en/Reference/WordCast
-  return 0;
+  unsigned int reste = EEPROM.read(this->baseAddress);
+  unsigned int quotient = EEPROM.read(this->baseAddress+1);
+  return (quotient*256+reste);
 }
 
 void
-Counter::set(int value)
+Counter::set(unsigned int value)
 {
-  // TODO implement this
-  // see http://arduino.cc/en/Reference/LowByte and http://arduino.cc/en/Reference/HighByte
+  unsigned int quotient = value/256;
+  unsigned int reste = value%256;
+  EEPROM.write(this->baseAddress, reste);
+  EEPROM.write(this->baseAddress + 1, quotient);
 }
 
 void
-Counter::increment(int value)
+Counter::increment(unsigned int value)
 {
   this->set(this->read() + value);
 }
