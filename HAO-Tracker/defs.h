@@ -61,5 +61,76 @@
  */
 #define RESET_COUNTER_BASE_ADDRESS 0x0002
 
+/**
+ * Phase counter EEPROM base address
+ */
+#define PHASE_COUNTER_BASE_ADDRESS 0x0004
+
+/**
+ * Time phase 1 counter base address
+ */
+#define TIME_PHASE_1_COUNTER_BASE_ADDRESS 0x0006
+
+/**
+ * Time phase 2 counter base address
+ */
+#define TIME_PHASE_2_COUNTER_BASE_ADDRESS 0x0008
+
+/**
+ * Time phase 3 counter base address
+ */
+#define TIME_PHASE_3_COUNTER_BASE_ADDRESS 0x0010
+
+/**
+ * Time phase 4 counter base address
+ */
+#define TIME_PHASE_4_COUNTER_BASE_ADDRESS 0x0012
+
+/**
+ * Time phase 5 counter base address
+ */
+#define TIME_PHASE_5_COUNTER_BASE_ADDRESS 0x0014
+
+/**
+ * Time of loop 1 pause
+ */
+#define TIME_PAUSE_1 500
+
+/**
+ * Time of loop 2 pause
+ */
+#define TIME_PAUSE_2 500
+
+/**
+ * Time of loop 3 pause
+ */
+#define TIME_PAUSE_3 500
+
+/**
+ * Time of loop 4 pause
+ */
+#define TIME_PAUSE_4 500
+
+/**
+ * Time of loop 5 pause
+ */
+#define TIME_PAUSE_5 500
+
+/**
+ * Number of phase value
+ */
+#define PHASE_1 0
+#define PHASE_2 1
+#define PHASE_3 2
+#define PHASE_4 3
+#define PHASE_5 4
+
+/**
+ * Limit of each phase in meters
+ */
+#define LIMIT_1 5000
+#define LIMIT_2 25000
+
+
 #endif
 

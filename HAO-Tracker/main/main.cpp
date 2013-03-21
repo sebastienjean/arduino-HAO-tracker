@@ -64,9 +64,16 @@ FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX_PIN);
 // ----------------------------
 Counter frameCounter(FRAME_COUNTER_BASE_ADDRESS);
 Counter resetCounter(RESET_COUNTER_BASE_ADDRESS);
-Counter* countersArray[2] =
-  { &frameCounter, &resetCounter };
-Counters counters(countersArray, 2);
+Counter phaseCounter(PHASE_COUNTER_BASE_ADDRESS);
+Counter timephase1Counter(TIME_PHASE_1_COUNTER_BASE_ADDRESS);
+Counter timephase2Counter(TIME_PHASE_2_COUNTER_BASE_ADDRESS);
+Counter timephase3Counter(TIME_PHASE_3_COUNTER_BASE_ADDRESS);
+Counter timephase4Counter(TIME_PHASE_4_COUNTER_BASE_ADDRESS);
+Counter timephase5Counter(TIME_PHASE_5_COUNTER_BASE_ADDRESS);
+Counter* countersArray[8] =
+  { &frameCounter, &resetCounter, &phaseCounter, &timephase1Counter,
+      &timephase2Counter, &timephase3Counter, &timephase4Counter, &timephase5Counter};
+Counters counters(countersArray, 8);
 
 // ----------------------------------
 // Analog sensors related definitions
@@ -181,52 +188,8 @@ initGpsSerial()
   serialNmeaGPSPort.begin(SERIAL_NMEA_GPS_BAUDRATE);
 }
 
-/**
- * Arduino's setup function, called once at startup, after init
- */
 void
-setup()
-{
-  leds.on();
-  delay(1000);
-  leds.off();
-
-  initUserButton();
-
-  initDebugSerial();
-
-  SERIAL_DEBUG.println(F("R"));
-
-  SERIAL_DEBUG.print(F("SD Init..."));
-
-  if (!initLogging())
-    {
-      SERIAL_DEBUG.println(F("KO"));
-      orange_LED.showStatus(false);
-    }
-  else
-    {
-      SERIAL_DEBUG.println(F("OK"));
-      orange_LED.showStatus(true);
-
-      if (deleteLogFileIfUserClaimsTo())
-        {
-          SERIAL_DEBUG.println(F("SD Clear"));
-          leds.quicklyMakeBlinkSeveralTimes(10);
-          orange_LED.showStatus(true);
-        }
-    }
-
-  orange_LED.showStatus(LOGGER.logMessage("R", true));
-
-  initGpsSerial();
-}
-
-/**
- * Arduino's loop function, called in loop (incredible, isn't it ?)
- */
-void
-loop()
+basicLoop()
 {
   // show loop start sequence
   red_LED.quicklyMakeBlinkSeveralTimes(1);
@@ -277,6 +240,147 @@ loop()
 
   // frame counter update
   frameCounter.increment(1);
+}
+
+void
+loop_1()
+{
+  int x = millis();
+
+  // DO STEP 1
+
+  delay(TIME_PAUSE_1);
+
+  if(nmeaGPS.getAltitude()>LIMIT_1)
+    phaseCounter.set(PHASE_2);
+
+   timephase1Counter.increment((millis()-x)/1000);
+}
+
+void
+loop_2()
+{
+  int x = millis();
+
+  // DO STEP 2
+
+  delay(TIME_PAUSE_2);
+
+  if(nmeaGPS.getAltitude() > LIMIT_2)
+    phaseCounter.set(PHASE_3);
+
+  timephase2Counter.increment((millis()-x)/1000);
+}
+
+void
+loop_3()
+{
+  int x = millis();
+
+  // DO STEP 3
+
+  delay(TIME_PAUSE_3);
+
+  if(nmeaGPS.getAltitude()<LIMIT_2)
+    phaseCounter.set(PHASE_4);
+
+  timephase3Counter.increment((millis()-x)/1000);
+}
+
+void
+loop_4()
+{
+  int x = millis();
+
+  // DO STEP 4
+
+  delay(TIME_PAUSE_4);
+
+  if(nmeaGPS.getAltitude()<LIMIT_1)
+    phaseCounter.set(PHASE_5);
+
+  timephase4Counter.increment((millis()-x)/1000);
+}
+
+void
+loop_5()
+{
+  int x = millis();
+
+  // DO STEP 5
+
+  delay(TIME_PAUSE_5);
+
+  timephase5Counter.increment((millis()-x)/1000);
+}
+
+/**
+ * Arduino's setup function, called once at startup, after init
+ */
+void
+setup()
+{
+  leds.on();
+  delay(1000);
+  leds.off();
+
+  initUserButton();
+
+  initDebugSerial();
+
+  SERIAL_DEBUG.println(F("R"));
+
+  SERIAL_DEBUG.print(F("SD Init..."));
+
+  if (!initLogging())
+    {
+      SERIAL_DEBUG.println(F("KO"));
+      orange_LED.showStatus(false);
+    }
+  else
+    {
+      SERIAL_DEBUG.println(F("OK"));
+      orange_LED.showStatus(true);
+
+      if (deleteLogFileIfUserClaimsTo())
+        {
+          SERIAL_DEBUG.println(F("SD Clear"));
+          leds.quicklyMakeBlinkSeveralTimes(10);
+          orange_LED.showStatus(true);
+        }
+    }
+
+  orange_LED.showStatus(LOGGER.logMessage("R", true));
+
+  initGpsSerial();
+}
+
+/**
+ * Arduino's loop function, called in loop (incredible, isn't it ?)
+ */
+void
+loop()
+{
+  basicLoop();
+
+  switch(phaseCounter.read())
+  {
+  case PHASE_1:
+    loop_1();
+
+  case PHASE_2:
+    loop_2();
+
+  case PHASE_3:
+    loop_3();
+
+  case PHASE_4:
+    loop_4();
+
+  case PHASE_5:
+    loop_5();
+    break;
+  }
 }
 
 /**
