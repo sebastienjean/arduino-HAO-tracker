@@ -16,13 +16,17 @@
 #ifndef DEFS_h
 #define DEFS_h
 
+//---------------------------
+// Serial related definitions
+//---------------------------
+
 /**
  * Serial used for debug
  */
 #define SERIAL_DEBUG Serial
 
 /**
- * GPS serial baudrate
+ * Debug serial baudrate
  */
 #define SERIAL_DEBUG_BAUDRATE 9600
 
@@ -41,15 +45,27 @@
  */
 #define SERIAL_NMEA_GPS_READING_CHARS_TIMEOUT 2000
 
+//----------------------------
+// Logging related definitions
+//----------------------------
+
 /**
  * Log file path
  */
 #define LOG_FILE_PATH "data.txt"
 
+//---------------------------
+// Naming related definitions
+//---------------------------
+
 /**
  * HAO name
  */
 #define HAO_NAME "POKEBALL"
+
+//-----------------------------
+// Counters related definitions
+//-----------------------------
 
 /**
  * Frame counter EEPROM base address
@@ -62,75 +78,107 @@
 #define RESET_COUNTER_BASE_ADDRESS 0x0002
 
 /**
- * Phase counter EEPROM base address
+ * Current flight phase counter EEPROM base address
  */
-#define PHASE_COUNTER_BASE_ADDRESS 0x0004
+#define CURRENT_FLIGHT_PHASE_COUNTER_BASE_ADDRESS 0x0004
 
 /**
- * Time phase 1 counter base address
+ * Flight phase number 0 duration counter base address
  */
-#define TIME_PHASE_1_COUNTER_BASE_ADDRESS 0x0006
+#define FLIGHT_PHASE_0_DURATION_COUNTER_BASE_ADDRESS 0x0006
 
 /**
- * Time phase 2 counter base address
+ * Flight phase number 1 duration counter base address
  */
-#define TIME_PHASE_2_COUNTER_BASE_ADDRESS 0x0008
+#define FLIGHT_PHASE_1_DURATION_COUNTER_BASE_ADDRESS 0x0008
 
 /**
- * Time phase 3 counter base address
+ * Flight phase number 2 duration counter base address
  */
-#define TIME_PHASE_3_COUNTER_BASE_ADDRESS 0x0010
+#define FLIGHT_PHASE_2_DURATION_COUNTER_BASE_ADDRESS 0x000A
 
 /**
- * Time phase 4 counter base address
+ * Flight phase number 3 duration counter base address
  */
-#define TIME_PHASE_4_COUNTER_BASE_ADDRESS 0x0012
+#define FLIGHT_PHASE_3_DURATION_COUNTER_BASE_ADDRESS 0x000C
 
 /**
- * Time phase 5 counter base address
+ * Flight phase number 4 duration counter base address
  */
-#define TIME_PHASE_5_COUNTER_BASE_ADDRESS 0x0014
+#define FLIGHT_PHASE_4_DURATION_COUNTER_BASE_ADDRESS 0x000E
 
 /**
- * Time of loop 1 pause
+ * Flight phase number 5 duration counter base address
  */
-#define TIME_PAUSE_1 500
+#define FLIGHT_PHASE_5_DURATION_COUNTER_BASE_ADDRESS 0x0010
 
 /**
- * Time of loop 2 pause
+ * Flight phase number 6 duration counter base address
  */
-#define TIME_PAUSE_2 500
+#define FLIGHT_PHASE_6_DURATION_COUNTER_BASE_ADDRESS 0x0012
+
+//------------------------------------------
+// Flight phase duration related definitions
+//------------------------------------------
 
 /**
- * Time of loop 3 pause
+ * Flight phase number 0 pause duration (in ms)
  */
-#define TIME_PAUSE_3 500
+#define FLIGHT_PHASE_0_PAUSE_DURATION 500
 
 /**
- * Time of loop 4 pause
+ * Flight phase number 1 pause duration (in ms)
  */
-#define TIME_PAUSE_4 500
+#define FLIGHT_PHASE_1_PAUSE_DURATION 500
 
 /**
- * Time of loop 5 pause
+ * Flight phase number 2 pause duration (in ms)
  */
-#define TIME_PAUSE_5 500
+#define FLIGHT_PHASE_2_PAUSE_DURATION 500
 
 /**
- * Number of phase value
+ * Flight phase number 3 pause duration (in ms)
  */
-#define PHASE_1 0
-#define PHASE_2 1
-#define PHASE_3 2
-#define PHASE_4 3
-#define PHASE_5 4
+#define FLIGHT_PHASE_3_PAUSE_DURATION 500
 
 /**
- * Limit of each phase in meters
+ * Flight phase number 4 pause duration (in ms)
  */
-#define LIMIT_1 5000
-#define LIMIT_2 25000
+#define FLIGHT_PHASE_4_PAUSE_DURATION 500
 
+/**
+ * Flight phase number 5 pause duration (in ms)
+ */
+#define FLIGHT_PHASE_5_PAUSE_DURATION 500
+
+/**
+ * Flight phase number 6 pause duration (in ms)
+ */
+#define FLIGHT_PHASE_6_PAUSE_DURATION 500
+
+//-------------------------------------------
+// Flight phase numbering related definitions
+//-------------------------------------------
+
+#define BEFORE_TAKING_OFF_FLIGHT_PHASE 0
+#define ASCENDING_BELOW_5000M_FLIGHT_PHASE 1
+#define ASCENDING_BETWEEN_5000M_AND_20000M_FLIGHT_PHASE 2
+#define BEFORE_BURST_FLIGHT_PHASE 3
+#define DESCENDING_ABOVE_5000M_FLIGHT_PHASE 4
+#define BEFORE_LANDING_FLIGHT_PHASE 5
+#define AFTER_LANDING_FLIGHT_PHASE 6
+
+//-----------------------------------------------------
+// Flight phase altitude triggering related definitions
+//-----------------------------------------------------
+
+#define FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER 5000
+#define FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER 20000
+#define FLIGHT_PHASE_4_TO_5_ALTITUDE_TRIGGER 5000
+
+//-----------------------------------------------------
+// Flight phase duration triggering related definitions
+//-----------------------------------------------------
 
 #endif
 

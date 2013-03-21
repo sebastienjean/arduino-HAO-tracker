@@ -64,16 +64,28 @@ FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX_PIN);
 // ----------------------------
 Counter frameCounter(FRAME_COUNTER_BASE_ADDRESS);
 Counter resetCounter(RESET_COUNTER_BASE_ADDRESS);
-Counter phaseCounter(PHASE_COUNTER_BASE_ADDRESS);
-Counter timephase1Counter(TIME_PHASE_1_COUNTER_BASE_ADDRESS);
-Counter timephase2Counter(TIME_PHASE_2_COUNTER_BASE_ADDRESS);
-Counter timephase3Counter(TIME_PHASE_3_COUNTER_BASE_ADDRESS);
-Counter timephase4Counter(TIME_PHASE_4_COUNTER_BASE_ADDRESS);
-Counter timephase5Counter(TIME_PHASE_5_COUNTER_BASE_ADDRESS);
-Counter* countersArray[8] =
-  { &frameCounter, &resetCounter, &phaseCounter, &timephase1Counter,
-      &timephase2Counter, &timephase3Counter, &timephase4Counter, &timephase5Counter};
-Counters counters(countersArray, 8);
+Counter currentFlightPhaseCounter(CURRENT_FLIGHT_PHASE_COUNTER_BASE_ADDRESS);
+Counter flightPhaseNumber0DurationCounter(
+    FLIGHT_PHASE_0_DURATION_COUNTER_BASE_ADDRESS);
+Counter flightPhaseNumber1DurationCounter(
+    FLIGHT_PHASE_1_DURATION_COUNTER_BASE_ADDRESS);
+Counter flightPhaseNumber2DurationCounter(
+    FLIGHT_PHASE_2_DURATION_COUNTER_BASE_ADDRESS);
+Counter flightPhaseNumber3DurationCounter(
+    FLIGHT_PHASE_3_DURATION_COUNTER_BASE_ADDRESS);
+Counter flightPhaseNumber4DurationCounter(
+    FLIGHT_PHASE_4_DURATION_COUNTER_BASE_ADDRESS);
+Counter flightPhaseNumber5DurationCounter(
+    FLIGHT_PHASE_5_DURATION_COUNTER_BASE_ADDRESS);
+Counter flightPhaseNumber6DurationCounter(
+    FLIGHT_PHASE_6_DURATION_COUNTER_BASE_ADDRESS);
+Counter* countersArray[9] =
+  { &frameCounter, &resetCounter, &currentFlightPhaseCounter,
+      &flightPhaseNumber0DurationCounter, &flightPhaseNumber1DurationCounter,
+      &flightPhaseNumber2DurationCounter, &flightPhaseNumber3DurationCounter,
+      &flightPhaseNumber4DurationCounter, &flightPhaseNumber5DurationCounter,
+      &flightPhaseNumber6DurationCounter };
+Counters counters(countersArray, 9);
 
 // ----------------------------------
 // Analog sensors related definitions
@@ -189,7 +201,7 @@ initGpsSerial()
 }
 
 void
-basicLoop()
+commonLoop()
 {
   // show loop start sequence
   red_LED.quicklyMakeBlinkSeveralTimes(1);
@@ -243,75 +255,99 @@ basicLoop()
 }
 
 void
-loop_1()
+flightPhaseNumber0Loop()
+{
+  int x = millis();
+
+  // DO STEP 0
+
+  delay(FLIGHT_PHASE_0_PAUSE_DURATION);
+
+  flightPhaseNumber0DurationCounter.increment((millis() - x) / 1000);
+  // TODO check flight phase transition condition
+}
+
+void
+flightPhaseNumber1Loop()
 {
   int x = millis();
 
   // DO STEP 1
 
-  delay(TIME_PAUSE_1);
+  delay(FLIGHT_PHASE_1_PAUSE_DURATION);
 
-  if(nmeaGPS.getAltitude()>LIMIT_1)
-    phaseCounter.set(PHASE_2);
+  if (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER)
+    currentFlightPhaseCounter.increment(1);
 
-   timephase1Counter.increment((millis()-x)/1000);
+  flightPhaseNumber1DurationCounter.increment((millis() - x) / 1000);
 }
 
 void
-loop_2()
+flightPhaseNumber2Loop()
 {
   int x = millis();
 
   // DO STEP 2
 
-  delay(TIME_PAUSE_2);
+  delay(FLIGHT_PHASE_2_PAUSE_DURATION);
 
-  if(nmeaGPS.getAltitude() > LIMIT_2)
-    phaseCounter.set(PHASE_3);
+  if (nmeaGPS.getAltitude() > FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER)
+    currentFlightPhaseCounter.increment(1);
 
-  timephase2Counter.increment((millis()-x)/1000);
+  flightPhaseNumber2DurationCounter.increment((millis() - x) / 1000);
 }
 
 void
-loop_3()
+flightPhaseNumber3Loop()
 {
   int x = millis();
 
   // DO STEP 3
 
-  delay(TIME_PAUSE_3);
+  delay(FLIGHT_PHASE_3_PAUSE_DURATION);
 
-  if(nmeaGPS.getAltitude()<LIMIT_2)
-    phaseCounter.set(PHASE_4);
-
-  timephase3Counter.increment((millis()-x)/1000);
+  flightPhaseNumber3DurationCounter.increment((millis() - x) / 1000);
+  // TODO check flight phase transition condition
 }
 
 void
-loop_4()
+flightPhaseNumber4Loop()
 {
   int x = millis();
 
   // DO STEP 4
 
-  delay(TIME_PAUSE_4);
+  delay(FLIGHT_PHASE_4_PAUSE_DURATION);
 
-  if(nmeaGPS.getAltitude()<LIMIT_1)
-    phaseCounter.set(PHASE_5);
+  if (nmeaGPS.getAltitude() < FLIGHT_PHASE_4_TO_5_ALTITUDE_TRIGGER)
+    currentFlightPhaseCounter.increment(1);
 
-  timephase4Counter.increment((millis()-x)/1000);
+  flightPhaseNumber4DurationCounter.increment((millis() - x) / 1000);
 }
 
 void
-loop_5()
+flightPhaseNumber5Loop()
 {
   int x = millis();
 
   // DO STEP 5
 
-  delay(TIME_PAUSE_5);
+  delay(FLIGHT_PHASE_5_PAUSE_DURATION);
 
-  timephase5Counter.increment((millis()-x)/1000);
+  flightPhaseNumber5DurationCounter.increment((millis() - x) / 1000);
+  // TODO check flight phase transition condition
+}
+
+void
+flightPhaseNumber6Loop()
+{
+  int x = millis();
+
+  // DO STEP 6
+
+  delay(FLIGHT_PHASE_6_PAUSE_DURATION);
+
+  flightPhaseNumber6DurationCounter.increment((millis() - x) / 1000);
 }
 
 /**
@@ -361,26 +397,35 @@ setup()
 void
 loop()
 {
-  basicLoop();
+  commonLoop();
 
-  switch(phaseCounter.read())
-  {
-  case PHASE_1:
-    loop_1();
-
-  case PHASE_2:
-    loop_2();
-
-  case PHASE_3:
-    loop_3();
-
-  case PHASE_4:
-    loop_4();
-
-  case PHASE_5:
-    loop_5();
+  switch (currentFlightPhaseCounter.read())
+    {
+  case BEFORE_TAKING_OFF_FLIGHT_PHASE:
+    flightPhaseNumber0Loop();
     break;
-  }
+
+  case ASCENDING_BELOW_5000M_FLIGHT_PHASE:
+    flightPhaseNumber1Loop();
+    break;
+
+  case ASCENDING_BETWEEN_5000M_AND_20000M_FLIGHT_PHASE:
+    flightPhaseNumber2Loop();
+    break;
+
+  case BEFORE_BURST_FLIGHT_PHASE:
+    flightPhaseNumber3Loop();
+    break;
+  case DESCENDING_ABOVE_5000M_FLIGHT_PHASE:
+    flightPhaseNumber4Loop();
+    break;
+  case BEFORE_LANDING_FLIGHT_PHASE:
+    flightPhaseNumber5Loop();
+    break;
+  case AFTER_LANDING_FLIGHT_PHASE:
+    flightPhaseNumber6Loop();
+    break;
+    }
 }
 
 /**
