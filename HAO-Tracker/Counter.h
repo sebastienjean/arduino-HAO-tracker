@@ -55,6 +55,13 @@ public:
   set(unsigned int value);
 
   /**
+   * Resets counter value (to 0).
+   *
+   */
+  void
+  reset();
+
+  /**
    * Increments counter value by a given amount.
    *
    * @param value the increment value

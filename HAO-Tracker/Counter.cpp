@@ -41,6 +41,12 @@ Counter::set(unsigned int value)
 }
 
 void
+Counter::reset()
+{
+  this->set(0);
+}
+
+void
 Counter::increment(unsigned int value)
 {
   this->set(this->read() + value);

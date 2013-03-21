@@ -22,11 +22,6 @@
 #include "Counter.h"
 
 /**
- * Maximum amount of counters (half the EEPROM size)
- */
-#define MAX_COUNTERS (E2END/2) +1
-
-/**
  * This class wraps a set of persistent integer counters. The number of counters that can be grouped in an instance of this
  * class depends on the platform EEPROM size (typically from 1kB to 4kB)
  */
@@ -35,9 +30,9 @@ class Counters
 private:
 
   /**
-   * Counters (pointers) contained in this set
+   * Counters (pointer array) contained in this set
    */
-  Counter* counters[MAX_COUNTERS];
+  Counter** counters;
 
   /**
    * Number of counters in this set
@@ -73,8 +68,8 @@ public:
   int
   getAmount(void);
 
-  /*
-   * Resets all counters of EEPROM
+  /**
+   * Resets all counters (to 0)
    *
    */
   void

@@ -20,14 +20,7 @@
 
 Counters::Counters(Counter* counters[], int countersAmount)
 {
-  for (int i = 0; (i < countersAmount) && (i < MAX_COUNTERS); i++)
-    {
-      this->counters[i] = counters[i];
-    }
-  if (countersAmount > MAX_COUNTERS)
-    {
-      countersAmount = MAX_COUNTERS;
-    }
+  this->counters = counters;
   this->countersAmount = countersAmount;
 }
 
@@ -50,11 +43,10 @@ Counters::getAmount()
 void
 Counters::reset()
 {
-  for (int i = 0; (i < countersAmount) && (i < MAX_COUNTERS); i++)
-      {
-        this->counters[i]->set(0);
-      }
-
+  for (int i = 0; i < countersAmount; i++)
+    {
+      this->counters[i]->reset();
+    }
 }
 
 Counter *
@@ -64,5 +56,5 @@ Counters::get(int counterNumber)
     {
       return NULL;
     }
-  return this->counters[counterNumber-1];
+  return this->counters[counterNumber - 1];
 }
