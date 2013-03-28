@@ -172,6 +172,7 @@
 // Flight phase altitude triggering related definitions
 //-----------------------------------------------------
 
+#define HAO_FALLING_TRIGGER 3000
 #define FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER 5000
 #define FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER 20000
 #define FLIGHT_PHASE_4_TO_5_ALTITUDE_TRIGGER 5000
