@@ -104,10 +104,8 @@ AnalogSensor* sensorsArray[4] =
       &externalTemperatureAnalogSensor, &internalTemperatureAnalogSensor };
 AnalogSensors sensors(sensorsArray, 4);
 
-// variable about altitude's variation in meters - Used to the transition between phase 3 et 4
-int deltaAltitude = 0;
-// variable to memorize the previous value of altitude
-int previousAltitude = 0;
+// HAO previous altitude (during ascending phase)
+int previousAltitude;
 
 // voltage sensor
 // N.B. this analog sensor is handled seperately from the others since kiwi frame does
@@ -309,7 +307,8 @@ flightPhaseNumber3Loop()
 {
   int x = millis();
 
-  deltaAltitude = nmeaGPS.getAltitude() - previousAltitude;
+  // TODO check for GPS fix
+  int deltaAltitude = previousAltitude - nmeaGPS.getAltitude();
   previousAltitude = nmeaGPS.getAltitude();
 
   if (deltaAltitude > HAO_FALLING_TRIGGER)
@@ -320,10 +319,6 @@ flightPhaseNumber3Loop()
   delay(FLIGHT_PHASE_3_PAUSE_DURATION);
 
   flightPhaseNumber3DurationCounter.increment((millis() - x) / 1000);
-
-  // TODO check flight phase transition condition : Var about altitude variation -> DONE.
-
-
 }
 
 void
@@ -372,6 +367,8 @@ flightPhaseNumber6Loop()
 void
 setup()
 {
+  previousAltitude = 0;
+
   leds.on();
   delay(1000);
   leds.off();
