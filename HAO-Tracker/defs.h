@@ -117,6 +117,11 @@
  */
 #define FLIGHT_PHASE_6_DURATION_COUNTER_BASE_ADDRESS 0x0012
 
+/**
+ * Time of unmoving ball counter base address
+ */
+#define TIME_OF_UNMOVING_BALL_COUNTER_BASE_ADDRESS 0x0014
+
 //------------------------------------------
 // Flight phase duration related definitions
 //------------------------------------------
@@ -176,10 +181,17 @@
 #define FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER 5000
 #define FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER 20000
 #define FLIGHT_PHASE_4_TO_5_ALTITUDE_TRIGGER 5000
+#define TIME_LIMIT_OF_UNMOVING_BALL 100
 
 //-----------------------------------------------------
 // Flight phase duration triggering related definitions
 //-----------------------------------------------------
+
+#define FLIGHT_PHASE_1_MAX_DURATION 200
+#define FLIGHT_PHASE_2_MAX_DURATION 200
+#define FLIGHT_PHASE_3_MAX_DURATION 200
+#define FLIGHT_PHASE_4_MAX_DURATION 200
+#define FLIGHT_PHASE_5_MAX_DURATION 200
 
 #endif
 

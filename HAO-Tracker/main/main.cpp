@@ -79,13 +79,15 @@ Counter flightPhaseNumber5DurationCounter(
     FLIGHT_PHASE_5_DURATION_COUNTER_BASE_ADDRESS);
 Counter flightPhaseNumber6DurationCounter(
     FLIGHT_PHASE_6_DURATION_COUNTER_BASE_ADDRESS);
-Counter* countersArray[9] =
+Counter timeOfUnmovingBallCounter(
+    TIME_OF_UNMOVING_BALL_COUNTER_BASE_ADDRESS);
+Counter* countersArray[10] =
   { &frameCounter, &resetCounter, &currentFlightPhaseCounter,
       &flightPhaseNumber0DurationCounter, &flightPhaseNumber1DurationCounter,
       &flightPhaseNumber2DurationCounter, &flightPhaseNumber3DurationCounter,
       &flightPhaseNumber4DurationCounter, &flightPhaseNumber5DurationCounter,
-      &flightPhaseNumber6DurationCounter };
-Counters counters(countersArray, 9);
+      &flightPhaseNumber6DurationCounter, &timeOfUnmovingBallCounter };
+Counters counters(countersArray, 10);
 
 // ----------------------------------
 // Analog sensors related definitions
@@ -262,6 +264,7 @@ flightPhaseNumber0Loop()
 {
   int x = millis();
 
+  commonLoop();
   // DO STEP 0
 
   delay(FLIGHT_PHASE_0_PAUSE_DURATION);
@@ -275,11 +278,19 @@ flightPhaseNumber1Loop()
 {
   int x = millis();
 
+  commonLoop();
   // DO STEP 1
 
   delay(FLIGHT_PHASE_1_PAUSE_DURATION);
 
-  if (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER)
+  if (nmeaGPS.getFix())
+    {
+      if (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER)
+        currentFlightPhaseCounter.increment(1);
+    }
+
+  // Check ending moment of the phase thanks to time.
+  if (flightPhaseNumber1DurationCounter == FLIGHT_PHASE_1_MAX_DURATION)
     currentFlightPhaseCounter.increment(1);
 
   flightPhaseNumber1DurationCounter.increment((millis() - x) / 1000);
@@ -290,14 +301,21 @@ flightPhaseNumber2Loop()
 {
   int x = millis();
 
+  commonLoop();
   // DO STEP 2
 
   delay(FLIGHT_PHASE_2_PAUSE_DURATION);
 
-  if (nmeaGPS.getAltitude() > FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER) {
+  if (nmeaGPS.getFix())
+    {
+      if (nmeaGPS.getAltitude() > FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER) {
       currentFlightPhaseCounter.increment(1);
-      previousAltitude = nmeaGPS.getAltitude();
-  }
+      previousAltitude = nmeaGPS.getAltitude();}
+    }
+
+  // Check ending moment of the phase thanks to time.
+  if (flightPhaseNumber2DurationCounter == FLIGHT_PHASE_2_MAX_DURATION)
+    currentFlightPhaseCounter.increment(1);
 
   flightPhaseNumber2DurationCounter.increment((millis() - x) / 1000);
 }
@@ -307,14 +325,21 @@ flightPhaseNumber3Loop()
 {
   int x = millis();
 
-  // TODO check for GPS fix
-  int deltaAltitude = previousAltitude - nmeaGPS.getAltitude();
-  previousAltitude = nmeaGPS.getAltitude();
-
-  if (deltaAltitude > HAO_FALLING_TRIGGER)
-    currentFlightPhaseCounter.increment(1);
-
   commonLoop();
+
+  // TODO check for GPS fix DONE
+  if (nmeaGPS.getFix())
+    {
+      int deltaAltitude = previousAltitude - nmeaGPS.getAltitude();
+      previousAltitude = nmeaGPS.getAltitude();
+
+      if (deltaAltitude > HAO_FALLING_TRIGGER)
+        currentFlightPhaseCounter.increment(1);
+    }
+
+  // Check ending moment of the phase thanks to time.
+  if (flightPhaseNumber3DurationCounter == FLIGHT_PHASE_3_MAX_DURATION)
+    currentFlightPhaseCounter.increment(1);
 
   delay(FLIGHT_PHASE_3_PAUSE_DURATION);
 
@@ -327,10 +352,18 @@ flightPhaseNumber4Loop()
   int x = millis();
 
   // DO STEP 4
+  commonLoop();
 
   delay(FLIGHT_PHASE_4_PAUSE_DURATION);
 
-  if (nmeaGPS.getAltitude() < FLIGHT_PHASE_4_TO_5_ALTITUDE_TRIGGER)
+  if (nmeaGPS.getFix())
+    {
+      if (nmeaGPS.getAltitude() < FLIGHT_PHASE_4_TO_5_ALTITUDE_TRIGGER)
+        currentFlightPhaseCounter.increment(1);
+    }
+
+  // Check ending moment of the phase thanks to time.
+  if (flightPhaseNumber4DurationCounter == FLIGHT_PHASE_4_MAX_DURATION)
     currentFlightPhaseCounter.increment(1);
 
   flightPhaseNumber4DurationCounter.increment((millis() - x) / 1000);
@@ -342,11 +375,31 @@ flightPhaseNumber5Loop()
   int x = millis();
 
   // DO STEP 5
+  commonLoop();
+
+  // Check ending moment of the phase with GPS (if fix ok)
+  if (nmeaGPS.getFix())
+    {
+      int deltaAltitude = previousAltitude - nmeaGPS.getAltitude();
+      previousAltitude = nmeaGPS.getAltitude();
+
+      if (deltaAltitude < 100)
+        timeOfUnmovingBallCounter.increment(1);
+      else
+        timeOfUnmovingBallCounter.set(0);
+
+      if (timeOfUnmovingBallCounter.read()== TIME_LIMIT_OF_UNMOVING_BALL)
+        currentFlightPhaseCounter.increment(1);
+    }
+
+  // Check ending moment of the phase thanks to time.
+  if (flightPhaseNumber5DurationCounter == FLIGHT_PHASE_5_MAX_DURATION)
+    currentFlightPhaseCounter.increment(1);
 
   delay(FLIGHT_PHASE_5_PAUSE_DURATION);
 
   flightPhaseNumber5DurationCounter.increment((millis() - x) / 1000);
-  // TODO check flight phase transition condition
+  // TODO check flight phase transition condition DONE.
 }
 
 void
@@ -355,6 +408,7 @@ flightPhaseNumber6Loop()
   int x = millis();
 
   // DO STEP 6
+  commonLoop();
 
   delay(FLIGHT_PHASE_6_PAUSE_DURATION);
 
