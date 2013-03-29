@@ -83,44 +83,14 @@
 #define CURRENT_FLIGHT_PHASE_COUNTER_BASE_ADDRESS 0x0004
 
 /**
- * Flight phase number 0 duration counter base address
+ * Flight current phase duration counter base address
  */
-#define FLIGHT_PHASE_0_DURATION_COUNTER_BASE_ADDRESS 0x0006
-
-/**
- * Flight phase number 1 duration counter base address
- */
-#define FLIGHT_PHASE_1_DURATION_COUNTER_BASE_ADDRESS 0x0008
-
-/**
- * Flight phase number 2 duration counter base address
- */
-#define FLIGHT_PHASE_2_DURATION_COUNTER_BASE_ADDRESS 0x000A
-
-/**
- * Flight phase number 3 duration counter base address
- */
-#define FLIGHT_PHASE_3_DURATION_COUNTER_BASE_ADDRESS 0x000C
-
-/**
- * Flight phase number 4 duration counter base address
- */
-#define FLIGHT_PHASE_4_DURATION_COUNTER_BASE_ADDRESS 0x000E
-
-/**
- * Flight phase number 5 duration counter base address
- */
-#define FLIGHT_PHASE_5_DURATION_COUNTER_BASE_ADDRESS 0x0010
-
-/**
- * Flight phase number 6 duration counter base address
- */
-#define FLIGHT_PHASE_6_DURATION_COUNTER_BASE_ADDRESS 0x0012
+#define FLIGHT_PHASE_DURATION_COUNTER_BASE_ADDRESS 0x0006
 
 /**
  * Time of unmoving ball counter base address
  */
-#define TIME_OF_UNMOVING_BALL_COUNTER_BASE_ADDRESS 0x0014
+#define TIME_OF_UNMOVING_BALL_COUNTER_BASE_ADDRESS 0x0008
 
 //------------------------------------------
 // Flight phase duration related definitions

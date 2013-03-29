@@ -65,29 +65,14 @@ FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX_PIN);
 Counter frameCounter(FRAME_COUNTER_BASE_ADDRESS);
 Counter resetCounter(RESET_COUNTER_BASE_ADDRESS);
 Counter currentFlightPhaseCounter(CURRENT_FLIGHT_PHASE_COUNTER_BASE_ADDRESS);
-Counter flightPhaseNumber0DurationCounter(
-    FLIGHT_PHASE_0_DURATION_COUNTER_BASE_ADDRESS);
-Counter flightPhaseNumber1DurationCounter(
-    FLIGHT_PHASE_1_DURATION_COUNTER_BASE_ADDRESS);
-Counter flightPhaseNumber2DurationCounter(
-    FLIGHT_PHASE_2_DURATION_COUNTER_BASE_ADDRESS);
-Counter flightPhaseNumber3DurationCounter(
-    FLIGHT_PHASE_3_DURATION_COUNTER_BASE_ADDRESS);
-Counter flightPhaseNumber4DurationCounter(
-    FLIGHT_PHASE_4_DURATION_COUNTER_BASE_ADDRESS);
-Counter flightPhaseNumber5DurationCounter(
-    FLIGHT_PHASE_5_DURATION_COUNTER_BASE_ADDRESS);
-Counter flightPhaseNumber6DurationCounter(
-    FLIGHT_PHASE_6_DURATION_COUNTER_BASE_ADDRESS);
 Counter timeOfUnmovingBallCounter(
     TIME_OF_UNMOVING_BALL_COUNTER_BASE_ADDRESS);
-Counter* countersArray[10] =
+Counter currentFlightPhaseDurationCounter (
+    FLIGHT_PHASE_DURATION_COUNTER_BASE_ADDRESS);
+Counter* countersArray[4] =
   { &frameCounter, &resetCounter, &currentFlightPhaseCounter,
-      &flightPhaseNumber0DurationCounter, &flightPhaseNumber1DurationCounter,
-      &flightPhaseNumber2DurationCounter, &flightPhaseNumber3DurationCounter,
-      &flightPhaseNumber4DurationCounter, &flightPhaseNumber5DurationCounter,
-      &flightPhaseNumber6DurationCounter, &timeOfUnmovingBallCounter };
-Counters counters(countersArray, 10);
+      &currentFlightPhaseDurationCounter};
+Counters counters(countersArray, 4);
 
 // ----------------------------------
 // Analog sensors related definitions
@@ -262,21 +247,31 @@ commonLoop()
 void
 flightPhaseNumber0Loop()
 {
-  int x = millis();
+  unsigned long x = millis();
 
   commonLoop();
   // DO STEP 0
 
   delay(FLIGHT_PHASE_0_PAUSE_DURATION);
 
-  flightPhaseNumber0DurationCounter.increment((millis() - x) / 1000);
+/*******************************************************************************/
+  // Check ending moment of the phase thanks to time.
+  if (currentFlightPhaseDurationCounter.read() == 1000)
+    {
+      currentFlightPhaseCounter.increment(1);
+      currentFlightPhaseDurationCounter.set(0);
+    }
+/*******************************************************************************/
+
+
+  currentFlightPhaseDurationCounter.increment((millis() - x) / 1000);
   // TODO check flight phase transition condition
 }
 
 void
 flightPhaseNumber1Loop()
 {
-  int x = millis();
+  unsigned long x = millis();
 
   commonLoop();
   // DO STEP 1
@@ -290,16 +285,19 @@ flightPhaseNumber1Loop()
     }
 
   // Check ending moment of the phase thanks to time.
-  if (flightPhaseNumber1DurationCounter == FLIGHT_PHASE_1_MAX_DURATION)
-    currentFlightPhaseCounter.increment(1);
+  if (currentFlightPhaseDurationCounter.read() == FLIGHT_PHASE_1_MAX_DURATION)
+    {
+      currentFlightPhaseCounter.increment(1);
+      currentFlightPhaseDurationCounter.set(0);
+    }
 
-  flightPhaseNumber1DurationCounter.increment((millis() - x) / 1000);
+  currentFlightPhaseDurationCounter.increment((millis() - x) / 1000);
 }
 
 void
 flightPhaseNumber2Loop()
 {
-  int x = millis();
+  unsigned long x = millis();
 
   commonLoop();
   // DO STEP 2
@@ -314,16 +312,19 @@ flightPhaseNumber2Loop()
     }
 
   // Check ending moment of the phase thanks to time.
-  if (flightPhaseNumber2DurationCounter == FLIGHT_PHASE_2_MAX_DURATION)
-    currentFlightPhaseCounter.increment(1);
+  if (currentFlightPhaseDurationCounter.read() == FLIGHT_PHASE_2_MAX_DURATION)
+    {
+      currentFlightPhaseCounter.increment(1);
+      currentFlightPhaseDurationCounter.set(0);
+    }
 
-  flightPhaseNumber2DurationCounter.increment((millis() - x) / 1000);
+  currentFlightPhaseDurationCounter.increment((millis() - x) / 1000);
 }
 
 void
 flightPhaseNumber3Loop()
 {
-  int x = millis();
+  unsigned long x = millis();
 
   commonLoop();
 
@@ -338,18 +339,21 @@ flightPhaseNumber3Loop()
     }
 
   // Check ending moment of the phase thanks to time.
-  if (flightPhaseNumber3DurationCounter == FLIGHT_PHASE_3_MAX_DURATION)
-    currentFlightPhaseCounter.increment(1);
+  if (currentFlightPhaseDurationCounter.read() == FLIGHT_PHASE_3_MAX_DURATION)
+    {
+      currentFlightPhaseCounter.increment(1);
+      currentFlightPhaseDurationCounter.set(0);
+    }
 
   delay(FLIGHT_PHASE_3_PAUSE_DURATION);
 
-  flightPhaseNumber3DurationCounter.increment((millis() - x) / 1000);
+  currentFlightPhaseDurationCounter.increment((millis() - x) / 1000);
 }
 
 void
 flightPhaseNumber4Loop()
 {
-  int x = millis();
+  unsigned long x = millis();
 
   // DO STEP 4
   commonLoop();
@@ -363,16 +367,19 @@ flightPhaseNumber4Loop()
     }
 
   // Check ending moment of the phase thanks to time.
-  if (flightPhaseNumber4DurationCounter == FLIGHT_PHASE_4_MAX_DURATION)
-    currentFlightPhaseCounter.increment(1);
+  if (currentFlightPhaseDurationCounter.read() == FLIGHT_PHASE_4_MAX_DURATION)
+    {
+      currentFlightPhaseCounter.increment(1);
+      currentFlightPhaseDurationCounter.set(0);
+    }
 
-  flightPhaseNumber4DurationCounter.increment((millis() - x) / 1000);
+  currentFlightPhaseDurationCounter.increment((millis() - x) / 1000);
 }
 
 void
 flightPhaseNumber5Loop()
 {
-  int x = millis();
+  unsigned long x = millis();
 
   // DO STEP 5
   commonLoop();
@@ -393,26 +400,29 @@ flightPhaseNumber5Loop()
     }
 
   // Check ending moment of the phase thanks to time.
-  if (flightPhaseNumber5DurationCounter == FLIGHT_PHASE_5_MAX_DURATION)
-    currentFlightPhaseCounter.increment(1);
+  if (currentFlightPhaseDurationCounter.read() == FLIGHT_PHASE_5_MAX_DURATION)
+    {
+      currentFlightPhaseCounter.increment(1);
+      currentFlightPhaseDurationCounter.set(0);
+    }
 
   delay(FLIGHT_PHASE_5_PAUSE_DURATION);
 
-  flightPhaseNumber5DurationCounter.increment((millis() - x) / 1000);
+  currentFlightPhaseDurationCounter.increment((millis() - x) / 1000);
   // TODO check flight phase transition condition DONE.
 }
 
 void
 flightPhaseNumber6Loop()
 {
-  int x = millis();
+  unsigned long x = millis();
 
   // DO STEP 6
   commonLoop();
 
   delay(FLIGHT_PHASE_6_PAUSE_DURATION);
 
-  flightPhaseNumber6DurationCounter.increment((millis() - x) / 1000);
+  currentFlightPhaseDurationCounter.increment((millis() - x) / 1000);
 }
 
 /**
