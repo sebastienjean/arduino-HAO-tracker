@@ -157,11 +157,11 @@
 // Flight phase duration triggering related definitions
 //-----------------------------------------------------
 
-#define FLIGHT_PHASE_1_MAX_DURATION 200
-#define FLIGHT_PHASE_2_MAX_DURATION 200
-#define FLIGHT_PHASE_3_MAX_DURATION 200
-#define FLIGHT_PHASE_4_MAX_DURATION 200
-#define FLIGHT_PHASE_5_MAX_DURATION 200
+#define FLIGHT_PHASE_1_MAX_DURATION 65
+#define FLIGHT_PHASE_2_MAX_DURATION 75
+#define FLIGHT_PHASE_3_MAX_DURATION 30
+#define FLIGHT_PHASE_4_MAX_DURATION 35
+#define FLIGHT_PHASE_5_MAX_DURATION 45
 
 #endif
 
