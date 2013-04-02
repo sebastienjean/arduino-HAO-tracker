@@ -25,6 +25,7 @@
 #include <DS1302.h>
 #include <GPS.h>
 #include <GPS3D.h>
+#include <FCOEV2.h>
 #if defined(GPS_SERIAL_RX_PIN)
 #include <SoftwareSerial.h>
 #endif
@@ -115,6 +116,13 @@ CustomFrameBuilder customFrameBuilder(&counters, &sensors, &voltage, &rtc,
 // ------------------------------
 unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
 KiwiFrameBuilder kiwiFrameBuilder(&sensors, &voltage);
+
+// -------------------
+// Cameras'declaration
+// -------------------
+FCOEV2 cameraMobile(CAMERA_MOBILE_PWM);
+FCOEV2 cameraGround(CAMERA_GROUND_PWM);
+FCOEV2 cameraSky(CAMERA_SKY_PWM);
 
 // ------------------------
 // LEDs related definitions
@@ -245,6 +253,149 @@ commonLoop()
   frameCounter.increment(1);
 }
 
+/**
+ * Function for HAO's cameras.
+ */
+
+void
+flightPhaseNumber1Cameras()
+{
+  // mobile camera change mode
+  if (cameraMobile.getCurrentMode()!= MODE_VIDEO)
+    cameraMobile.switchToMode(MODE_VIDEO);
+
+  // mobile camera change mode
+  if (cameraGround.getCurrentMode()!= MODE_VIDEO)
+    cameraGround.switchToMode(MODE_VIDEO);
+
+  // mobile camera change mode
+  if (cameraSky.getCurrentMode()!= MODE_VIDEO)
+    cameraSky.switchToMode(MODE_VIDEO);
+
+
+  // mobile camera management
+  // TODO Servo -> GROUND
+  if (frameCounter.read()%DELAY_FRAGMENTATION==0)
+    {
+      cameraMobile.toggleAction();
+      cameraMobile.toggleAction();
+    }
+
+  // ground camera management
+  if (frameCounter.read()%DELAY_FRAGMENTATION==0)
+    {
+      cameraGround.toggleAction();
+      cameraGround.toggleAction();
+    }
+
+  // sky camera management
+  if (frameCounter.read()%DELAY_FRAGMENTATION==0)
+    {
+      cameraSky.toggleAction();
+      cameraSky.toggleAction();
+    }
+}
+
+void
+flightPhaseNumber2Cameras()
+{
+  // mobile camera change mode
+  // TODO Switch servo GROUND/HORIZON/SKY
+  if (cameraMobile.getCurrentMode()!= MODE_PHOTO_SINGLE)
+    cameraMobile.switchToMode(MODE_PHOTO_SINGLE);
+
+  // ground camera change mode
+  if (cameraGround.getCurrentMode()!= MODE_PHOTO_SINGLE)
+    cameraGround.switchToMode(MODE_PHOTO_SINGLE);
+
+  // sky camera change mode
+  if (cameraSky.getCurrentMode()!= MODE_PHOTO_SINGLE)
+    cameraSky.switchToMode(MODE_PHOTO_SINGLE);
+
+  // Take photos
+  cameraMobile.toggleAction();
+  cameraGround.toggleAction();
+  cameraSky.toggleAction();
+}
+
+void
+flightPhaseNumber3Cameras()
+{
+  // mobile camera change mode
+  if (cameraMobile.getCurrentMode()!= MODE_VIDEO)
+    cameraMobile.switchToMode(MODE_VIDEO);
+
+  // mobile camera change mode
+  if (cameraGround.getCurrentMode()!= MODE_VIDEO)
+    cameraGround.switchToMode(MODE_VIDEO);
+
+  // mobile camera change mode
+  if (cameraSky.getCurrentMode()!= MODE_VIDEO)
+    cameraSky.switchToMode(MODE_VIDEO);
+
+
+  // mobile camera management
+  // TODO Servo -> SKY
+  if (frameCounter.read()%DELAY_FRAGMENTATION==0)
+    {
+      cameraMobile.toggleAction();
+      cameraMobile.toggleAction();
+    }
+
+  // ground camera management
+  if (frameCounter.read()%DELAY_FRAGMENTATION==0)
+    {
+      cameraGround.toggleAction();
+      cameraGround.toggleAction();
+    }
+
+  // sky camera management
+  if (frameCounter.read()%DELAY_FRAGMENTATION==0)
+    {
+      cameraSky.toggleAction();
+      cameraSky.toggleAction();
+    }
+}
+
+void
+flightPhaseNumber4Cameras()
+{
+  // mobile camera change mode
+  if (cameraMobile.getCurrentMode()!= MODE_VIDEO)
+    cameraMobile.switchToMode(MODE_VIDEO);
+
+  // mobile camera change mode
+  if (cameraGround.getCurrentMode()!= MODE_VIDEO)
+    cameraGround.switchToMode(MODE_VIDEO);
+
+  // mobile camera change mode
+  if (cameraSky.getCurrentMode()!= MODE_VIDEO)
+    cameraSky.switchToMode(MODE_VIDEO);
+
+
+  // mobile camera management
+  // TODO Servo -> HORIZON
+  if (frameCounter.read()%DELAY_FRAGMENTATION==0)
+    {
+      cameraMobile.toggleAction();
+      cameraMobile.toggleAction();
+    }
+
+  // ground camera management
+  if (frameCounter.read()%DELAY_FRAGMENTATION==0)
+    {
+      cameraGround.toggleAction();
+      cameraGround.toggleAction();
+    }
+
+  // sky camera management
+  if (frameCounter.read()%DELAY_FRAGMENTATION==0)
+    {
+      cameraSky.toggleAction();
+      cameraSky.toggleAction();
+    }
+}
+
 bool
 flightPhaseNumber0Loop()
 {
@@ -256,6 +407,16 @@ flightPhaseNumber0Loop()
   // Check ending moment of the phase thanks to time.
   if (currentFlightPhaseDurationCounter.read() > 50)
     {
+      // Switch to mode video
+      cameraMobile.switchToMode(MODE_VIDEO);
+      cameraGround.switchToMode(MODE_VIDEO);
+      cameraSky.switchToMode(MODE_VIDEO);
+
+      // Start record
+      cameraMobile.toggleAction();
+      cameraGround.toggleAction();
+      cameraSky.toggleAction();
+
       return true;
     }
 /*******************************************************************************/
@@ -269,13 +430,16 @@ flightPhaseNumber1Loop()
 {
   SERIAL_DEBUG.println(F("@P1L"));
   delay(FLIGHT_PHASE_1_PAUSE_DURATION);
-  // DO STEP 1
 
+  // Management of cameras on phase 1
+  flightPhaseNumber1Cameras();
 
   if (nmeaGPS.getFix())
     {
       if (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER)
-        return true;
+        {
+          return true;
+        }
     }
 
   // Check ending moment of the phase thanks to time.
@@ -291,7 +455,9 @@ flightPhaseNumber2Loop()
 {
   SERIAL_DEBUG.println(F("@P2L"));
   delay(FLIGHT_PHASE_2_PAUSE_DURATION);
-  // DO STEP 2
+
+  // Management of cameras on phase 2
+  flightPhaseNumber2Cameras();
 
   if (nmeaGPS.getFix())
     {
@@ -314,6 +480,9 @@ flightPhaseNumber3Loop()
   SERIAL_DEBUG.println(F("@P3L"));
   delay(FLIGHT_PHASE_3_PAUSE_DURATION);
 
+  // Management of cameras on phase 3
+  flightPhaseNumber3Cameras();
+
   if (nmeaGPS.getFix())
     {
       int deltaAltitude = previousAltitude - nmeaGPS.getAltitude();
@@ -334,10 +503,11 @@ flightPhaseNumber3Loop()
 bool
 flightPhaseNumber4Loop()
 {
-  // DO STEP 4
-
   SERIAL_DEBUG.println(F("@P4L"));
   delay(FLIGHT_PHASE_4_PAUSE_DURATION);
+
+  // Management of cameras on phase 4
+  flightPhaseNumber4Cameras();
 
   if (nmeaGPS.getFix())
     {
@@ -361,7 +531,8 @@ flightPhaseNumber5Loop()
 
   delay(FLIGHT_PHASE_5_PAUSE_DURATION);
 
-  // DO STEP 5
+  // Management of cameras on phase 4
+  flightPhaseNumber4Cameras();
 
   // Check ending moment of the phase with GPS (if fix ok)
   if (nmeaGPS.getFix())
@@ -392,6 +563,7 @@ flightPhaseNumber6Loop()
 {
   SERIAL_DEBUG.println(F("@P6L"));
   delay(FLIGHT_PHASE_6_PAUSE_DURATION);
+
   // DO STEP 6
 
   return false;

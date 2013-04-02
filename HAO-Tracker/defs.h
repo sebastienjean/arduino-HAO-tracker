@@ -163,5 +163,16 @@
 #define FLIGHT_PHASE_4_MAX_DURATION 35
 #define FLIGHT_PHASE_5_MAX_DURATION 45
 
+// ---------------
+// Cameras' output
+// ---------------
+#define CAMERA_MOBILE_PWM 22
+#define CAMERA_GROUND_PWM 3
+#define CAMERA_SKY_PWM 26
+
+// ----------------------------------------------------
+// Delay of the number of frame to reset camera's video
+// ----------------------------------------------------
+#define DELAY_FRAGMENTATION 10
 #endif
 
