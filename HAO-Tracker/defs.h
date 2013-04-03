@@ -187,11 +187,11 @@
 // Flight phase duration triggering related definitions
 //-----------------------------------------------------
 
-#define FLIGHT_PHASE_1_MAX_DURATION 65
-#define FLIGHT_PHASE_2_MAX_DURATION 75
+#define FLIGHT_PHASE_1_MAX_DURATION 40
+#define FLIGHT_PHASE_2_MAX_DURATION 30
 #define FLIGHT_PHASE_3_MAX_DURATION 30
-#define FLIGHT_PHASE_4_MAX_DURATION 35
-#define FLIGHT_PHASE_5_MAX_DURATION 45
+#define FLIGHT_PHASE_4_MAX_DURATION 30
+#define FLIGHT_PHASE_5_MAX_DURATION 30
 
 // ---------------
 // Cameras' output
@@ -209,12 +209,12 @@
 // State of the camera
 // -------------------
 
-#define VIDEO_CAMERA_ON 0
-#define VIDEO_CAMERA_OFF 1
+#define VIDEO_CAMERA_OFF 0
+#define VIDEO_CAMERA_ON 1
 
 #define CAMERA_MODE_VIDEO 0
-#define CAMERA_MODE_PHOTO_SINGLE 1
-#define CAMERA_MODE_PHOTO_SERIAL 2
+#define CAMERA_MODE_PHOTO_SERIAL 1
+#define CAMERA_MODE_PHOTO_SINGLE 2
 
 #endif
 
