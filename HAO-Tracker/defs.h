@@ -92,6 +92,36 @@
  */
 #define TIME_OF_UNMOVING_BALL_COUNTER_BASE_ADDRESS 0x0008
 
+/**
+ * State of the mobile video camera counter base address
+ */
+#define STATE_OF_MOBILE_VIDEO_CAMERA_COUNTER_BASE_ADDRESS 0x000A
+
+/**
+ * State of the ground video camera counter base address
+ */
+#define STATE_OF_GROUND_VIDEO_CAMERA_COUNTER_BASE_ADDRESS 0x000C
+
+/**
+ * State of the sky video camera counter base address
+ */
+#define STATE_OF_SKY_VIDEO_CAMERA_COUNTER_BASE_ADDRESS 0x000E
+
+/**
+ * Mode of mobile camera counter base address
+ */
+#define MODE_OF_MOBILE_CAMERA_COUNTER_BASE_ADDRESS 0x0010
+
+/**
+ * Mode of ground camera counter base address
+ */
+#define MODE_OF_GROUND_CAMERA_COUNTER_BASE_ADDRESS 0x0010
+
+/**
+ * Mode of sky camera counter base address
+ */
+#define MODE_OF_SKY_CAMERA_COUNTER_BASE_ADDRESS 0x0010
+
 //------------------------------------------
 // Flight phase duration related definitions
 //------------------------------------------
@@ -174,5 +204,17 @@
 // Delay of the number of frame to reset camera's video
 // ----------------------------------------------------
 #define DELAY_FRAGMENTATION 10
+
+// -------------------
+// State of the camera
+// -------------------
+
+#define VIDEO_CAMERA_ON 0
+#define VIDEO_CAMERA_OFF 1
+
+#define CAMERA_MODE_VIDEO 0
+#define CAMERA_MODE_PHOTO_SINGLE 1
+#define CAMERA_MODE_PHOTO_SERIAL 2
+
 #endif
 

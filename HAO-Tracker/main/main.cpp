@@ -68,6 +68,18 @@ Counter resetCounter(RESET_COUNTER_BASE_ADDRESS);
 Counter currentFlightPhaseCounter(CURRENT_FLIGHT_PHASE_COUNTER_BASE_ADDRESS);
 Counter timeOfUnmovingBallCounter(
     TIME_OF_UNMOVING_BALL_COUNTER_BASE_ADDRESS);
+Counter stateOfMobileVideoCamera(
+    STATE_OF_MOBILE_VIDEO_CAMERA_COUNTER_BASE_ADDRESS);
+Counter stateOfGroundVideoCamera(
+    STATE_OF_GROUND_VIDEO_CAMERA_COUNTER_BASE_ADDRESS);
+Counter stateOfSkyVideoCamera(
+    STATE_OF_SKY_VIDEO_CAMERA_COUNTER_BASE_ADDRESS);
+Counter modeOfMobileCamera(
+    MODE_OF_MOBILE_CAMERA_COUNTER_BASE_ADDRESS);
+Counter modeOfGroundCamera(
+    MODE_OF_GROUND_CAMERA_COUNTER_BASE_ADDRESS);
+Counter modeOfSkyCamera(
+    MODE_OF_SKY_CAMERA_COUNTER_BASE_ADDRESS);
 Counter currentFlightPhaseDurationCounter (
     FLIGHT_PHASE_DURATION_COUNTER_BASE_ADDRESS);
 Counter* countersArray[4] =
@@ -165,6 +177,16 @@ deleteLogFileIfUserClaimsTo()
     {
       // reset all counters
       counters.reset();
+      timeOfUnmovingBallCounter.reset();
+
+      stateOfMobileVideoCamera.reset();
+      stateOfGroundVideoCamera.reset();
+      stateOfSkyVideoCamera.reset();
+
+      modeOfMobileCamera.reset();
+      modeOfGroundCamera.reset();
+      modeOfSkyCamera.reset();
+
       return LOGGER.reset();
     }
   return false;
