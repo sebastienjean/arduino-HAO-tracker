@@ -61,7 +61,7 @@
 /**
  * HAO name
  */
-#define HAO_NAME "POKEBALL"
+#define HAO_NAME "STRATERRESTRE"
 
 //-----------------------------
 // Counters related definitions
@@ -88,39 +88,39 @@
 #define FLIGHT_PHASE_DURATION_COUNTER_BASE_ADDRESS 0x0006
 
 /**
- * Time of unmoving ball counter base address
+ * HAO stillness duration (in seconds) counter base address
  */
-#define TIME_OF_UNMOVING_BALL_COUNTER_BASE_ADDRESS 0x0008
+#define STILLNESS_DURATION_IN_SECONDS_COUNTER_BASE_ADDRESS 0x0008
 
 /**
- * State of the mobile video camera counter base address
+ * Motorized camera running status counter base address
  */
-#define STATE_OF_MOBILE_VIDEO_CAMERA_COUNTER_BASE_ADDRESS 0x000A
+#define MOTORIZED_CAMERA_RUNNING_STATUS_COUNTER_BASE_ADDRESS 0x000A
 
 /**
- * State of the ground video camera counter base address
+ * Ground camera running status counter base address
  */
-#define STATE_OF_GROUND_VIDEO_CAMERA_COUNTER_BASE_ADDRESS 0x000C
+#define GROUND_CAMERA_RUNNING_STATUS_COUNTER_BASE_ADDRESS 0x000C
 
 /**
- * State of the sky video camera counter base address
+ * Sky camera running status counter base address
  */
-#define STATE_OF_SKY_VIDEO_CAMERA_COUNTER_BASE_ADDRESS 0x000E
+#define SKY_CAMERA_RUNNING_STATUS_COUNTER_BASE_ADDRESS 0x000E
 
 /**
- * Mode of mobile camera counter base address
+ * Motorized camera mode counter base address
  */
-#define MODE_OF_MOBILE_CAMERA_COUNTER_BASE_ADDRESS 0x0010
+#define MOTORIZED_CAMERA_MODE_COUNTER_BASE_ADDRESS 0x0010
 
 /**
- * Mode of ground camera counter base address
+ * Ground camera mode counter base address
  */
-#define MODE_OF_GROUND_CAMERA_COUNTER_BASE_ADDRESS 0x0010
+#define GROUND_CAMERA_MODE_COUNTER_BASE_ADDRESS 0x0010
 
 /**
- * Mode of sky camera counter base address
+ * Sky camera mode counter base address
  */
-#define MODE_OF_SKY_CAMERA_COUNTER_BASE_ADDRESS 0x0010
+#define SKY_CAMERA_MODE_COUNTER_BASE_ADDRESS 0x0010
 
 //------------------------------------------
 // Flight phase duration related definitions
@@ -181,7 +181,7 @@
 #define FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER 5000
 #define FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER 20000
 #define FLIGHT_PHASE_4_TO_5_ALTITUDE_TRIGGER 5000
-#define TIME_LIMIT_OF_UNMOVING_BALL 100
+#define STILLNESS_DURATION_IN_SECONDS_LIMIT 100
 
 //-----------------------------------------------------
 // Flight phase duration triggering related definitions
@@ -204,17 +204,6 @@
 // Delay of the number of frame to reset camera's video
 // ----------------------------------------------------
 #define DELAY_FRAGMENTATION 10
-
-// -------------------
-// State of the camera
-// -------------------
-
-#define VIDEO_CAMERA_OFF 0
-#define VIDEO_CAMERA_ON 1
-
-#define CAMERA_MODE_VIDEO 0
-#define CAMERA_MODE_PHOTO_SERIAL 1
-#define CAMERA_MODE_PHOTO_SINGLE 2
 
 #endif
 
