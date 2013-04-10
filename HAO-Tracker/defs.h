@@ -115,12 +115,12 @@
 /**
  * Ground camera mode counter base address
  */
-#define GROUND_CAMERA_MODE_COUNTER_BASE_ADDRESS 0x0010
+#define GROUND_CAMERA_MODE_COUNTER_BASE_ADDRESS 0x0012
 
 /**
  * Sky camera mode counter base address
  */
-#define SKY_CAMERA_MODE_COUNTER_BASE_ADDRESS 0x0010
+#define SKY_CAMERA_MODE_COUNTER_BASE_ADDRESS 0x0014
 
 //------------------------------------------
 // Flight phase duration related definitions
