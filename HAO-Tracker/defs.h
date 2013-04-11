@@ -165,18 +165,47 @@
 // Flight phase numbering related definitions
 //-------------------------------------------
 
+/**
+ * First flight phase, before taking off
+ */
 #define BEFORE_TAKING_OFF_FLIGHT_PHASE 0
+
+/**
+ * Second flight phase, ascending, below 5000 meters
+ */
 #define ASCENDING_BELOW_5000M_FLIGHT_PHASE 1
+
+/**
+ * Third flight phase, ascending, above 5000 meters and below 20000 meters
+ */
 #define ASCENDING_BETWEEN_5000M_AND_20000M_FLIGHT_PHASE 2
+
+/**
+ * Fourth flight phase, ascending, above 20000 meters and before burst
+ */
 #define BEFORE_BURST_FLIGHT_PHASE 3
+
+/**
+ * Fifth flight phase, descending, above 5000 meters
+ */
 #define DESCENDING_ABOVE_5000M_FLIGHT_PHASE 4
+
+/**
+ * Sixth flight phase, before landing, below 5000 meters
+ */
 #define BEFORE_LANDING_FLIGHT_PHASE 5
+
+/**
+ * Seventh flight phase, after landing
+ */
 #define AFTER_LANDING_FLIGHT_PHASE 6
 
 //-----------------------------------------------------
 // Flight phase altitude triggering related definitions
 //-----------------------------------------------------
-
+/**
+ * Fifth flight phase, descending, above 5000 meters
+ */
 #define HAO_FALLING_TRIGGER 3000
 #define FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER 5000
 #define FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER 20000
@@ -196,9 +225,9 @@
 // ---------------
 // Cameras' output
 // ---------------
-#define CAMERA_MOBILE_PWM 22
-#define CAMERA_GROUND_PWM 3
-#define CAMERA_SKY_PWM 26
+#define MOTORIZED_CAMERA_PWM_PIN 22
+#define GROUND_CAMERA_PWM_PIN 3
+#define SKY_CAMERA_PWM_PIN 26
 
 // ----------------------------------------------------
 // Delay of the number of frame to reset camera's video
