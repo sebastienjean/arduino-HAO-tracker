@@ -359,25 +359,22 @@ initGpsSerial()
 void
 initCameras()
 {
-  // turning cameras off and on again (following advice)
-  // TODO extract delay from On (too long)
+  /* turning cameras off and on again (following advice) */
   motorizedCamera.switchOff();
-  motorizedCamera.switchOn();
-
   groundCamera.switchOff();
-  groundCamera.switchOn();
-
   skyCamera.switchOff();
+  delay(500);
+  motorizedCamera.switchOn();
+  groundCamera.switchOn();
   skyCamera.switchOn();
+  delay(SWITCH_ON_PAUSE_MILLIS);
 
-  // TODO waiting for camera to turn on here
-
-  // switching to last known mode
+  /* switching to last known mode */
   motorizedCamera.switchToMode(motorizedCameraModeCounter.read());
   groundCamera.switchToMode(groundCameraModeCounter.read());
   skyCamera.switchToMode(skyCameraModeCounter.read());
 
-  // toogling action if needed
+  /* toggling action if needed */
   if (motorizedCamera.getRunningStatus() == CAMERA_RUNNING)
   {
     motorizedCamera.toggleAction();
@@ -397,55 +394,55 @@ commonLoop()
 {
   SERIAL_DEBUG.println(F("@CL"));
 
-  // Loop start sequence
-      redLED.quicklyMakeBlinkSeveralTimes(1);
-      greenLED.quicklyMakeBlinkSeveralTimes(1);
+  /* Loop start sequence */
 
-  // kiwi frame building
-      kiwiFrameBuilder.buildKiwiFrame(kiwiFrame);
+  redLED.quicklyMakeBlinkSeveralTimes(1);
+  greenLED.quicklyMakeBlinkSeveralTimes(1);
 
-  // kiwi frame transmission
-      fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
+  /* kiwi frame building */
+  kiwiFrameBuilder.buildKiwiFrame(kiwiFrame);
 
-      greenLED.quicklyMakeBlinkSeveralTimes(2);
+  /* kiwi frame transmission */
+  fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
 
-      // Positioning data reading (and debug)
-      nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer);
+  greenLED.quicklyMakeBlinkSeveralTimes(2);
 
-      blueLED.showStatus(nmeaGPS.getFix());
+  /* positioning data reading (and debug) */
+  nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer);
 
-      // NMEA sentences logging
-      LOGGER.logMessage(nmeaRmcSentenceBuffer, false);
-      LOGGER.logMessage(nmeaGgaSentenceBuffer, false);
-      delay(500);
+  blueLED.showStatus(nmeaGPS.getFix());
 
-      // NMEA sentences transmission
-      fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
+  /* NMEA sentences logging */
+  LOGGER.logMessage(nmeaRmcSentenceBuffer, false);
+  LOGGER.logMessage(nmeaGgaSentenceBuffer, false);
+  delay(500);
 
-      fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaGgaSentenceBuffer));
+  /* NMEA sentences transmission */
+  fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
+  fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaGgaSentenceBuffer));
 
-      greenLED.quicklyMakeBlinkSeveralTimes(3);
+  greenLED.quicklyMakeBlinkSeveralTimes(3);
 
-      // custom frame building
-      customFrameBuilder.buildCustomFrame(customFrame);
+  /* custom frame building */
+  customFrameBuilder.buildCustomFrame(customFrame);
 
-      // custom frame debug
-      SERIAL_DEBUG.print(customFrame);
+  /* custom frame debug */
+  SERIAL_DEBUG.print(customFrame);
 
-      // custom frame logging
-      LOGGER.logMessage(customFrame, false);
-      // Pause half a second to ensure SD asynchronous writing to be finished
-      delay(500);
+  /* custom frame logging */
+  LOGGER.logMessage(customFrame, false);
+  /* pause half a second to ensure SD asynchronous writing to be finished */
+  delay(500);
 
-      // custom frame transmission
-      fskModulator.modulateBytes(customFrame, strlen(customFrame));
+  /* custom frame transmission */
+  fskModulator.modulateBytes(customFrame, strlen(customFrame));
 
-      redLED.quicklyMakeBlinkSeveralTimes(1);
-      delay(1000);
+  redLED.quicklyMakeBlinkSeveralTimes(1);
+  delay(1000);
 
-      // frame counter update
-      frameCounter.increment(1);
-    }
+  /* frame counter update */
+  frameCounter.increment(1);
+}
 
   /**
    * Function for HAO's cameras.
@@ -453,7 +450,6 @@ commonLoop()
 void
 flightPhase1CameraProcessing()
 {
-  // MOBILE CAMERA MANAGEMENT
   // TODO Servo -> GROUND
   if (motorizedCamera.getCurrentMode() == MODE_VIDEO)
   {
