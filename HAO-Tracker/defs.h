@@ -127,39 +127,39 @@
 //------------------------------------------
 
 /**
- * Flight phase number 0 pause duration (in ms)
+ * Flight phase number 0 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_0_PAUSE_DURATION 500
+#define FLIGHT_PHASE_0_PAUSE_MILLIS 30000
 
 /**
- * Flight phase number 1 pause duration (in ms)
+ * Flight phase number 1 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_1_PAUSE_DURATION 500
+#define FLIGHT_PHASE_1_PAUSE_MILLIS 30000
 
 /**
- * Flight phase number 2 pause duration (in ms)
+ * Flight phase number 2 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_2_PAUSE_DURATION 500
+#define FLIGHT_PHASE_2_PAUSE_MILLIS 30000
 
 /**
- * Flight phase number 3 pause duration (in ms)
+ * Flight phase number 3 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_3_PAUSE_DURATION 500
+#define FLIGHT_PHASE_3_PAUSE_MILLIS 30000
 
 /**
- * Flight phase number 4 pause duration (in ms)
+ * Flight phase number 4 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_4_PAUSE_DURATION 500
+#define FLIGHT_PHASE_4_PAUSE_MILLIS 30000
 
 /**
- * Flight phase number 5 pause duration (in ms)
+ * Flight phase number 5 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_5_PAUSE_DURATION 500
+#define FLIGHT_PHASE_5_PAUSE_MILLIS 30000
 
 /**
- * Flight phase number 6 pause duration (in ms)
+ * Flight phase number 6 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_6_PAUSE_DURATION 500
+#define FLIGHT_PHASE_6_PAUSE_MILLIS 30000
 
 //-------------------------------------------
 // Flight phase numbering related definitions

@@ -717,6 +717,14 @@ flightPhase4CameraProcessing()
   }
 }
 
+/**
+ * Flight phase 0 sub-loop.
+ *
+ * - does nothing special but pausing for 30 seconds
+ * - exits when takeoff switch is activated
+ *
+ * @return <tt>true</tt> if takeoff switch is detected as activated, <tt>false</tt> else
+ */
 boolean
 flightPhase0Loop()
 {
@@ -725,43 +733,19 @@ flightPhase0Loop()
   /* Detecting take-off */
   if (digitalRead(TAKE_OFF_SWITCH_PIN) == LOW)
   {
-
-     return true;
+    SERIAL_DEBUG.println(F("@TO!"));
+    SERIAL_DEBUG.println(F("@P0L<"));
+    return true;
   }
-
-
-
-      // Check ending moment of the phase thanks to time.
-      if (currentFlightPhaseDurationCounter.read() > 20)
-      {
-        // Switch to mode video
-        motorizedCamera.switchToMode(MODE_VIDEO);
-        motorizedCameraModeCounter.set(MODE_VIDEO);
-        groundCamera.switchToMode(MODE_VIDEO);
-        groundCameraModeCounter.set(MODE_VIDEO);
-        skyCamera.switchToMode(MODE_VIDEO);
-        skyCameraModeCounter.set(MODE_VIDEO);
-
-        // Start record
-        motorizedCamera.toggleAction();
-        motorizedCameraRunningStatusCounter.set(CAMERA_ON);
-        groundCamera.toggleAction();
-        groundCameraRunningStatusCounter.set(CAMERA_ON);
-        skyCamera.toggleAction();
-        skyCameraRunningStatusCounter.set(CAMERA_ON);
-
-        return true;
-      }
-      /*******************************************************************************/
-      // TODO check flight phase transition condition
-      return false;
-    }
+  delay(FLIGHT_PHASE_0_PAUSE_MILLIS);
+  return false;
+}
 
 boolean
 flightPhase1Loop()
 {
   SERIAL_DEBUG.println(F("@P1L"));
-  delay(FLIGHT_PHASE_1_PAUSE_DURATION);
+  delay(FLIGHT_PHASE_1_PAUSE_MILLIS);
 
   // Management of cameras on phase 1
       flightPhase1CameraProcessing();
@@ -812,7 +796,7 @@ boolean
 flightPhase2Loop()
 {
   SERIAL_DEBUG.println(F("@P2L"));
-  delay(FLIGHT_PHASE_2_PAUSE_DURATION);
+  delay(FLIGHT_PHASE_2_PAUSE_MILLIS);
 
   /* Management of cameras on phase 2 */
 
@@ -875,7 +859,7 @@ boolean
 flightPhase3Loop()
 {
   SERIAL_DEBUG.println(F("@P3L"));
-  delay(FLIGHT_PHASE_3_PAUSE_DURATION);
+  delay(FLIGHT_PHASE_3_PAUSE_MILLIS);
 
   // Management of cameras on phase 3
       flightPhase3CameraProcessing();
@@ -945,7 +929,7 @@ boolean
 flightPhase4Loop()
 {
   SERIAL_DEBUG.println(F("@P4L"));
-  delay(FLIGHT_PHASE_4_PAUSE_DURATION);
+  delay(FLIGHT_PHASE_4_PAUSE_MILLIS);
 
   // Management of cameras on phase 4
       flightPhase4CameraProcessing();
@@ -1020,7 +1004,7 @@ flightPhase5Loop()
 {
   SERIAL_DEBUG.println(F("@P5L"));
 
-  delay(FLIGHT_PHASE_5_PAUSE_DURATION);
+  delay(FLIGHT_PHASE_5_PAUSE_MILLIS);
 
   // Management of cameras on phase 4
       flightPhase4CameraProcessing();
@@ -1053,7 +1037,7 @@ boolean
 flightPhase6Loop()
 {
   SERIAL_DEBUG.println(F("@P6L"));
-  delay(FLIGHT_PHASE_6_PAUSE_DURATION);
+  delay(FLIGHT_PHASE_6_PAUSE_MILLIS);
 
   // DO STEP 6
 
@@ -1128,7 +1112,7 @@ loop()
       flightPhaseHasToBeIncremented = flightPhase1Loop();
       break;
 
-    case ASCENDING_BETWEEN_LOWER_AND_UPPER_LIMIT_FLIGHT_PHASE :
+    case ASCENDING_BETWEEN_LOWER_AND_UPPER_LIMIT_FLIGHT_PHASE:
       flightPhaseHasToBeIncremented = flightPhase2Loop();
       break;
 
