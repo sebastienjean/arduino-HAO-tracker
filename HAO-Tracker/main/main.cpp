@@ -304,7 +304,7 @@ clearAllPersistentData()
 {
   delay(1000);
 
-  if (digitalRead(USER_BUTTON_PIN) == LOW)
+  if (digitalRead(USER_SWITCH_PIN) == LOW)
   {
     // reset all counters
     counters.reset();
@@ -324,13 +324,23 @@ clearAllPersistentData()
 }
 
 /**
+ * Internal function used to initialize takeoff switch
+ */
+void
+initTakeOffSwitch()
+{
+  pinMode(TAKE_OFF_SWITCH_PIN, INPUT);
+  digitalWrite(TAKE_OFF_SWITCH_PIN, HIGH);
+}
+
+/**
  * Internal function used to initialize user switch
  */
 void
-initUserButton()
+initUserSwitch()
 {
-  pinMode(USER_BUTTON_PIN, INPUT);
-  digitalWrite(USER_BUTTON_PIN, HIGH);
+  pinMode(USER_SWITCH_PIN, INPUT);
+  digitalWrite(USER_SWITCH_PIN, HIGH);
 }
 
 /**
@@ -710,11 +720,17 @@ flightPhase4CameraProcessing()
 boolean
 flightPhase0Loop()
 {
-  SERIAL_DEBUG.println(F("@P0L"));
-  delay(FLIGHT_PHASE_0_PAUSE_DURATION);
-  // DO STEP 0
+  SERIAL_DEBUG.println(F("@P0L>"));
 
-      /*******************************************************************************/
+  /* Detecting take-off */
+  if (digitalRead(TAKE_OFF_SWITCH_PIN) == LOW)
+  {
+
+     return true;
+  }
+
+
+
       // Check ending moment of the phase thanks to time.
       if (currentFlightPhaseDurationCounter.read() > 20)
       {
@@ -1054,7 +1070,9 @@ setup()
   delay(1000);
   leds.off();
 
-  initUserButton();
+  initTakeOffSwitch();
+
+  initUserSwitch();
 
   initDebugSerial();
 

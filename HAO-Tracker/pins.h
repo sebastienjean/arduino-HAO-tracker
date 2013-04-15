@@ -16,7 +16,9 @@
 #ifndef PINS_h
 #define PINS_h
 
-#define USER_BUTTON_PIN 5
+#define USER_SWITCH_PIN 5
+
+#define TAKE_OFF_SWITCH_PIN 11
 
 #define RED_LED_PIN 46
 
