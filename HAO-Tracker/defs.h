@@ -171,14 +171,14 @@
 #define BEFORE_TAKING_OFF_FLIGHT_PHASE 0
 
 /**
- * Second flight phase, ascending, below 5000 meters
+ * Second flight phase, ascending, below Lower altitude limit in meters
  */
-#define ASCENDING_BELOW_5000M_FLIGHT_PHASE 1
+#define ASCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE 1
 
 /**
- * Third flight phase, ascending, above 5000 meters and below 20000 meters
+ * Third flight phase, ascending, above lower and below upper altitude limits in meters
  */
-#define ASCENDING_BETWEEN_5000M_AND_20000M_FLIGHT_PHASE 2
+#define ASCENDING_BETWEEN_LOWER_AND_UPPER_LIMIT_FLIGHT_PHASE 2
 
 /**
  * Fourth flight phase, ascending, above 20000 meters and before burst
@@ -186,7 +186,7 @@
 #define BEFORE_BURST_FLIGHT_PHASE 3
 
 /**
- * Fifth flight phase, descending, above 5000 meters
+ * Fifth flight phase, descending, above lower altitude limit in meters
  */
 #define DESCENDING_ABOVE_5000M_FLIGHT_PHASE 4
 

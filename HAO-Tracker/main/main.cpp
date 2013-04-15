@@ -1124,11 +1124,11 @@ loop()
       flightPhaseHasToBeIncremented = flightPhase0Loop();
       break;
 
-    case ASCENDING_BELOW_5000M_FLIGHT_PHASE:
+    case ASCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE:
       flightPhaseHasToBeIncremented = flightPhase1Loop();
       break;
 
-    case ASCENDING_BETWEEN_5000M_AND_20000M_FLIGHT_PHASE:
+    case ASCENDING_BETWEEN_LOWER_AND_UPPER_LIMIT_FLIGHT_PHASE :
       flightPhaseHasToBeIncremented = flightPhase2Loop();
       break;
 
