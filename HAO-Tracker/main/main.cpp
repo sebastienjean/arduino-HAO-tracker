@@ -1060,9 +1060,9 @@ setup()
 
   initDebugSerial();
 
-  SERIAL_DEBUG.println(F("R"));
+  SERIAL_DEBUG.println(F("@Reset"));
 
-  SERIAL_DEBUG.print(F("SD Init..."));
+  SERIAL_DEBUG.print(F("@SD_I..."));
 
   if (!initLogging())
   {
@@ -1077,18 +1077,24 @@ setup()
 
   if (clearAllPersistentData())
   {
-    SERIAL_DEBUG.println(F("Clear"));
+    SERIAL_DEBUG.println(F("@Clear"));
     leds.quicklyMakeBlinkSeveralTimes(10);
     orangeLED.showStatus(true);
   }
+  else
+  {
+    SERIAL_DEBUG.println(F("@Restart"));
+  }
 
-  orangeLED.showStatus(LOGGER.logMessage("R", true));
+  orangeLED.showStatus(LOGGER.logMessage("Reset", true));
 
   initGpsSerial();
 
   previousAltitude = 0;
 
+  SERIAL_DEBUG.println(F("@Cam_I..."));
   initCameras();
+  SERIAL_DEBUG.println(F("done"));
 }
 
 /**
