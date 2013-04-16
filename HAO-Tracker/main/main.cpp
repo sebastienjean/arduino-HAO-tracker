@@ -334,6 +334,16 @@ initTakeOffSwitch()
 }
 
 /**
+ * Takeoff detection (using takeoff switch)
+ *
+ * @return <tt>true</tt if takeoff has been detected, <tt>false</tt> else
+ */
+boolean isAboutToTakeOff()
+{
+  return (digitalRead(TAKE_OFF_SWITCH_PIN) == LOW);
+}
+
+/**
  * Internal function used to initialize user switch
  */
 void
@@ -731,7 +741,7 @@ flightPhase0Loop()
   SERIAL_DEBUG.println(F("@P0L>"));
 
   /* Detecting take-off */
-  if (digitalRead(TAKE_OFF_SWITCH_PIN) == LOW)
+  if (isAboutToTakeOff())
   {
     SERIAL_DEBUG.println(F("@TO!"));
     SERIAL_DEBUG.println(F("@P0L<"));
