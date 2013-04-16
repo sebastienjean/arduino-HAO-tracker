@@ -338,7 +338,8 @@ initTakeOffSwitch()
  *
  * @return <tt>true</tt if takeoff has been detected, <tt>false</tt> else
  */
-boolean isAboutToTakeOff()
+boolean
+isAboutToTakeOff()
 {
   return (digitalRead(TAKE_OFF_SWITCH_PIN) == LOW);
 }
@@ -379,7 +380,7 @@ initGpsSerial()
 void
 initCameras()
 {
-  /* turning cameras off and on again (following advice) */
+  /* turning cameras off and on again (following Roy's advice) */
   motorizedCamera.switchOff();
   groundCamera.switchOff();
   skyCamera.switchOff();
@@ -412,7 +413,7 @@ initCameras()
 void
 commonLoop()
 {
-  SERIAL_DEBUG.println(F("@CL"));
+  SERIAL_DEBUG.println(F("@CL >"));
 
   /* Loop start sequence */
 
@@ -464,20 +465,75 @@ commonLoop()
   frameCounter.increment(1);
 }
 
+  /**
+   * Cameras behavior during flight phase 1
+   *
+   * - All cameras are supposed to be off
+   */
 void
 flightPhase0CameraProcessing()
 {
+  if (motorizedCamera.isOn())
+  {
+    motorizedCamera.switchOff();
+    SERIAL_DEBUG.println(F("@Cam-M-Off"));
+  }
+  if (groundCamera.isOn())
+  {
+    groundCamera.switchOff();
+    SERIAL_DEBUG.println(F("@Cam-G-Off"));
+  }
+  if (skyCamera.isOn())
+  {
+    skyCamera.switchOff();
+    SERIAL_DEBUG.println(F("@Cam-S-Off"));
+  }
   /* Does nothing special for the moment */
 }
 
+    /**
+     * Internal function called when detecting transition from flight phase 0 to 1
+     */
+void
+flightPhase0to1Transition()
+{
+  /* turning camera On */
+  SERIAL_DEBUG.println(F("@Cam-All-On"));
+  motorizedCamera.switchOn();
+  groundCamera.switchOn();
+  skyCamera.switchOn();
+  delay(SWITCH_ON_PAUSE_MILLIS);
 
-/**
- * Function for HAO's cameras.
- */
+  SERIAL_DEBUG.println(F("@Cam-All-ModeVideo"));
+  // TODO set servo to Horizon
+  motorizedCamera.switchToMode(MODE_VIDEO);
+  groundCamera.switchToMode(MODE_VIDEO);
+  skyCamera.switchToMode(MODE_VIDEO);
+  delay(SWITCH_MODE_PAUSE_MILLIS);
+
+  SERIAL_DEBUG.println(F("@Cam-All-Action"));
+  motorizedCamera.toggleAction();
+  groundCamera.toggleAction();
+  skyCamera.toggleAction();
+
+  SERIAL_DEBUG.println(F("@Cam-All-saveStatus"));
+  motorizedCameraModeCounter.set(motorizedCamera.getCurrentMode());
+  motorizedCameraRunningStatusCounter.set(motorizedCamera.getRunningStatus());
+  groundCameraModeCounter.set(groundCamera.getCurrentMode());
+  groundCameraRunningStatusCounter.set(groundCamera.getRunningStatus());
+  skyCameraModeCounter.set(skyCamera.getCurrentMode());
+  skyCameraRunningStatusCounter.set(skyCamera.getRunningStatus());
+}
+
+  /**
+   * Cameras behavior during flight phase 1
+   *
+   * - Motorized camera is in "sky" position
+   * - all cameras are taking videos, fragmented every 5 loops
+   */
 void
 flightPhase1CameraProcessing()
 {
-  // TODO Servo -> GROUND
   if (motorizedCamera.getCurrentMode() == MODE_VIDEO)
   {
     if (motorizedCamera.getRunningStatus())
@@ -751,7 +807,6 @@ flightPhase0Loop()
   flightPhase0CameraProcessing();
   SERIAL_DEBUG.println(F("@P0L-C <"));
 
-
   /* Detecting take-off */
   if (isAboutToTakeOff())
   {
@@ -765,6 +820,14 @@ flightPhase0Loop()
   return false;
 }
 
+  /**
+   * Flight phase 1 sub-loop.
+   *
+   * - ...
+   * - exits when ...
+   *
+   * @return <tt>true</tt> if flight phase transition has been detected, <tt>false</tt> else
+   */
 boolean
 flightPhase1Loop()
 {
@@ -1121,9 +1184,9 @@ setup()
   SERIAL_DEBUG.println(F("done"));
 }
 
-/**
- * Arduino's loop function, called in loop (incredible, isn't it ?)
- */
+  /**
+   * Arduino's loop function, called in loop (incredible, isn't it ?)
+   */
 void
 loop()
 {
