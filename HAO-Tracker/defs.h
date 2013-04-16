@@ -232,7 +232,7 @@
 // ----------------------------------------------------
 // Delay of the number of frame to reset camera's video
 // ----------------------------------------------------
-#define DELAY_FRAGMENTATION 10
+#define VIDEO_FRAGMENTATION_LOOPS 10
 
 #endif
 
