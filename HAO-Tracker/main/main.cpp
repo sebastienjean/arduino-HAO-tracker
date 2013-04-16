@@ -763,6 +763,44 @@ flightPhase4CameraProcessing()
     }
   }
 
+void
+flightPhase4to5Transition()
+{
+  SERIAL_DEBUG.println(F("@Transition-4-5"));
+
+  /* turning camera off and on again */
+  SERIAL_DEBUG.println(F("@Cam-All-Off"));
+  motorizedCamera.switchOff();
+  groundCamera.switchOff();
+  skyCamera.switchOff();
+  delay(1000);
+
+  SERIAL_DEBUG.println(F("@Cam-All-On"));
+  motorizedCamera.switchOn();
+  groundCamera.switchOn();
+  skyCamera.switchOn();
+  delay(SWITCH_ON_PAUSE_MILLIS);
+
+  SERIAL_DEBUG.println(F("@Cam-All-ModePhotoSerial"));
+  motorizedCamera.switchToMode(MODE_PHOTO_SERIAL);
+  groundCamera.switchToMode(MODE_PHOTO_SERIAL);
+  skyCamera.switchToMode(MODE_PHOTO_SERIAL);
+  delay(SWITCH_MODE_PAUSE_MILLIS);
+
+  SERIAL_DEBUG.println(F("@Cam-All-Action"));
+  motorizedCamera.toggleAction();
+  groundCamera.toggleAction();
+  skyCamera.toggleAction();
+
+  SERIAL_DEBUG.println(F("@Cam-All-saveStatus"));
+  motorizedCameraModeCounter.set(motorizedCamera.getCurrentMode());
+  motorizedCameraRunningStatusCounter.set(motorizedCamera.getRunningStatus());
+  groundCameraModeCounter.set(groundCamera.getCurrentMode());
+  groundCameraRunningStatusCounter.set(groundCamera.getRunningStatus());
+  skyCameraModeCounter.set(skyCamera.getCurrentMode());
+  skyCameraRunningStatusCounter.set(skyCamera.getRunningStatus());
+}
+
 /**
  * Flight phase 0 sub-loop.
  *
@@ -1174,19 +1212,35 @@ loop()
       break;
 
     case ASCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE:
-      flightPhase1Loop();
-      break;
+      if (flightPhase1Loop())
+            {
+              flightPhase1to2Transition();
+              return;
+            }
+            break;
 
     case ASCENDING_BETWEEN_LOWER_AND_UPPER_LIMIT_FLIGHT_PHASE:
-      flightPhase2Loop();
-      break;
+      if (flightPhase2Loop())
+            {
+              flightPhase2to3Transition();
+              return;
+            }
+            break;
 
     case BEFORE_BURST_FLIGHT_PHASE:
-      flightPhase3Loop();
-      break;
+      if (flightPhase3Loop())
+            {
+              flightPhase3to4Transition();
+              return;
+            }
+            break;
     case DESCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE:
-      flightPhase4Loop();
-      break;
+      if (flightPhase4Loop())
+            {
+              flightPhase4to5Transition();
+              return;
+            }
+            break;
     case AFTER_LANDING_FLIGHT_PHASE:
       flightPhase5Loop();
       break;
