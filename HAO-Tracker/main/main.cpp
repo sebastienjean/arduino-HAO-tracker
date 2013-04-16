@@ -64,7 +64,7 @@ char nmeaRmcSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
 char nmeaGgaSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
 
 // HAO previous altitude (during ascending phase)
-int previousAltitude;
+double previousAltitude;
 
 // ---------------------------------
 // FSK modulator related definitions
@@ -97,7 +97,7 @@ Counter currentFlightPhaseCounter(CURRENT_FLIGHT_PHASE_COUNTER_BASE_ADDRESS);
 /**
  * HAO stillness duration (in seconds) persistent counter
  */
-Counter stillnessDurationInSecondsCounter(STILLNESS_DURATION_IN_SECONDS_COUNTER_BASE_ADDRESS);
+Counter stillnessDurationInLoopsCounter(STILLNESS_DURATION_IN_SECONDS_COUNTER_BASE_ADDRESS);
 
 /**
  * Motorized camera running status persistent counter
@@ -308,7 +308,7 @@ clearAllPersistentData()
   {
     // reset all counters
     counters.reset();
-    stillnessDurationInSecondsCounter.reset();
+    stillnessDurationInLoopsCounter.reset();
 
     motorizedCameraRunningStatusCounter.reset();
     groundCameraRunningStatusCounter.reset();
@@ -715,6 +715,12 @@ flightPhase3to4Transition()
 {
   SERIAL_DEBUG.println(F("@Transition-3-4"));
 
+  /* stopping recording */
+  SERIAL_DEBUG.println(F("@Cam-All-StopRecording"));
+  motorizedCamera.toggleAction();
+  groundCamera.toggleAction();
+  skyCamera.toggleAction();
+
   /* turning camera off and on again */
   SERIAL_DEBUG.println(F("@Cam-All-Off"));
   motorizedCamera.switchOff();
@@ -779,6 +785,12 @@ void
 flightPhase4to5Transition()
 {
   SERIAL_DEBUG.println(F("@Transition-4-5"));
+
+  /* stopping recording */
+  SERIAL_DEBUG.println(F("@Cam-All-StopRecording"));
+  motorizedCamera.toggleAction();
+  groundCamera.toggleAction();
+  skyCamera.toggleAction();
 
   /* turning camera off and on again */
   SERIAL_DEBUG.println(F("@Cam-All-Off"));
@@ -878,7 +890,7 @@ flightPhase2Loop()
   SERIAL_DEBUG.println(F("@P2L >"));
 
   SERIAL_DEBUG.println(F("@P2L-C >"));
-  flightPhase1CameraProcessing();
+  flightPhase2CameraProcessing();
   SERIAL_DEBUG.println(F("@P2L-C <"));
 
   /* flight phase transition detection */
@@ -896,144 +908,51 @@ flightPhase2Loop()
 boolean
 flightPhase3Loop()
 {
-  SERIAL_DEBUG.println(F("@P3L"));
-  delay(FLIGHT_PHASE_3_PAUSE_MILLIS);
+  SERIAL_DEBUG.println(F("@P3L >"));
 
-// Management of cameras on phase 3
+  SERIAL_DEBUG.println(F("@P3L-C >"));
   flightPhase3CameraProcessing();
+  SERIAL_DEBUG.println(F("@P3L-C <"));
 
-  if (nmeaGPS.getFix())
+  /* flight phase transition detection */
+  if ((nmeaGPS.getFix())&&(nmeaGPS.getAltitude() < FLIGHT_PHASE_3_TO_4_ALTITUDE_TRIGGER))
   {
-    int deltaAltitude = previousAltitude - nmeaGPS.getAltitude();
+    SERIAL_DEBUG.println(F("@P3L <"));
     previousAltitude = nmeaGPS.getAltitude();
-
-    if (deltaAltitude > HAO_FALLING_TRIGGER)
-    {
-      // stop record
-      if (! motorizedCamera.getRunningStatus())
-      motorizedCamera.toggleAction();
-      if (! groundCamera.getRunningStatus())
-      groundCamera.toggleAction();
-      if (! skyCamera.getRunningStatus())
-      skyCamera.toggleAction();
-
-      // Switch to mode video
-      motorizedCamera.switchToMode(MODE_VIDEO);
-      groundCamera.switchToMode(MODE_VIDEO);
-      skyCamera.switchToMode(MODE_VIDEO);
-
-      // Start record
-      motorizedCamera.toggleAction();
-      groundCamera.toggleAction();
-      skyCamera.toggleAction();
-
-      return true;
-    }
-  }
-
-// Check ending moment of the phase thanks to time.
-  if (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_3_MAX_DURATION)
-  {
-    // stop record
-    if (! motorizedCamera.getRunningStatus())
-    motorizedCamera.toggleAction();
-    if (! groundCamera.getRunningStatus())
-    groundCamera.toggleAction();
-    if (! skyCamera.getRunningStatus())
-    skyCamera.toggleAction();
-
-    // Switch to mode video
-    motorizedCamera.switchToMode(MODE_VIDEO);
-    motorizedCameraModeCounter.set(MODE_VIDEO);
-    groundCamera.switchToMode(MODE_VIDEO);
-    groundCameraModeCounter.set(MODE_VIDEO);
-    skyCamera.switchToMode(MODE_VIDEO);
-    skyCameraModeCounter.set(MODE_VIDEO);
-
-    // Start record
-    motorizedCamera.toggleAction();
-    motorizedCameraRunningStatusCounter.set(CAMERA_ON);
-    groundCamera.toggleAction();
-    groundCameraRunningStatusCounter.set(CAMERA_ON);
-    skyCamera.toggleAction();
-    skyCameraRunningStatusCounter.set(CAMERA_ON);
-
     return true;
   }
+  delay(FLIGHT_PHASE_3_PAUSE_MILLIS);
+  SERIAL_DEBUG.println(F("@P3L <"));
   return false;
 }
 
 boolean
 flightPhase4Loop()
 {
-  SERIAL_DEBUG.println(F("@P4L"));
-  delay(FLIGHT_PHASE_4_PAUSE_MILLIS);
+  SERIAL_DEBUG.println(F("@P4L >"));
 
-  // Management of cameras on phase 4
+  SERIAL_DEBUG.println(F("@P4L-C >"));
   flightPhase4CameraProcessing();
+  SERIAL_DEBUG.println(F("@P4L-C <"));
 
+  /* flight phase transition detection */
   if (nmeaGPS.getFix())
   {
-    if (nmeaGPS.getAltitude() < FLIGHT_PHASE_4_TO_5_ALTITUDE_TRIGGER)
-    {
-      // stop record
-      if (! motorizedCamera.getRunningStatus())
-      motorizedCamera.toggleAction();
-      if (! groundCamera.getRunningStatus())
-      groundCamera.toggleAction();
-      if (! skyCamera.getRunningStatus())
-      skyCamera.toggleAction();
+    int deltaAltitude = previousAltitude - nmeaGPS.getAltitude();
+    previousAltitude = nmeaGPS.getAltitude();
 
-      // Switch to mode video
-      motorizedCamera.switchToMode(MODE_VIDEO);
-      motorizedCameraModeCounter.set(MODE_VIDEO);
-      groundCamera.switchToMode(MODE_VIDEO);
-      groundCameraModeCounter.set(MODE_VIDEO);
-      skyCamera.switchToMode(MODE_VIDEO);
-      skyCameraModeCounter.set(MODE_VIDEO);
+    if (deltaAltitude < DELTA_ALTITUDE_IN_METERS_CONSIDERED_AS_STILLNESS)
+    stillnessDurationInLoopsCounter.increment(1);
+    else
+    stillnessDurationInLoopsCounter.set(0);
 
-      // Start record
-      motorizedCamera.toggleAction();
-      motorizedCameraRunningStatusCounter.set(CAMERA_ON);
-      groundCamera.toggleAction();
-      groundCameraRunningStatusCounter.set(CAMERA_ON);
-      skyCamera.toggleAction();
-      skyCameraRunningStatusCounter.set(CAMERA_ON);
-
-      return true;
-    }
-  }
-
-  // Check ending moment of the phase thanks to time.
-  if (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_4_MAX_DURATION)
-  {
-    // stop record
-    if (! motorizedCamera.getRunningStatus())
-    motorizedCamera.toggleAction();
-    if (! groundCamera.getRunningStatus())
-    groundCamera.toggleAction();
-    if (! skyCamera.getRunningStatus())
-    skyCamera.toggleAction();
-
-    // Switch to mode video
-    motorizedCamera.switchToMode(MODE_VIDEO);
-    motorizedCameraModeCounter.set(MODE_VIDEO);
-    groundCamera.switchToMode(MODE_VIDEO);
-    groundCameraModeCounter.set(MODE_VIDEO);
-    skyCamera.switchToMode(MODE_VIDEO);
-    skyCameraModeCounter.set(MODE_VIDEO);
-
-    // Start record
-    motorizedCamera.toggleAction();
-    motorizedCameraRunningStatusCounter.set(CAMERA_ON);
-    groundCamera.toggleAction();
-    groundCameraRunningStatusCounter.set(CAMERA_ON);
-    skyCamera.toggleAction();
-    skyCameraRunningStatusCounter.set(CAMERA_ON);
-
+    if (stillnessDurationInLoopsCounter.read()> STILLNESS_DURATION_IN_LOOPS_LIMIT)
+    SERIAL_DEBUG.println(F("@P4L <"));
     return true;
   }
 
+  delay(FLIGHT_PHASE_4_PAUSE_MILLIS);
+  SERIAL_DEBUG.println(F("@P4L <"));
   return false;
 }
 
@@ -1041,33 +960,8 @@ boolean
 flightPhase5Loop()
 {
   SERIAL_DEBUG.println(F("@P5L >"));
-
   delay(FLIGHT_PHASE_5_PAUSE_MILLIS);
-
-  // Management of cameras on phase 4
-  flightPhase4CameraProcessing();
-
-  // Check ending moment of the phase with GPS (if fix ok)
-  if (nmeaGPS.getFix())
-  {
-    int deltaAltitude = previousAltitude - nmeaGPS.getAltitude();
-    previousAltitude = nmeaGPS.getAltitude();
-
-    if (deltaAltitude < 100)
-    stillnessDurationInSecondsCounter.increment(1);
-    else
-    stillnessDurationInSecondsCounter.set(0);
-
-    if (stillnessDurationInSecondsCounter.read()> STILLNESS_DURATION_IN_SECONDS_LIMIT)
-    return true;
-  }
-
-  // Check ending moment of the phase thanks to time.
-  if (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_5_MAX_DURATION)
-  {
-    return true;
-  }
-
+  SERIAL_DEBUG.println(F("@P5L <"));
   return false;
 }
 
