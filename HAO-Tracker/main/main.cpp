@@ -574,6 +574,11 @@ flightPhase1to2Transition()
 {
   SERIAL_DEBUG.println(F("@Transition-1-2"));
 
+  /* stop recording */
+  SERIAL_DEBUG.println(F("@Cam-All-StopRecording"));
+  motorizedCamera.toggleAction();
+  groundCamera.toggleAction();
+  skyCamera.toggleAction();
   /* turning camera off and on again */
   SERIAL_DEBUG.println(F("@Cam-All-Off"));
   motorizedCamera.switchOff();
@@ -695,9 +700,9 @@ flightPhase3CameraProcessing()
     }
   }
 
-/**
- * Internal function called when detecting transition from flight phase 3 to 4
- */
+      /**
+       * Internal function called when detecting transition from flight phase 3 to 4
+       */
 void
 flightPhase3to4Transition()
 {
@@ -801,14 +806,14 @@ flightPhase4to5Transition()
   skyCameraRunningStatusCounter.set(skyCamera.getRunningStatus());
 }
 
-/**
- * Flight phase 0 sub-loop.
- *
- * - does nothing special but pausing for 30 seconds
- * - exits when takeoff switch is activated
- *
- * @return <tt>true</tt> if takeoff switch is detected as activated, <tt>false</tt> else
- */
+  /**
+   * Flight phase 0 sub-loop.
+   *
+   * - does nothing special but pausing for 30 seconds
+   * - exits when takeoff switch is activated
+   *
+   * @return <tt>true</tt> if takeoff switch is detected as activated, <tt>false</tt> else
+   */
 boolean
 flightPhase0Loop()
 {
@@ -845,97 +850,34 @@ flightPhase1Loop()
   SERIAL_DEBUG.println(F("@P1L >"));
 
   SERIAL_DEBUG.println(F("@P1L-C >"));
-  flightPhase0CameraProcessing();
+  flightPhase1CameraProcessing();
   SERIAL_DEBUG.println(F("@P1L-C <"));
 
   /* flight phase transition detection */
-
-  if (nmeaGPS.getFix())
+  if (((nmeaGPS.getFix()) && (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER))|| (currentFlightPhaseDurationCounter.read() >FLIGHT_PHASE_1_MAX_DURATION))
   {
-    if (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER)
-    {
-      // stop record
-      if (! motorizedCamera.getRunningStatus())
-      motorizedCamera.toggleAction();
-      if (! groundCamera.getRunningStatus())
-      groundCamera.toggleAction();
-      if (! skyCamera.getRunningStatus())
-      skyCamera.toggleAction();
-
-      // Switch to mode photo
-      motorizedCamera.switchToMode(MODE_PHOTO_SINGLE);
-      groundCamera.switchToMode(MODE_PHOTO_SINGLE);
-      skyCamera.switchToMode(MODE_PHOTO_SINGLE);
-
-      SERIAL_DEBUG.println(F("@P1L <"));
-      return true;
-    }
-
-    delay(FLIGHT_PHASE_1_PAUSE_MILLIS);
-
-    return false;
-  }
-
-  // Check ending moment of the phase thanks to time.
-  if (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_1_MAX_DURATION)
-  {
-    // stop record
-    if (! motorizedCamera.getRunningStatus())
-    motorizedCamera.toggleAction();
-    if (! groundCamera.getRunningStatus())
-    groundCamera.toggleAction();
-    if (! skyCamera.getRunningStatus())
-    skyCamera.toggleAction();
-
-    // Switch to mode photo
-    motorizedCamera.switchToMode(MODE_PHOTO_SINGLE);
-    groundCamera.switchToMode(MODE_PHOTO_SINGLE);
-    skyCamera.switchToMode(MODE_PHOTO_SINGLE);
-
+    SERIAL_DEBUG.println(F("@P1L <"));
     return true;
   }
+
+  delay(FLIGHT_PHASE_1_PAUSE_MILLIS);
+  SERIAL_DEBUG.println(F("@P1L <"));
   return false;
 }
 
 boolean
 flightPhase2Loop()
 {
-  SERIAL_DEBUG.println(F("@P2L"));
-  delay(FLIGHT_PHASE_2_PAUSE_MILLIS);
+SERIAL_DEBUG.println(F("@P2L"));
+delay(FLIGHT_PHASE_2_PAUSE_MILLIS);
 
-  /* Management of cameras on phase 2 */
+/* Management of cameras on phase 2 */
 
-  flightPhase2CameraProcessing();
+flightPhase2CameraProcessing();
 
-  if (nmeaGPS.getFix())
-  {
-    if (nmeaGPS.getAltitude() > FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER)
-    {
-      // stop record
-      if (! motorizedCamera.getRunningStatus())
-      motorizedCamera.toggleAction();
-      if (! groundCamera.getRunningStatus())
-      groundCamera.toggleAction();
-      if (! skyCamera.getRunningStatus())
-      skyCamera.toggleAction();
-
-      // Switch to mode video
-      motorizedCamera.switchToMode(MODE_VIDEO);
-      groundCamera.switchToMode(MODE_VIDEO);
-      skyCamera.switchToMode(MODE_VIDEO);
-
-      // Start record
-      motorizedCamera.toggleAction();
-      groundCamera.toggleAction();
-      skyCamera.toggleAction();
-
-      previousAltitude = nmeaGPS.getAltitude();
-      return true;
-    }
-  }
-
-  // Check ending moment of the phase thanks to time.
-  if (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_2_MAX_DURATION)
+if (nmeaGPS.getFix())
+{
+  if (nmeaGPS.getAltitude() > FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER)
   {
     // stop record
     if (! motorizedCamera.getRunningStatus())
@@ -955,9 +897,35 @@ flightPhase2Loop()
     groundCamera.toggleAction();
     skyCamera.toggleAction();
 
+    previousAltitude = nmeaGPS.getAltitude();
     return true;
   }
-  return false;
+}
+
+// Check ending moment of the phase thanks to time.
+if (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_2_MAX_DURATION)
+{
+  // stop record
+  if (! motorizedCamera.getRunningStatus())
+  motorizedCamera.toggleAction();
+  if (! groundCamera.getRunningStatus())
+  groundCamera.toggleAction();
+  if (! skyCamera.getRunningStatus())
+  skyCamera.toggleAction();
+
+  // Switch to mode video
+  motorizedCamera.switchToMode(MODE_VIDEO);
+  groundCamera.switchToMode(MODE_VIDEO);
+  skyCamera.switchToMode(MODE_VIDEO);
+
+  // Start record
+  motorizedCamera.toggleAction();
+  groundCamera.toggleAction();
+  skyCamera.toggleAction();
+
+  return true;
+}
+return false;
 }
 
 boolean
@@ -967,68 +935,68 @@ flightPhase3Loop()
   delay(FLIGHT_PHASE_3_PAUSE_MILLIS);
 
   // Management of cameras on phase 3
-      flightPhase3CameraProcessing();
+  flightPhase3CameraProcessing();
 
-      if (nmeaGPS.getFix())
-      {
-        int deltaAltitude = previousAltitude - nmeaGPS.getAltitude();
-        previousAltitude = nmeaGPS.getAltitude();
+  if (nmeaGPS.getFix())
+  {
+    int deltaAltitude = previousAltitude - nmeaGPS.getAltitude();
+    previousAltitude = nmeaGPS.getAltitude();
 
-        if (deltaAltitude > HAO_FALLING_TRIGGER)
-        {
-          // stop record
-          if (! motorizedCamera.getRunningStatus())
-          motorizedCamera.toggleAction();
-          if (! groundCamera.getRunningStatus())
-          groundCamera.toggleAction();
-          if (! skyCamera.getRunningStatus())
-          skyCamera.toggleAction();
+    if (deltaAltitude > HAO_FALLING_TRIGGER)
+    {
+      // stop record
+      if (! motorizedCamera.getRunningStatus())
+      motorizedCamera.toggleAction();
+      if (! groundCamera.getRunningStatus())
+      groundCamera.toggleAction();
+      if (! skyCamera.getRunningStatus())
+      skyCamera.toggleAction();
 
-          // Switch to mode video
-          motorizedCamera.switchToMode(MODE_VIDEO);
-          groundCamera.switchToMode(MODE_VIDEO);
-          skyCamera.switchToMode(MODE_VIDEO);
+      // Switch to mode video
+      motorizedCamera.switchToMode(MODE_VIDEO);
+      groundCamera.switchToMode(MODE_VIDEO);
+      skyCamera.switchToMode(MODE_VIDEO);
 
-          // Start record
-          motorizedCamera.toggleAction();
-          groundCamera.toggleAction();
-          skyCamera.toggleAction();
+      // Start record
+      motorizedCamera.toggleAction();
+      groundCamera.toggleAction();
+      skyCamera.toggleAction();
 
-          return true;
-        }
-      }
-
-      // Check ending moment of the phase thanks to time.
-      if (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_3_MAX_DURATION)
-      {
-        // stop record
-        if (! motorizedCamera.getRunningStatus())
-        motorizedCamera.toggleAction();
-        if (! groundCamera.getRunningStatus())
-        groundCamera.toggleAction();
-        if (! skyCamera.getRunningStatus())
-        skyCamera.toggleAction();
-
-        // Switch to mode video
-        motorizedCamera.switchToMode(MODE_VIDEO);
-        motorizedCameraModeCounter.set(MODE_VIDEO);
-        groundCamera.switchToMode(MODE_VIDEO);
-        groundCameraModeCounter.set(MODE_VIDEO);
-        skyCamera.switchToMode(MODE_VIDEO);
-        skyCameraModeCounter.set(MODE_VIDEO);
-
-        // Start record
-        motorizedCamera.toggleAction();
-        motorizedCameraRunningStatusCounter.set(CAMERA_ON);
-        groundCamera.toggleAction();
-        groundCameraRunningStatusCounter.set(CAMERA_ON);
-        skyCamera.toggleAction();
-        skyCameraRunningStatusCounter.set(CAMERA_ON);
-
-        return true;
-      }
-      return false;
+      return true;
     }
+  }
+
+  // Check ending moment of the phase thanks to time.
+  if (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_3_MAX_DURATION)
+  {
+    // stop record
+    if (! motorizedCamera.getRunningStatus())
+    motorizedCamera.toggleAction();
+    if (! groundCamera.getRunningStatus())
+    groundCamera.toggleAction();
+    if (! skyCamera.getRunningStatus())
+    skyCamera.toggleAction();
+
+    // Switch to mode video
+    motorizedCamera.switchToMode(MODE_VIDEO);
+    motorizedCameraModeCounter.set(MODE_VIDEO);
+    groundCamera.switchToMode(MODE_VIDEO);
+    groundCameraModeCounter.set(MODE_VIDEO);
+    skyCamera.switchToMode(MODE_VIDEO);
+    skyCameraModeCounter.set(MODE_VIDEO);
+
+    // Start record
+    motorizedCamera.toggleAction();
+    motorizedCameraRunningStatusCounter.set(CAMERA_ON);
+    groundCamera.toggleAction();
+    groundCameraRunningStatusCounter.set(CAMERA_ON);
+    skyCamera.toggleAction();
+    skyCameraRunningStatusCounter.set(CAMERA_ON);
+
+    return true;
+  }
+  return false;
+}
 
 boolean
 flightPhase4Loop()
@@ -1037,110 +1005,110 @@ flightPhase4Loop()
   delay(FLIGHT_PHASE_4_PAUSE_MILLIS);
 
   // Management of cameras on phase 4
-      flightPhase4CameraProcessing();
+  flightPhase4CameraProcessing();
 
-      if (nmeaGPS.getFix())
-      {
-        if (nmeaGPS.getAltitude() < FLIGHT_PHASE_4_TO_5_ALTITUDE_TRIGGER)
-        {
-          // stop record
-          if (! motorizedCamera.getRunningStatus())
-          motorizedCamera.toggleAction();
-          if (! groundCamera.getRunningStatus())
-          groundCamera.toggleAction();
-          if (! skyCamera.getRunningStatus())
-          skyCamera.toggleAction();
+  if (nmeaGPS.getFix())
+  {
+    if (nmeaGPS.getAltitude() < FLIGHT_PHASE_4_TO_5_ALTITUDE_TRIGGER)
+    {
+      // stop record
+      if (! motorizedCamera.getRunningStatus())
+      motorizedCamera.toggleAction();
+      if (! groundCamera.getRunningStatus())
+      groundCamera.toggleAction();
+      if (! skyCamera.getRunningStatus())
+      skyCamera.toggleAction();
 
-          // Switch to mode video
-          motorizedCamera.switchToMode(MODE_VIDEO);
-          motorizedCameraModeCounter.set(MODE_VIDEO);
-          groundCamera.switchToMode(MODE_VIDEO);
-          groundCameraModeCounter.set(MODE_VIDEO);
-          skyCamera.switchToMode(MODE_VIDEO);
-          skyCameraModeCounter.set(MODE_VIDEO);
+      // Switch to mode video
+      motorizedCamera.switchToMode(MODE_VIDEO);
+      motorizedCameraModeCounter.set(MODE_VIDEO);
+      groundCamera.switchToMode(MODE_VIDEO);
+      groundCameraModeCounter.set(MODE_VIDEO);
+      skyCamera.switchToMode(MODE_VIDEO);
+      skyCameraModeCounter.set(MODE_VIDEO);
 
-          // Start record
-          motorizedCamera.toggleAction();
-          motorizedCameraRunningStatusCounter.set(CAMERA_ON);
-          groundCamera.toggleAction();
-          groundCameraRunningStatusCounter.set(CAMERA_ON);
-          skyCamera.toggleAction();
-          skyCameraRunningStatusCounter.set(CAMERA_ON);
+      // Start record
+      motorizedCamera.toggleAction();
+      motorizedCameraRunningStatusCounter.set(CAMERA_ON);
+      groundCamera.toggleAction();
+      groundCameraRunningStatusCounter.set(CAMERA_ON);
+      skyCamera.toggleAction();
+      skyCameraRunningStatusCounter.set(CAMERA_ON);
 
-          return true;
-        }
-      }
-
-      // Check ending moment of the phase thanks to time.
-      if (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_4_MAX_DURATION)
-      {
-        // stop record
-        if (! motorizedCamera.getRunningStatus())
-        motorizedCamera.toggleAction();
-        if (! groundCamera.getRunningStatus())
-        groundCamera.toggleAction();
-        if (! skyCamera.getRunningStatus())
-        skyCamera.toggleAction();
-
-        // Switch to mode video
-        motorizedCamera.switchToMode(MODE_VIDEO);
-        motorizedCameraModeCounter.set(MODE_VIDEO);
-        groundCamera.switchToMode(MODE_VIDEO);
-        groundCameraModeCounter.set(MODE_VIDEO);
-        skyCamera.switchToMode(MODE_VIDEO);
-        skyCameraModeCounter.set(MODE_VIDEO);
-
-        // Start record
-        motorizedCamera.toggleAction();
-        motorizedCameraRunningStatusCounter.set(CAMERA_ON);
-        groundCamera.toggleAction();
-        groundCameraRunningStatusCounter.set(CAMERA_ON);
-        skyCamera.toggleAction();
-        skyCameraRunningStatusCounter.set(CAMERA_ON);
-
-        return true;
-      }
-
-      return false;
+      return true;
     }
+  }
+
+  // Check ending moment of the phase thanks to time.
+  if (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_4_MAX_DURATION)
+  {
+    // stop record
+    if (! motorizedCamera.getRunningStatus())
+    motorizedCamera.toggleAction();
+    if (! groundCamera.getRunningStatus())
+    groundCamera.toggleAction();
+    if (! skyCamera.getRunningStatus())
+    skyCamera.toggleAction();
+
+    // Switch to mode video
+    motorizedCamera.switchToMode(MODE_VIDEO);
+    motorizedCameraModeCounter.set(MODE_VIDEO);
+    groundCamera.switchToMode(MODE_VIDEO);
+    groundCameraModeCounter.set(MODE_VIDEO);
+    skyCamera.switchToMode(MODE_VIDEO);
+    skyCameraModeCounter.set(MODE_VIDEO);
+
+    // Start record
+    motorizedCamera.toggleAction();
+    motorizedCameraRunningStatusCounter.set(CAMERA_ON);
+    groundCamera.toggleAction();
+    groundCameraRunningStatusCounter.set(CAMERA_ON);
+    skyCamera.toggleAction();
+    skyCameraRunningStatusCounter.set(CAMERA_ON);
+
+    return true;
+  }
+
+  return false;
+}
 
 boolean
 flightPhase5Loop()
 {
-  SERIAL_DEBUG.println(F("@P5L"));
+  SERIAL_DEBUG.println(F("@P5L >"));
 
   delay(FLIGHT_PHASE_5_PAUSE_MILLIS);
 
   // Management of cameras on phase 4
-      flightPhase4CameraProcessing();
+  flightPhase4CameraProcessing();
 
-      // Check ending moment of the phase with GPS (if fix ok)
-      if (nmeaGPS.getFix())
-      {
-        int deltaAltitude = previousAltitude - nmeaGPS.getAltitude();
-        previousAltitude = nmeaGPS.getAltitude();
+  // Check ending moment of the phase with GPS (if fix ok)
+  if (nmeaGPS.getFix())
+  {
+    int deltaAltitude = previousAltitude - nmeaGPS.getAltitude();
+    previousAltitude = nmeaGPS.getAltitude();
 
-        if (deltaAltitude < 100)
-        stillnessDurationInSecondsCounter.increment(1);
-        else
-        stillnessDurationInSecondsCounter.set(0);
+    if (deltaAltitude < 100)
+    stillnessDurationInSecondsCounter.increment(1);
+    else
+    stillnessDurationInSecondsCounter.set(0);
 
-        if (stillnessDurationInSecondsCounter.read()> STILLNESS_DURATION_IN_SECONDS_LIMIT)
-        return true;
-      }
+    if (stillnessDurationInSecondsCounter.read()> STILLNESS_DURATION_IN_SECONDS_LIMIT)
+    return true;
+  }
 
-      // Check ending moment of the phase thanks to time.
-      if (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_5_MAX_DURATION)
-      {
-        return true;
-      }
+  // Check ending moment of the phase thanks to time.
+  if (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_5_MAX_DURATION)
+  {
+    return true;
+  }
 
-      return false;
-    }
+  return false;
+}
 
-  /**
-   * Arduino's setup function, called once at startup, after init
-   */
+/**
+ * Arduino's setup function, called once at startup, after init
+ */
 void
 setup()
 {
@@ -1191,9 +1159,9 @@ setup()
   SERIAL_DEBUG.println(F("done"));
 }
 
-  /**
-   * Arduino's loop function, called in loop (incredible, isn't it ?)
-   */
+/**
+ * Arduino's loop function, called in loop (incredible, isn't it ?)
+ */
 void
 loop()
 {
@@ -1213,34 +1181,34 @@ loop()
 
     case ASCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE:
       if (flightPhase1Loop())
-            {
-              flightPhase1to2Transition();
-              return;
-            }
-            break;
+      {
+        flightPhase1to2Transition();
+        return;
+      }
+      break;
 
     case ASCENDING_BETWEEN_LOWER_AND_UPPER_LIMIT_FLIGHT_PHASE:
       if (flightPhase2Loop())
-            {
-              flightPhase2to3Transition();
-              return;
-            }
-            break;
+      {
+        flightPhase2to3Transition();
+        return;
+      }
+      break;
 
     case BEFORE_BURST_FLIGHT_PHASE:
       if (flightPhase3Loop())
-            {
-              flightPhase3to4Transition();
-              return;
-            }
-            break;
+      {
+        flightPhase3to4Transition();
+        return;
+      }
+      break;
     case DESCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE:
       if (flightPhase4Loop())
-            {
-              flightPhase4to5Transition();
-              return;
-            }
-            break;
+      {
+        flightPhase4to5Transition();
+        return;
+      }
+      break;
     case AFTER_LANDING_FLIGHT_PHASE:
       flightPhase5Loop();
       break;
