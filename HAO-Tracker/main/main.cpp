@@ -464,9 +464,16 @@ commonLoop()
   frameCounter.increment(1);
 }
 
-  /**
-   * Function for HAO's cameras.
-   */
+void
+flightPhase0CameraProcessing()
+{
+  /* Does nothing special for the moment */
+}
+
+
+/**
+ * Function for HAO's cameras.
+ */
 void
 flightPhase1CameraProcessing()
 {
@@ -738,16 +745,23 @@ flightPhase4CameraProcessing()
 boolean
 flightPhase0Loop()
 {
-  SERIAL_DEBUG.println(F("@P0L>"));
+  SERIAL_DEBUG.println(F("@P0L >"));
+
+  SERIAL_DEBUG.println(F("@P0L-C >"));
+  flightPhase0CameraProcessing();
+  SERIAL_DEBUG.println(F("@P0L-C <"));
+
 
   /* Detecting take-off */
   if (isAboutToTakeOff())
   {
-    SERIAL_DEBUG.println(F("@TO!"));
-    SERIAL_DEBUG.println(F("@P0L<"));
+    SERIAL_DEBUG.println(F("@About to take off!"));
+    SERIAL_DEBUG.println(F("@P0L <"));
     return true;
   }
+
   delay(FLIGHT_PHASE_0_PAUSE_MILLIS);
+  SERIAL_DEBUG.println(F("@P0L <"));
   return false;
 }
 
