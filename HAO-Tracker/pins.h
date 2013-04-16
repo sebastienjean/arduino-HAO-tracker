@@ -48,4 +48,10 @@
 
 #define RTC_SCLK_PIN 10
 
+#define MOTORIZED_CAMERA_PWM_PIN 22
+
+#define GROUND_CAMERA_PWM_PIN 3
+
+#define SKY_CAMERA_PWM_PIN 26
+
 #endif

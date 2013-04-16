@@ -193,10 +193,6 @@
 //-----------------------------------------------------
 // Flight phase altitude triggering related definitions
 //-----------------------------------------------------
-/**
- * Fifth flight phase, descending, above 5000 meters
- */
-#define HAO_FALLING_TRIGGER 3000
 #define FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER 5000
 #define FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER 20000
 #define FLIGHT_PHASE_3_TO_4_ALTITUDE_TRIGGER 5000
@@ -207,19 +203,10 @@
 //-----------------------------------------------------
 // Flight phase duration triggering related definitions
 //-----------------------------------------------------
-
-#define FLIGHT_PHASE_1_MAX_DURATION 40
-#define FLIGHT_PHASE_2_MAX_DURATION 30
-#define FLIGHT_PHASE_3_MAX_DURATION 30
-#define FLIGHT_PHASE_4_MAX_DURATION 30
-#define FLIGHT_PHASE_5_MAX_DURATION 30
-
-// ---------------
-// Cameras' output
-// ---------------
-#define MOTORIZED_CAMERA_PWM_PIN 22
-#define GROUND_CAMERA_PWM_PIN 3
-#define SKY_CAMERA_PWM_PIN 26
+#define FLIGHT_PHASE_1_MAX_SECONDS_DURATION 40
+#define FLIGHT_PHASE_2_MAX_SECONDS_DURATION 30
+#define FLIGHT_PHASE_3_MAX_SECONDS_DURATION 30
+#define FLIGHT_PHASE_4_MAX_SECONDS_DURATION 30
 
 // ----------------------------------------------------
 // Delay of the number of frame to reset camera's video
