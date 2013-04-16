@@ -156,11 +156,6 @@
  */
 #define FLIGHT_PHASE_5_PAUSE_MILLIS 30000
 
-/**
- * Flight phase number 6 pause duration (in milliseconds)
- */
-#define FLIGHT_PHASE_6_PAUSE_MILLIS 30000
-
 //-------------------------------------------
 // Flight phase numbering related definitions
 //-------------------------------------------
@@ -186,19 +181,14 @@
 #define BEFORE_BURST_FLIGHT_PHASE 3
 
 /**
- * Fifth flight phase, descending, above lower altitude limit in meters
+ * Fifth flight phase, descending, below lower altitude limit in meters
  */
-#define DESCENDING_ABOVE_5000M_FLIGHT_PHASE 4
+#define DESCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE 4
 
 /**
- * Sixth flight phase, before landing, below 5000 meters
+ * Sixth flight phase,  after landing
  */
-#define BEFORE_LANDING_FLIGHT_PHASE 5
-
-/**
- * Seventh flight phase, after landing
- */
-#define AFTER_LANDING_FLIGHT_PHASE 6
+#define AFTER_LANDING_FLIGHT_PHASE 5
 
 //-----------------------------------------------------
 // Flight phase altitude triggering related definitions
