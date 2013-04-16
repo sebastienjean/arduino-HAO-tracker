@@ -532,7 +532,6 @@ flightPhase0to1Transition()
   groundCameraRunningStatusCounter.set(groundCamera.getRunningStatus());
   skyCameraModeCounter.set(skyCamera.getCurrentMode());
   skyCameraRunningStatusCounter.set(skyCamera.getRunningStatus());
-
 }
 
   /**
@@ -547,64 +546,105 @@ flightPhase1CameraProcessing()
   switch (frameCounter.read() % VIDEO_FRAGMENTATION_LOOPS)
   {
     case 0:
-    SERIAL_DEBUG.println(F("@Cam-M-Video-fragment"));
-    motorizedCamera.toggleAction();
-    delay(2000);
-    motorizedCamera.toggleAction();
-    break;
-    case 1:
-    SERIAL_DEBUG.println(F("@Cam-G-Video-fragment"));
-    groundCamera.toggleAction();
-    delay(2000);
-    groundCamera.toggleAction();
-    break;
-    case 2:
+      SERIAL_DEBUG.println(F("@Cam-M-Video-fragment"));
+      motorizedCamera.toggleAction();
+      delay(2000);
+      motorizedCamera.toggleAction();
+      break;
+      case 1:
+      SERIAL_DEBUG.println(F("@Cam-G-Video-fragment"));
+      groundCamera.toggleAction();
+      delay(2000);
+      groundCamera.toggleAction();
+      break;
+      case 2:
       SERIAL_DEBUG.println(F("@Cam-S-Video-fragment"));
-    skyCamera.toggleAction();
-    delay(2000);
-    skyCamera.toggleAction();
-  break;
+      skyCamera.toggleAction();
+      delay(2000);
+      skyCamera.toggleAction();
+      break;
+    }
   }
+
+/**
+  * Internal function called when detecting transition from flight phase 1 to 2
+  */
+void
+flightPhase1to2Transition()
+{
+SERIAL_DEBUG.println(F("@Transition-1-2"));
+
+/* turning camera off and on again */
+SERIAL_DEBUG.println(F("@Cam-All-Off"));
+motorizedCamera.switchOff();
+groundCamera.switchOff();
+skyCamera.switchOff();
+delay(1000);
+
+SERIAL_DEBUG.println(F("@Cam-All-On"));
+motorizedCamera.switchOn();
+groundCamera.switchOn();
+skyCamera.switchOn();
+delay(SWITCH_ON_PAUSE_MILLIS);
+
+SERIAL_DEBUG.println(F("@Cam-All-ModePhotoSerial"));
+motorizedCamera.switchToMode(MODE_PHOTO_SERIAL);
+groundCamera.switchToMode(MODE_PHOTO_SERIAL);
+skyCamera.switchToMode(MODE_PHOTO_SERIAL);
+delay(SWITCH_MODE_PAUSE_MILLIS);
+
+SERIAL_DEBUG.println(F("@Cam-All-Action"));
+motorizedCamera.toggleAction();
+groundCamera.toggleAction();
+skyCamera.toggleAction();
+
+SERIAL_DEBUG.println(F("@Cam-All-saveStatus"));
+motorizedCameraModeCounter.set(motorizedCamera.getCurrentMode());
+motorizedCameraRunningStatusCounter.set(motorizedCamera.getRunningStatus());
+groundCameraModeCounter.set(groundCamera.getCurrentMode());
+groundCameraRunningStatusCounter.set(groundCamera.getRunningStatus());
+skyCameraModeCounter.set(skyCamera.getCurrentMode());
+skyCameraRunningStatusCounter.set(skyCamera.getRunningStatus());
 }
 
 void
 flightPhase2CameraProcessing()
 {
- // mobile camera management
- // TODO Switch servo GROUND/HORIZON/SKY
-if (motorizedCamera.getCurrentMode() == MODE_PHOTO_SINGLE)
-{
-SERIAL_DEBUG.println(F("@MobilePhoto"));
-motorizedCamera.toggleAction();
-}
-else
-{
-motorizedCamera.switchToMode(MODE_PHOTO_SINGLE);
-}
+  // mobile camera management
+  // TODO Switch servo GROUND/HORIZON/SKY
+  if (motorizedCamera.getCurrentMode() == MODE_PHOTO_SINGLE)
+  {
+    SERIAL_DEBUG.println(F("@MobilePhoto"));
+    motorizedCamera.toggleAction();
+  }
+  else
+  {
+    motorizedCamera.switchToMode(MODE_PHOTO_SINGLE);
+  }
 
- // ground camera management
-if (groundCamera.getCurrentMode() == MODE_PHOTO_SINGLE)
-{
-SERIAL_DEBUG.println(F("@GroundPhoto"));
-groundCamera.toggleAction();
-}
-else
-{
-groundCamera.switchToMode(MODE_PHOTO_SINGLE);
-}
+  // ground camera management
+        if (groundCamera.getCurrentMode() == MODE_PHOTO_SINGLE)
+        {
+          SERIAL_DEBUG.println(F("@GroundPhoto"));
+          groundCamera.toggleAction();
+        }
+        else
+        {
+          groundCamera.switchToMode(MODE_PHOTO_SINGLE);
+        }
 
- // sky camera management
-if (skyCamera.getCurrentMode() == MODE_PHOTO_SINGLE)
-{
-SERIAL_DEBUG.println(F("@SkyPhoto"));
-skyCamera.toggleAction();
-}
-else
-{
-skyCamera.switchToMode(MODE_PHOTO_SINGLE);
-}
+        // sky camera management
+        if (skyCamera.getCurrentMode() == MODE_PHOTO_SINGLE)
+        {
+          SERIAL_DEBUG.println(F("@SkyPhoto"));
+          skyCamera.toggleAction();
+        }
+        else
+        {
+          skyCamera.switchToMode(MODE_PHOTO_SINGLE);
+        }
 
-}
+      }
 
 void
 flightPhase3CameraProcessing()
