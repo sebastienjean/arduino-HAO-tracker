@@ -54,7 +54,7 @@
 
 #define SKY_CAMERA_PWM_PIN 24
 
-#define SERVO_PWM_PIN 25
+#define ROTOR_PWM_PIN 25
 
 #define MOTORIZED_CAMERA_PWR_PIN 30
 

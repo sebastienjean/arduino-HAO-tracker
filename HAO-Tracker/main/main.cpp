@@ -26,6 +26,7 @@
 #include <GPS.h>
 #include <GPS3D.h>
 #include <FCOEV2.h>
+#include <Rotor.h>
 
 // Modules includes
 #include "AnalogSensor.h"
@@ -248,6 +249,9 @@ FCOEV2 groundCamera(GROUND_CAMERA_PWM_PIN, GROUND_CAMERA_PWR_PIN);
  */
 FCOEV2 skyCamera(SKY_CAMERA_PWM_PIN, SKY_CAMERA_PWR_PIN);
 
+
+Rotor rotor(ROTOR_PWM_PIN);
+
 // ------------------------
 // LEDs related definitions
 // ------------------------
@@ -380,6 +384,12 @@ initGpsSerial()
 void
 initCameras()
 {
+  rotor.goBottom();
+  delay(500);
+  rotor.goMiddle();
+  delay(500);
+  rotor.goTop();
+  delay(500);
   /* turning cameras off and on again (following Roy's advice) */
   motorizedCamera.switchOff();
   groundCamera.switchOff();
@@ -515,7 +525,8 @@ flightPhase0to1Transition()
   delay(SWITCH_ON_PAUSE_MILLIS);
 
   SERIAL_DEBUG.println(F("@Cam-All-ModeVideo"));
-  /* TODO set servo to Horizon */
+
+  rotor.goMiddle();
   motorizedCamera.switchToMode(MODE_VIDEO);
   groundCamera.switchToMode(MODE_VIDEO);
   skyCamera.switchToMode(MODE_VIDEO);
@@ -620,15 +631,15 @@ flightPhase2CameraProcessing()
   switch (frameCounter.read() % 3)
   {
     case 0:
-      /* TODO rotate motorized camera to sky */
+       rotor.goTop();
       break;
 
     case 1:
-      /* TODO rotate motorized camera to horizon */
+      rotor.goMiddle();
       break;
 
     case 2:
-      /* TODO rotate motorized camera to ground */
+      rotor.goBottom();
       break;
 
   }
@@ -689,7 +700,7 @@ flightPhase2to3Transition()
   skyCamera.switchToMode(MODE_VIDEO);
   delay(SWITCH_MODE_PAUSE_MILLIS);
 
-  /* TODO rotate motorized camera to sky */
+  rotor.goTop();
   SERIAL_DEBUG.println(F("@Cam-All-Action"));
   motorizedCamera.toggleAction();
   groundCamera.toggleAction();
@@ -713,6 +724,7 @@ flightPhase3CameraProcessing()
       SERIAL_DEBUG.println(F("@Cam-M-Video-fragment"));
       motorizedCamera.toggleAction();
       delay(2000);
+      rotor.goTop();
       motorizedCamera.toggleAction();
       break;
       case 1:
@@ -763,7 +775,7 @@ flightPhase3to4Transition()
   skyCamera.switchToMode(MODE_VIDEO);
   delay(SWITCH_MODE_PAUSE_MILLIS);
 
-  /* TODO rotate motorized camera to horizon */
+  rotor.goMiddle();
   SERIAL_DEBUG.println(F("@Cam-All-Action"));
   motorizedCamera.toggleAction();
   groundCamera.toggleAction();
@@ -787,6 +799,7 @@ flightPhase4CameraProcessing()
       SERIAL_DEBUG.println(F("@Cam-M-Video-fragment"));
       motorizedCamera.toggleAction();
       delay(2000);
+      rotor.goMiddle();
       motorizedCamera.toggleAction();
       break;
       case 1:
