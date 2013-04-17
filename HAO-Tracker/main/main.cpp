@@ -495,6 +495,7 @@ flightPhase0CameraProcessing()
     skyCamera.switchOff();
     SERIAL_DEBUG.println(F("@Cam-S-Off"));
   }
+  delay(1000);
   /* Does nothing special for the moment */
 }
 
