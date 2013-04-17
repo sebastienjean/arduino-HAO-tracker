@@ -236,17 +236,17 @@ KiwiFrameBuilder kiwiFrameBuilder(&sensors, &voltage);
 /**
  * Motorized camera object
  */
-FCOEV2 motorizedCamera(MOTORIZED_CAMERA_PWM_PIN);
+FCOEV2 motorizedCamera(MOTORIZED_CAMERA_PWM_PIN, MOTORIZED_CAMERA_PWR_PIN);
 
 /**
  * Ground camera object
  */
-FCOEV2 groundCamera(GROUND_CAMERA_PWM_PIN);
+FCOEV2 groundCamera(GROUND_CAMERA_PWM_PIN, GROUND_CAMERA_PWR_PIN);
 
 /**
  * Sky camera object
  */
-FCOEV2 skyCamera(SKY_CAMERA_PWM_PIN);
+FCOEV2 skyCamera(SKY_CAMERA_PWM_PIN, SKY_CAMERA_PWR_PIN);
 
 // ------------------------
 // LEDs related definitions
