@@ -632,11 +632,33 @@ flightPhase2CameraProcessing()
       break;
 
   }
-}
 
-/**
- * Internal function called when detecting transition from flight phase 2 to 3
- */
+  switch (frameCounter.read() % VIDEO_FRAGMENTATION_LOOPS)
+  {
+    case 0:
+      SERIAL_DEBUG.println(F("@Cam-M-WakeUp"));
+      motorizedCamera.toggleAction();
+      delay(2000);
+      motorizedCamera.toggleAction();
+      break;
+      case 1:
+      SERIAL_DEBUG.println(F("@Cam-G-WakeUp"));
+      groundCamera.toggleAction();
+      delay(2000);
+      groundCamera.toggleAction();
+      break;
+      case 2:
+      SERIAL_DEBUG.println(F("@Cam-S-WakeUp"));
+      skyCamera.toggleAction();
+      delay(2000);
+      skyCamera.toggleAction();
+      break;
+    }
+  }
+
+      /**
+       * Internal function called when detecting transition from flight phase 2 to 3
+       */
 void
 flightPhase2to3Transition()
 {
