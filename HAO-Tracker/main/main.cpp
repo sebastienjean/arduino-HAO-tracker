@@ -341,7 +341,7 @@ initTakeOffSwitch()
 boolean
 isAboutToTakeOff()
 {
-  return (digitalRead(TAKE_OFF_SWITCH_PIN) == LOW);
+  return (digitalRead(TAKE_OFF_SWITCH_PIN) == HIGH);
 }
 
 /**
@@ -873,7 +873,7 @@ flightPhase1Loop()
   SERIAL_DEBUG.println(F("@P1L-C <"));
 
   /* flight phase transition detection */
-  if (((nmeaGPS.getFix()) && (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER))|| (currentFlightPhaseDurationCounter.read() >FLIGHT_PHASE_1_MAX_DURATION))
+  if (((nmeaGPS.getFix()) && (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER))|| (currentFlightPhaseDurationCounter.read() >FLIGHT_PHASE_1_MAX_SECONDS_DURATION))
   {
     SERIAL_DEBUG.println(F("@P1L <"));
     return true;
@@ -895,7 +895,7 @@ flightPhase2Loop()
 
   /* flight phase transition detection */
 
-  if (((nmeaGPS.getFix())&&(nmeaGPS.getAltitude() > FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER))||(currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_2_MAX_DURATION))
+  if (((nmeaGPS.getFix())&&(nmeaGPS.getAltitude() > FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER))||(currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_2_MAX_SECONDS_DURATION))
   {
     SERIAL_DEBUG.println(F("@P2L <"));
     return true;
