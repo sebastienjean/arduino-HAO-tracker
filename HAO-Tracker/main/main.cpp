@@ -1034,6 +1034,7 @@ loop()
       if (flightPhase0Loop())
       {
         flightPhase0to1Transition();
+        switchToNextFlightPhase();
         return;
       }
       break;
@@ -1042,6 +1043,7 @@ loop()
       if (flightPhase1Loop())
       {
         flightPhase1to2Transition();
+        switchToNextFlightPhase();
         return;
       }
       break;
@@ -1050,6 +1052,7 @@ loop()
       if (flightPhase2Loop())
       {
         flightPhase2to3Transition();
+        switchToNextFlightPhase();
         return;
       }
       break;
@@ -1058,6 +1061,7 @@ loop()
       if (flightPhase3Loop())
       {
         flightPhase3to4Transition();
+        switchToNextFlightPhase();
         return;
       }
       break;
@@ -1065,6 +1069,7 @@ loop()
       if (flightPhase4Loop())
       {
         flightPhase4to5Transition();
+        switchToNextFlightPhase();
         return;
       }
       break;
