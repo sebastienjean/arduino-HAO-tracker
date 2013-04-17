@@ -129,32 +129,32 @@
 /**
  * Flight phase number 0 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_0_PAUSE_MILLIS 30000
+#define FLIGHT_PHASE_0_PAUSE_MILLIS 5000
 
 /**
  * Flight phase number 1 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_1_PAUSE_MILLIS 30000
+#define FLIGHT_PHASE_1_PAUSE_MILLIS 1000
 
 /**
  * Flight phase number 2 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_2_PAUSE_MILLIS 30000
+#define FLIGHT_PHASE_2_PAUSE_MILLIS 5000
 
 /**
  * Flight phase number 3 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_3_PAUSE_MILLIS 30000
+#define FLIGHT_PHASE_3_PAUSE_MILLIS 5000
 
 /**
  * Flight phase number 4 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_4_PAUSE_MILLIS 30000
+#define FLIGHT_PHASE_4_PAUSE_MILLIS 5000
 
 /**
  * Flight phase number 5 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_5_PAUSE_MILLIS 30000
+#define FLIGHT_PHASE_5_PAUSE_MILLIS 10000
 
 //-------------------------------------------
 // Flight phase numbering related definitions
@@ -203,10 +203,10 @@
 //-----------------------------------------------------
 // Flight phase duration triggering related definitions
 //-----------------------------------------------------
-#define FLIGHT_PHASE_1_MAX_SECONDS_DURATION 40
-#define FLIGHT_PHASE_2_MAX_SECONDS_DURATION 30
-#define FLIGHT_PHASE_3_MAX_SECONDS_DURATION 30
-#define FLIGHT_PHASE_4_MAX_SECONDS_DURATION 30
+#define FLIGHT_PHASE_1_MAX_SECONDS_DURATION 600 //1200
+#define FLIGHT_PHASE_2_MAX_SECONDS_DURATION 600 //4000
+#define FLIGHT_PHASE_3_MAX_SECONDS_DURATION 600//3600
+#define FLIGHT_PHASE_4_MAX_SECONDS_DURATION 600 //4000
 
 // ----------------------------------------------------
 // Delay of the number of frame to reset camera's video
