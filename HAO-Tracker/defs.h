@@ -203,10 +203,10 @@
 //-----------------------------------------------------
 // Flight phase duration triggering related definitions
 //-----------------------------------------------------
-#define FLIGHT_PHASE_1_MAX_SECONDS_DURATION 180 //1200
-#define FLIGHT_PHASE_2_MAX_SECONDS_DURATION 180 //4000
-#define FLIGHT_PHASE_3_MAX_SECONDS_DURATION 180//3600
-#define FLIGHT_PHASE_4_MAX_SECONDS_DURATION 180 //4000
+#define FLIGHT_PHASE_1_MAX_SECONDS_DURATION 10 //1200
+#define FLIGHT_PHASE_2_MAX_SECONDS_DURATION 240 //4000
+#define FLIGHT_PHASE_3_MAX_SECONDS_DURATION 100//3600
+#define FLIGHT_PHASE_4_MAX_SECONDS_DURATION 100 //4000
 
 // ----------------------------------------------------
 // Delay of the number of frame to reset camera's video

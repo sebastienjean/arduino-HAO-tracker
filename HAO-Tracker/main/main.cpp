@@ -628,6 +628,8 @@ flightPhase1to2Transition()
 void
 flightPhase2CameraProcessing()
 {
+  // TODO make rotor position persistent
+  // TODO stop camera every 10 loops, off/on, mode, action
   switch (frameCounter.read() % 3)
   {
     case 0:
@@ -641,30 +643,11 @@ flightPhase2CameraProcessing()
     case 2:
       rotor.goBottom();
       break;
-
   }
-
-  switch (frameCounter.read() % VIDEO_FRAGMENTATION_LOOPS)
-  {
-    case 0:
-      SERIAL_DEBUG.println(F("@Cam-M-WakeUp"));
-      motorizedCamera.toggleAction();
-      delay(2000);
-      motorizedCamera.toggleAction();
-      break;
-      case 1:
-      SERIAL_DEBUG.println(F("@Cam-G-WakeUp"));
-      groundCamera.toggleAction();
-      delay(2000);
-      groundCamera.toggleAction();
-      break;
-      case 2:
-      SERIAL_DEBUG.println(F("@Cam-S-WakeUp"));
-      skyCamera.toggleAction();
-      delay(2000);
-      skyCamera.toggleAction();
-      break;
-    }
+  SERIAL_DEBUG.println(F("@Cam-All-Action"));
+  motorizedCamera.toggleAction();
+  groundCamera.toggleAction();
+  skyCamera.toggleAction();
   }
 
       /**
