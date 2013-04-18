@@ -442,6 +442,10 @@ commonLoop()
 
   /* kiwi frame transmission */
   fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
+  delay(250);
+  fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
+  delay(250);
+  fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
 
   greenLED.quicklyMakeBlinkSeveralTimes(2);
 
