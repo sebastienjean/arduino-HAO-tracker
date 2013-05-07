@@ -219,7 +219,7 @@ AnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 /**
  * Array of analog sensors to be included in custom frame
  */
-AnalogSensor* sensorsArray[9] =
+AnalogSensor* customFrameSensorsArray[9] =
   { &externalTemperatureAnalogSensor,
     &externalHumidityAnalogSensor,
     &internalTemperatureAnalogSensor,
@@ -231,9 +231,27 @@ AnalogSensor* sensorsArray[9] =
     &batteryTemperatureAnalogSensor };
 
 /**
+ * Array of analog sensors to be included in kiwi frame
+ */
+AnalogSensor* kiwiFrameSensorsArray[8] =
+  { &externalTemperatureAnalogSensor,
+    &internalTemperatureAnalogSensor,
+    &externalHumidityAnalogSensor,
+    &upLuminosityAnalogSensor,
+    &side1LuminosityAnalogSensor,
+    &side2LuminosityAnalogSensor,
+    &differentialPressureAnalogSensor,
+    &batteryTemperatureAnalogSensor };
+
+/**
  * Analog sensors to be included in custom frame
  */
-AnalogSensors sensors(sensorsArray, 9);
+AnalogSensors customFrameAnalogSensors(customFrameSensorsArray, 9);
+
+/**
+ * Analog sensors to be included in kiwi frame
+ */
+AnalogSensors kiwiFrameAnalogSensors(kiwiFrameSensorsArray, 8);
 
 // -----------------------------------
 // Real Time Clock related definitions
@@ -256,7 +274,7 @@ char customFrame[CUSTOM_FRAME_MAX_LENGTH];
 /**
  * Custom frame builder object
  */
-CustomFrameBuilder customFrameBuilder(&counters, &sensors, &voltage, &rtc, &nmeaGPS);
+CustomFrameBuilder customFrameBuilder(&counters, &customFrameAnalogSensors, &voltage, &rtc, &nmeaGPS);
 
 // ------------------------------
 // KIWI frame related definitions
@@ -270,7 +288,7 @@ unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
 /**
  * Kiwi frame builder object
  */
-KiwiFrameBuilder kiwiFrameBuilder(&sensors, &voltage);
+KiwiFrameBuilder kiwiFrameBuilder(&kiwiFrameAnalogSensors, &voltage);
 
 // --------------------------
 // Camera related definitions
