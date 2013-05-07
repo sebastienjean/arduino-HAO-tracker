@@ -20,7 +20,6 @@
 #include <GPS3D.h>
 
 #include "Counters.h"
-//#include "DS1302_RTC.h"
 #include "DS1302.h"
 #include "AnalogSensor.h"
 #include "AnalogSensors.h"
@@ -29,7 +28,7 @@
 /**
  * Maximum length of custom frame
  */
-#define CUSTOM_FRAME_MAX_LENGTH 150
+#define CUSTOM_FRAME_MAX_LENGTH 200
 
 /**
  * Custom frame field separator character

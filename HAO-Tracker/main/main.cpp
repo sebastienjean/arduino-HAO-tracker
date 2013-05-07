@@ -38,7 +38,6 @@
 #include "KiwiFrameBuilder.h"
 #include "CustomFrameBuilder.h"
 #include "Logger.h"
-//#include "DS1302_RTC.h"
 
 // -----------------------
 // GPS related definitions
@@ -64,7 +63,9 @@ char nmeaRmcSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
  */
 char nmeaGgaSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
 
-// HAO previous altitude (during ascending phase)
+/**
+ * HAO previous altitude (during ascending phase)
+ */
 double previousAltitude;
 
 // ---------------------------------
@@ -152,16 +153,16 @@ Counters counters(countersArray, 4);
 // ----------------------------------
 // Analog sensors related definitions
 // ----------------------------------
-
-/**
- * Differential pressure analog sensor
- */
-AnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Absolute pressure analog sensor
- */
-AnalogSensor absolutePressureAnalogSensor(ABSOLUTE_PRESSURE_ANALOG_SENSOR_CHANNEL);
+#define EXTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL A0
+#define EXTERNAL_HUMIDITY_ANALOG_SENSOR_CHANNEL A1
+#define INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL A2
+#define UP_LUMINOSITY_ANALOG_SENSOR_CHANNEL A3
+#define SIDE1_LUMINOSITY_ANALOG_SENSOR_CHANNEL A4
+#define SIDE2_LUMINOSITY_ANALOG_SENSOR_CHANNEL A5
+#define BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL A6
+#define DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL A7
+#define SOUND_LEVEL_ANALOG_SENSOR_CHANNEL A8
+#define BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL A9
 
 /**
  * External temperature analog sensor
@@ -169,12 +170,48 @@ AnalogSensor absolutePressureAnalogSensor(ABSOLUTE_PRESSURE_ANALOG_SENSOR_CHANNE
 AnalogSensor externalTemperatureAnalogSensor(EXTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
 /**
+ * External humidity analog sensor
+ */
+AnalogSensor externalHumidityAnalogSensor(EXTERNAL_HUMIDITY_ANALOG_SENSOR_CHANNEL);
+
+/**
  * Internal temperature analog sensor
  */
 AnalogSensor internalTemperatureAnalogSensor(INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
 /**
- * Voltage analogsensor
+ * Accurate luminosity analog sensor
+ */
+AnalogSensor upLuminosityAnalogSensor(UP_LUMINOSITY_ANALOG_SENSOR_CHANNEL);
+
+/**
+ * Coarse luminosity analog sensor, side 1
+ */
+AnalogSensor side1LuminosityAnalogSensor(SIDE1_LUMINOSITY_ANALOG_SENSOR_CHANNEL);
+
+/**
+ * Coarse luminosity analog sensor, side 2
+ */
+AnalogSensor side2LuminosityAnalogSensor(SIDE2_LUMINOSITY_ANALOG_SENSOR_CHANNEL);
+
+/**
+ * Differential pressure analog sensor
+ */
+AnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
+
+/**
+ * Sound level analog sensor
+ */
+AnalogSensor soundLevelAnalogSensor(SOUND_LEVEL_ANALOG_SENSOR_CHANNEL);
+
+/**
+ * Battery temperature analog sensor
+ */
+AnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+
+
+/**
+ * Voltage analog sensor
  */
 // N.B. this analog sensor is handled separately from the others since kiwi frame does
 AnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
@@ -182,16 +219,21 @@ AnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 /**
  * Array of analog sensors to be included in custom frame
  */
-AnalogSensor* sensorsArray[4] =
-  { &differentialPressureAnalogSensor,
-    &absolutePressureAnalogSensor,
-    &externalTemperatureAnalogSensor,
-    &internalTemperatureAnalogSensor };
+AnalogSensor* sensorsArray[9] =
+  { &externalTemperatureAnalogSensor,
+    &externalHumidityAnalogSensor,
+    &internalTemperatureAnalogSensor,
+    &upLuminosityAnalogSensor,
+    &side1LuminosityAnalogSensor,
+    &side2LuminosityAnalogSensor,
+    &differentialPressureAnalogSensor,
+    &soundLevelAnalogSensor,
+    &batteryTemperatureAnalogSensor };
 
 /**
  * Analog sensors to be included in custom frame
  */
-AnalogSensors sensors(sensorsArray, 4);
+AnalogSensors sensors(sensorsArray, 9);
 
 // -----------------------------------
 // Real Time Clock related definitions
@@ -1037,7 +1079,7 @@ setup()
   previousAltitude = 0;
 
   SERIAL_DEBUG.println(F("@Cam_I..."));
-  initCameras();
+  //initCameras();
   SERIAL_DEBUG.println(F("done"));
 }
 
