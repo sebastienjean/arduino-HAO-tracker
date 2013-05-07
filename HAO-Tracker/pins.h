@@ -16,17 +16,17 @@
 #ifndef PINS_h
 #define PINS_h
 
-#define USER_SWITCH_PIN 5
+#define USER_SWITCH_PIN 29
 
-#define TAKE_OFF_SWITCH_PIN 4
+#define TAKE_OFF_SWITCH_PIN 12
 
-#define RED_LED_PIN 46
+#define RED_LED_PIN 37
 
-#define ORANGE_LED_PIN 47
+#define ORANGE_LED_PIN 35
 
-#define GREEN_LED_PIN 48
+#define GREEN_LED_PIN 33
 
-#define BLUE_LED_PIN 49
+#define BLUE_LED_PIN 31
 
 #define FSK_MODULATOR_TX_PIN 6
 
