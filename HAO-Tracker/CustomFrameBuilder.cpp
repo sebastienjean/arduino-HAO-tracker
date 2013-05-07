@@ -23,7 +23,8 @@
 #include "AnalogSensor.h"
 #include "AnalogSensors.h"
 #include "Counters.h"
-#include "DS1302_RTC.h"
+//#include "DS1302_RTC.h"
+#include "DS1302.h"
 
 void
 CustomFrameBuilder::appendStartOfFrameChar()
@@ -79,7 +80,7 @@ CustomFrameBuilder::appendSystemTime()
 void
 CustomFrameBuilder::appendRtcTime()
 {
-  this->rtc->getRtcTimeString(this->whereToAppend);
+  this->rtc->getTimeBrief(this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
@@ -178,7 +179,7 @@ CustomFrameBuilder::appendPositioningData()
 }
 
 CustomFrameBuilder::CustomFrameBuilder(Counters *counters,
-    AnalogSensors *sensors, AnalogSensor *voltage, DS1302_RTC *rtc, GPS3D *gps)
+    AnalogSensors *sensors, AnalogSensor *voltage, DS1302 *rtc, GPS3D *gps)
 {
   this->counters = counters;
   this->rtc = rtc;

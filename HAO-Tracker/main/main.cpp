@@ -38,7 +38,7 @@
 #include "KiwiFrameBuilder.h"
 #include "CustomFrameBuilder.h"
 #include "Logger.h"
-#include "DS1302_RTC.h"
+//#include "DS1302_RTC.h"
 
 // -----------------------
 // GPS related definitions
@@ -200,7 +200,7 @@ AnalogSensors sensors(sensorsArray, 4);
 /**
  * RTC object
  */
-DS1302_RTC rtc(RTC_CE_PIN, RTC_IO_PIN, RTC_SCLK_PIN);
+DS1302 rtc(RTC_CE_PIN, RTC_IO_PIN, RTC_SCLK_PIN);
 
 // --------------------------------
 // Custom frame related definitions

@@ -20,7 +20,8 @@
 #include <GPS3D.h>
 
 #include "Counters.h"
-#include "DS1302_RTC.h"
+//#include "DS1302_RTC.h"
+#include "DS1302.h"
 #include "AnalogSensor.h"
 #include "AnalogSensors.h"
 
@@ -67,7 +68,7 @@ private:
   /**
    * Pointer to Real Time Clock
    */
-  DS1302_RTC *rtc;
+  DS1302 *rtc;
 
   /**
    * Pointer to sensors
@@ -166,7 +167,7 @@ public:
    * @param gps positioning data provider
    */
   CustomFrameBuilder(Counters *counters, AnalogSensors *sensors,
-      AnalogSensor *voltage, DS1302_RTC *rtc, GPS3D *gps);
+      AnalogSensor *voltage, DS1302 *rtc, GPS3D *gps);
 
   /**
    * Builds custom frame (time, location, sensor data, ...)
