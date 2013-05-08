@@ -38,6 +38,7 @@
 #include "KiwiFrameBuilder.h"
 #include "CustomFrameBuilder.h"
 #include "Logger.h"
+#include "Tone.h"
 
 // -----------------------
 // GPS related definitions
@@ -312,6 +313,8 @@ FCOEV2 skyCamera(SKY_CAMERA_PWM_PIN, SKY_CAMERA_PWR_PIN);
 
 Rotor rotor(ROTOR_PWM_PIN);
 
+Tone toneGenerator(FSK_MODULATOR_TX_PIN);
+
 // ------------------------
 // LEDs related definitions
 // ------------------------
@@ -346,6 +349,30 @@ Led* ledArray[4] =
     &blueLED };
 Leds leds(ledArray, 4);
 
+
+/**
+ *
+ * @return
+ */
+void playIntro()
+{
+  int oct = 5;
+  int bpm = 216;
+
+  toneGenerator.melody(Mi,oct,croche,bpm);
+  toneGenerator.melody(Mi,oct,croche,bpm);
+  toneGenerator.melody(0,oct,dsoupir,bpm);
+  toneGenerator.melody(Mi,oct,croche,bpm);
+  toneGenerator.melody(0,oct,dsoupir,bpm);
+  toneGenerator.melody(Do,oct,croche,bpm);
+  toneGenerator.melody(Mi,oct,noire,bpm);
+
+  toneGenerator.melody(Sol,oct,noire,bpm);
+  toneGenerator.melody(0,oct,soupir,bpm);
+  toneGenerator.melody(Sol,oct-1,noire,bpm);
+  toneGenerator.melody(0,oct,soupir,bpm);
+}
+
 /**
  * Internal function used to initialize logging (SD).
  *
@@ -378,9 +405,9 @@ clearAllPersistentData()
     groundCameraRunningStatusCounter.reset();
     skyCameraRunningStatusCounter.reset();
 
-    motorizedCameraModeCounter.reset();
-    groundCameraModeCounter.reset();
-    skyCameraModeCounter.reset();
+    motorizedCameraModeCounter.set(MODE_PHOTO_SINGLE);
+    groundCameraModeCounter.set(MODE_PHOTO_SINGLE);
+    skyCameraModeCounter.set(MODE_PHOTO_SINGLE);
 
     return LOGGER.reset();
   }
@@ -554,6 +581,10 @@ commonLoop()
 void
 flightPhase0CameraProcessing()
 {
+  motorizedCamera.toggleAction();
+  groundCamera.toggleAction();
+  skyCamera.toggleAction();
+  /*
   if (motorizedCamera.isOn())
   {
     motorizedCamera.switchOff();
@@ -569,8 +600,9 @@ flightPhase0CameraProcessing()
     skyCamera.switchOff();
     SERIAL_DEBUG.println(F("@Cam-S-Off"));
   }
-  delay(1000);
+  delay(1000);/*
   /* Does nothing special for the moment */
+
 }
 
     /**
@@ -1096,8 +1128,9 @@ setup()
 
   previousAltitude = 0;
 
+  playIntro();
   SERIAL_DEBUG.println(F("@Cam_I..."));
-  //initCameras();
+  initCameras();
   SERIAL_DEBUG.println(F("done"));
 }
 
