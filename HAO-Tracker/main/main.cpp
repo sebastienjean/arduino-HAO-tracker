@@ -154,16 +154,6 @@ Counters counters(countersArray, 4);
 // ----------------------------------
 // Analog sensors related definitions
 // ----------------------------------
-#define EXTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL A0
-#define EXTERNAL_HUMIDITY_ANALOG_SENSOR_CHANNEL A1
-#define INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL A2
-#define UP_LUMINOSITY_ANALOG_SENSOR_CHANNEL A3
-#define SIDE1_LUMINOSITY_ANALOG_SENSOR_CHANNEL A4
-#define SIDE2_LUMINOSITY_ANALOG_SENSOR_CHANNEL A5
-#define BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL A6
-#define DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL A7
-#define SOUND_LEVEL_ANALOG_SENSOR_CHANNEL A8
-#define BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL A9
 
 /**
  * External temperature analog sensor
@@ -218,9 +208,14 @@ AnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CH
 AnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 
 /**
+ * Middle temperature analog sensor
+ */
+AnalogSensor middleTemperatureAnalogSensor(MIDDLE_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+
+/**
  * Array of analog sensors to be included in custom frame
  */
-AnalogSensor* customFrameSensorsArray[9] =
+AnalogSensor* customFrameSensorsArray[10] =
   { &externalTemperatureAnalogSensor,
     &externalHumidityAnalogSensor,
     &internalTemperatureAnalogSensor,
@@ -229,25 +224,26 @@ AnalogSensor* customFrameSensorsArray[9] =
     &side2LuminosityAnalogSensor,
     &differentialPressureAnalogSensor,
     &soundLevelAnalogSensor,
-    &batteryTemperatureAnalogSensor };
+    &batteryTemperatureAnalogSensor,
+    &middleTemperatureAnalogSensor};
 
 /**
  * Array of analog sensors to be included in kiwi frame
  */
 AnalogSensor* kiwiFrameSensorsArray[8] =
   { &externalTemperatureAnalogSensor,
+    &middleTemperatureAnalogSensor,
     &internalTemperatureAnalogSensor,
     &externalHumidityAnalogSensor,
     &upLuminosityAnalogSensor,
     &side1LuminosityAnalogSensor,
     &side2LuminosityAnalogSensor,
-    &differentialPressureAnalogSensor,
-    &batteryTemperatureAnalogSensor };
+    &differentialPressureAnalogSensor};
 
 /**
  * Analog sensors to be included in custom frame
  */
-AnalogSensors customFrameAnalogSensors(customFrameSensorsArray, 9);
+AnalogSensors customFrameAnalogSensors(customFrameSensorsArray, 10);
 
 /**
  * Analog sensors to be included in kiwi frame
