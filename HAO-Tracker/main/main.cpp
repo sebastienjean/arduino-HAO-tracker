@@ -213,42 +213,29 @@ AnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 AnalogSensor middleTemperatureAnalogSensor(MIDDLE_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
 /**
- * Array of analog sensors to be included in custom frame
+ * Array of analog sensors to be included in custom and (partially) in kiwi frame
  */
-AnalogSensor* customFrameSensorsArray[10] =
-  { &externalTemperatureAnalogSensor,
-    &externalHumidityAnalogSensor,
-    &internalTemperatureAnalogSensor,
-    &upLuminosityAnalogSensor,
-    &side1LuminosityAnalogSensor,
-    &side2LuminosityAnalogSensor,
-    &differentialPressureAnalogSensor,
-    &soundLevelAnalogSensor,
-    &batteryTemperatureAnalogSensor,
-    &middleTemperatureAnalogSensor};
-
-/**
- * Array of analog sensors to be included in kiwi frame
- */
-AnalogSensor* kiwiFrameSensorsArray[8] =
-  { &externalTemperatureAnalogSensor,
+AnalogSensor* sensorsArray[10] =
+  { &internalTemperatureAnalogSensor,
     &middleTemperatureAnalogSensor,
-    &internalTemperatureAnalogSensor,
+    &externalTemperatureAnalogSensor,
     &externalHumidityAnalogSensor,
+    &differentialPressureAnalogSensor,
     &upLuminosityAnalogSensor,
     &side1LuminosityAnalogSensor,
     &side2LuminosityAnalogSensor,
-    &differentialPressureAnalogSensor};
+    &soundLevelAnalogSensor,
+    &batteryTemperatureAnalogSensor };
 
 /**
  * Analog sensors to be included in custom frame
  */
-AnalogSensors customFrameAnalogSensors(customFrameSensorsArray, 10);
+AnalogSensors customFrameAnalogSensors(sensorsArray, 10);
 
 /**
  * Analog sensors to be included in kiwi frame
  */
-AnalogSensors kiwiFrameAnalogSensors(kiwiFrameSensorsArray, 8);
+AnalogSensors kiwiFrameAnalogSensors(sensorsArray, 8);
 
 // -----------------------------------
 // Real Time Clock related definitions
