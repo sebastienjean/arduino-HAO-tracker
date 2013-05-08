@@ -28,7 +28,7 @@
 /**
  * Debug serial baudrate
  */
-#define SERIAL_DEBUG_BAUDRATE 9600
+#define SERIAL_DEBUG_BAUDRATE 600
 
 /**
  * GPS serial baudrate
