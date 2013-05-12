@@ -20,6 +20,7 @@
 AnalogSensor::AnalogSensor(int channel)
 {
   this->channel = channel;
+  pinMode(this->channel, INPUT);
 }
 
 int
