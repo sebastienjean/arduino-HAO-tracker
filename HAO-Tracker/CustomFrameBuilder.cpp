@@ -73,7 +73,7 @@ void
 CustomFrameBuilder::appendSystemTime()
 {
   // seconds elapsed since last reset, as a decimal coded ASCII string
-  itoa(millis() / 1000, this->whereToAppend, 10);
+  itoa((millis() * 5) / 2500, this->whereToAppend, 10);
   this->whereToAppend += strlen(this->whereToAppend);
 }
 

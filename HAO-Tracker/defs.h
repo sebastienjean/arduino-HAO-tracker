@@ -20,7 +20,6 @@
 // Serial related definitions
 //---------------------------
 
-#define SECOND_COMPENSATION_FACTOR 1333
 /**
  * Serial used for debug
  */
