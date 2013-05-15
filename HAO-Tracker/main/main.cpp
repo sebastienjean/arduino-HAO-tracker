@@ -1267,9 +1267,8 @@ flightPhase4Loop()
     else
     stillnessDurationInLoopsCounter.set(0);
 
-    if (stillnessDurationInLoopsCounter.read()> STILLNESS_DURATION_IN_LOOPS_LIMIT)
     debugInfo("@P4L <\r\n", 8);
-    return true;
+    return (stillnessDurationInLoopsCounter.read() > STILLNESS_DURATION_IN_LOOPS_LIMIT);
   }
 
   delay(FLIGHT_PHASE_4_PAUSE_MILLIS);
