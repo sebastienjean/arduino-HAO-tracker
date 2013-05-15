@@ -383,7 +383,7 @@ Tone toneGenerator(FSK_MODULATOR_TX_PIN);
 void
 debugInfo(char *message, int chars)
 {
-  SERIAL_DEBUG.print(message);
+  SERIAL_DEBUG.write((unsigned char *) message, chars);
   fskModulator.modulateBytes(message, chars);
 }
 
@@ -569,11 +569,16 @@ commonLoop()
   kiwiFrameBuilder.buildKiwiFrame(kiwiFrame);
 
   /* kiwi frame transmission */
+  //fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
+  debugInfo("\r\n", 2);
+  debugInfo((char *)kiwiFrame, KIWI_FRAME_LENGTH);
+  delay(50);
   fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
-  delay(150);
-  fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
-  delay(150);
-  fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
+  debugInfo((char *)kiwiFrame, KIWI_FRAME_LENGTH);
+  delay(50);
+  debugInfo((char *)kiwiFrame, KIWI_FRAME_LENGTH);
+  delay(50);
+  debugInfo("\r\n", 2);
 
   /*
    greenLED.quicklyMakeBlinkSeveralTimes(2);
