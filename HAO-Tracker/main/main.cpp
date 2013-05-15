@@ -380,7 +380,8 @@ Tone toneGenerator(FSK_MODULATOR_TX_PIN);
  * @param message a NUL-terminated string, supposed to include line-termination chars if needed.
  * @param string length (included line-termination chars)
  */
-void debugInfo(char *message, int chars)
+void
+debugInfo(char *message, int chars)
 {
   SERIAL_DEBUG.print(message);
   fskModulator.modulateBytes(message, chars);
@@ -547,9 +548,6 @@ initCameras()
 void
 switchToNextFlightPhase()
 {
-  debugInfo("@Mario Time!\r\n", 14);
-  playMarioTheme();
-
   currentFlightPhaseCounter.increment(1);
   currentFlightPhaseDurationCounter.set(0);
 }
@@ -565,6 +563,7 @@ commonLoop()
    redLED.quicklyMakeBlinkSeveralTimes(1);
    greenLED.quicklyMakeBlinkSeveralTimes(1);
    */
+  delay(1000);
 
   /* kiwi frame building */
   kiwiFrameBuilder.buildKiwiFrame(kiwiFrame);
@@ -603,8 +602,7 @@ commonLoop()
   /* custom frame building */
   customFrameBuilder.buildCustomFrame(customFrame);
 
-  /* custom frame debug */
-  SERIAL_DEBUG.print(customFrame);
+  /* custom frame debug */SERIAL_DEBUG.print(customFrame);
 
   /* custom frame logging */
   LOGGER.logMessage(customFrame, false);
@@ -624,11 +622,11 @@ commonLoop()
   debugInfo("@CL <\r\n", 7);
 }
 
-  /**
-   * Cameras behavior during flight phase 0
-   *
-   * - All cameras are supposed to be off
-   */
+/**
+ * Cameras behavior during flight phase 0
+ *
+ * - All cameras are supposed to be off
+ */
 void
 flightPhase0CameraProcessing()
 {
@@ -676,12 +674,12 @@ flightPhase0to1Transition()
   skyCameraRecordingStatusCounter.set(CAMERA_RUNNING);
 }
 
-  /**
-   * Cameras behavior during flight phase 1
-   *
-   * - Motorized camera is in "ground" position
-   * - all cameras are taking videos, fragmented every 15 loops
-   */
+/**
+ * Cameras behavior during flight phase 1
+ *
+ * - Motorized camera is in "ground" position
+ * - all cameras are taking videos, fragmented every 15 loops
+ */
 void
 flightPhase1CameraProcessing()
 {
@@ -722,9 +720,9 @@ flightPhase1CameraProcessing()
   }
 }
 
-    /**
-     * Internal function called when detecting transition from flight phase 1 to 2
-     */
+/**
+ * Internal function called when detecting transition from flight phase 1 to 2
+ */
 void
 flightPhase1to2Transition()
 {
@@ -780,12 +778,12 @@ flightPhase1to2Transition()
   skyCameraRecordAtFrameCounter.reset();
 }
 
-  /**
-   * Cameras behavior during flight phase 2
-   *
-   * - Motorized camera is in "horizon" position
-   * - all cameras are taking videos, during 15 loops, with a pause of 30 loops between each
-   */
+/**
+ * Cameras behavior during flight phase 2
+ *
+ * - Motorized camera is in "horizon" position
+ * - all cameras are taking videos, during 15 loops, with a pause of 30 loops between each
+ */
 void
 flightPhase2CameraProcessing()
 {
@@ -887,9 +885,9 @@ flightPhase2CameraProcessing()
   }
 }
 
-    /**
-     * Internal function called when detecting transition from flight phase 2 to 3
-     */
+/**
+ * Internal function called when detecting transition from flight phase 2 to 3
+ */
 void
 flightPhase2to3Transition()
 {
@@ -939,12 +937,12 @@ flightPhase2to3Transition()
   skyCameraRecordingStatusCounter.set(CAMERA_RUNNING);
 }
 
-  /**
-   * Cameras behavior during flight phase 3
-   *
-   * - Motorized camera is in "sky" position
-   * - all cameras are taking videos, fragmented every 15 loops
-   */
+/**
+ * Cameras behavior during flight phase 3
+ *
+ * - Motorized camera is in "sky" position
+ * - all cameras are taking videos, fragmented every 15 loops
+ */
 void
 flightPhase3CameraProcessing()
 {
@@ -985,9 +983,9 @@ flightPhase3CameraProcessing()
   }
 }
 
-    /**
-     * Internal function called when detecting transition from flight phase 3 to 4
-     */
+/**
+ * Internal function called when detecting transition from flight phase 3 to 4
+ */
 void
 flightPhase3to4Transition()
 {
@@ -1036,12 +1034,12 @@ flightPhase3to4Transition()
   skyCameraRecordingStatusCounter.set(CAMERA_RUNNING);
 }
 
-  /**
-   * Cameras behavior during flight phase 4
-   *
-   * - Motorized camera is in "ground" position
-   * - all cameras are taking videos, fragmented every 15 loops
-   */
+/**
+ * Cameras behavior during flight phase 4
+ *
+ * - Motorized camera is in "ground" position
+ * - all cameras are taking videos, fragmented every 15 loops
+ */
 void
 flightPhase4CameraProcessing()
 {
@@ -1107,11 +1105,11 @@ flightPhase4to5Transition()
   skyCamera.switchOff();
 }
 
-  /**
-   * Cameras behavior during flight phase 5
-   *
-   * - All cameras are supposed to be off
-   */
+/**
+ * Cameras behavior during flight phase 5
+ *
+ * - All cameras are supposed to be off
+ */
 void
 flightPhase5CameraProcessing()
 {
@@ -1152,43 +1150,43 @@ flightPhase0Loop()
   return false;
 }
 
-  /**
-   * Flight phase 1 sub-loop.
-   *
-   * - camera recording (rotor to ground), common loop, no delay between frames
-   * - exits when maximum altitude or duration are reached
-   *
-   * @return <tt>true</tt> if flight phase transition has been detected, <tt>false</tt> else
-   */
+/**
+ * Flight phase 1 sub-loop.
+ *
+ * - camera recording (rotor to ground), common loop, no delay between frames
+ * - exits when maximum altitude or duration are reached
+ *
+ * @return <tt>true</tt> if flight phase transition has been detected, <tt>false</tt> else
+ */
 boolean
 flightPhase1Loop()
 {
   debugInfo("@P1L >\r\n", 8);
-
   debugInfo("@P1L-C >\r\n", 10);
   flightPhase1CameraProcessing();
   debugInfo("@P1L-C <\r\n", 10);
-
-  /* flight phase transition detection */
-  if (((nmeaGPS.getFix()) && (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER))|| (currentFlightPhaseDurationCounter.read() >FLIGHT_PHASE_1_MAX_SECONDS_DURATION))
-  {
-    debugInfo("@P1L <\r\n", 8);
-    return true;
-  }
-
   delay(FLIGHT_PHASE_1_PAUSE_MILLIS);
   debugInfo("@P1L <\r\n", 8);
-  return false;
+  /* flight phase transition detection */
+  //if (((nmeaGPS.getFix()) && (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER))
+  //    || (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_1_MAX_SECONDS_DURATION))
+  if (nmeaGPS.getFix())
+  {
+    if (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER)
+      return true;
+  }
+  else
+    return (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_1_MAX_SECONDS_DURATION);
 }
 
 /**
-  * Flight phase 2 sub-loop.
-  *
-  * - camera 33% recording (rotor to horizon), common loop, no delay between frames
-  * - exits when maximum altitude or duration are reached
-  *
-  * @return <tt>true</tt> if flight phase transition has been detected, <tt>false</tt> else
-  */
+ * Flight phase 2 sub-loop.
+ *
+ * - camera 33% recording (rotor to horizon), common loop, no delay between frames
+ * - exits when maximum altitude or duration are reached
+ *
+ * @return <tt>true</tt> if flight phase transition has been detected, <tt>false</tt> else
+ */
 boolean
 flightPhase2Loop()
 {
@@ -1197,27 +1195,30 @@ flightPhase2Loop()
   debugInfo("@P2L-C >\r\n", 10);
   flightPhase2CameraProcessing();
   debugInfo("@P2L-C <\r\n", 10);
+  delay(FLIGHT_PHASE_2_PAUSE_MILLIS);
+  debugInfo("@P2L <\r\n", 8);
 
   /* flight phase transition detection */
 
-  if (((nmeaGPS.getFix())&&(nmeaGPS.getAltitude() > FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER))||(currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_2_MAX_SECONDS_DURATION))
+  if (nmeaGPS.getFix())
   {
-    debugInfo("@P2L <\r\n", 8);
-    return true;
+    if (nmeaGPS.getAltitude() > FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER)
+      return true;
   }
-  delay(FLIGHT_PHASE_2_PAUSE_MILLIS);
-  debugInfo("@P2L <\r\n", 8);
+  else
+    return (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_2_MAX_SECONDS_DURATION);
+
   return false;
 }
 
 /**
-  * Flight phase 3 sub-loop.
-  *
-  * - camera recording (rotor to sky), common loop, no delay between frames
-  * - exits when minimum altitude or maximum duration are reached
-  *
-  * @return <tt>true</tt> if flight phase transition has been detected, <tt>false</tt> else
-  */
+ * Flight phase 3 sub-loop.
+ *
+ * - camera recording (rotor to sky), common loop, no delay between frames
+ * - exits when minimum altitude or maximum duration are reached
+ *
+ * @return <tt>true</tt> if flight phase transition has been detected, <tt>false</tt> else
+ */
 boolean
 flightPhase3Loop()
 {
@@ -1226,27 +1227,26 @@ flightPhase3Loop()
   debugInfo("@P3L-C >\r\n", 10);
   flightPhase3CameraProcessing();
   debugInfo("@P3L-C <\r\n", 10);
+  delay(FLIGHT_PHASE_3_PAUSE_MILLIS);
+  debugInfo("@P3L <\r\n", 8);
 
   /* flight phase transition detection */
-  if ((nmeaGPS.getFix())&&(nmeaGPS.getAltitude() < FLIGHT_PHASE_3_TO_4_ALTITUDE_TRIGGER))
+  if ((nmeaGPS.getFix()) && (nmeaGPS.getAltitude() < FLIGHT_PHASE_3_TO_4_ALTITUDE_TRIGGER))
   {
-    debugInfo("@P3L <\r\n", 8);
     previousAltitude = nmeaGPS.getAltitude();
     return true;
   }
-  delay(FLIGHT_PHASE_3_PAUSE_MILLIS);
-  debugInfo("@P3L <\r\n", 8);
   return false;
 }
 
 /**
-  * Flight phase 4 sub-loop.
-  *
-  * - camera recording (rotor to ground), common loop, no delay between frames
-  * - exits when ground or maximum duration are reached
-  *
-  * @return <tt>true</tt> if flight phase transition has been detected, <tt>false</tt> else
-  */
+ * Flight phase 4 sub-loop.
+ *
+ * - camera recording (rotor to ground), common loop, no delay between frames
+ * - exits when ground or maximum duration are reached
+ *
+ * @return <tt>true</tt> if flight phase transition has been detected, <tt>false</tt> else
+ */
 boolean
 flightPhase4Loop()
 {
@@ -1255,6 +1255,8 @@ flightPhase4Loop()
   debugInfo("@P4L-C >\r\n", 10);
   flightPhase4CameraProcessing();
   debugInfo("@P4L-C <\r\n", 10);
+  delay(FLIGHT_PHASE_4_PAUSE_MILLIS);
+  debugInfo("@P4L <\r\n", 8);
 
   /* flight phase transition detection */
   if (nmeaGPS.getFix())
@@ -1263,26 +1265,22 @@ flightPhase4Loop()
     previousAltitude = nmeaGPS.getAltitude();
 
     if (deltaAltitude < DELTA_ALTITUDE_IN_METERS_CONSIDERED_AS_STILLNESS)
-    stillnessDurationInLoopsCounter.increment(1);
+      stillnessDurationInLoopsCounter.increment(1);
     else
-    stillnessDurationInLoopsCounter.set(0);
+      stillnessDurationInLoopsCounter.set(0);
 
-    debugInfo("@P4L <\r\n", 8);
     return (stillnessDurationInLoopsCounter.read() > STILLNESS_DURATION_IN_LOOPS_LIMIT);
   }
-
-  delay(FLIGHT_PHASE_4_PAUSE_MILLIS);
-  debugInfo("@P4L <\r\n", 8);
   return false;
 }
 
 /**
-  * Flight phase 5 sub-loop.
-  *
-  * - camera off, common loop, 15s between frames
-  *
-  * @return <tt>false</tt>
-  */
+ * Flight phase 5 sub-loop.
+ *
+ * - camera off, common loop, 15s between frames
+ *
+ * @return <tt>false</tt>
+ */
 boolean
 flightPhase5Loop()
 {
@@ -1372,6 +1370,9 @@ loop()
     case BEFORE_TAKING_OFF_FLIGHT_PHASE:
       if (flightPhase0Loop())
       {
+        debugInfo("@Mario Time!\r\n", 14);
+        playMarioTheme();
+
         flightPhase0to1Transition();
         switchToNextFlightPhase();
         return;
@@ -1381,6 +1382,9 @@ loop()
     case ASCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE:
       if (flightPhase1Loop())
       {
+        debugInfo("@Mario Time!\r\n", 14);
+        playMarioTheme();
+
         flightPhase1to2Transition();
         switchToNextFlightPhase();
         return;
@@ -1390,6 +1394,9 @@ loop()
     case ASCENDING_BETWEEN_LOWER_AND_UPPER_LIMIT_FLIGHT_PHASE:
       if (flightPhase2Loop())
       {
+        debugInfo("@Mario Time!\r\n", 14);
+        playMarioTheme();
+
         flightPhase2to3Transition();
         switchToNextFlightPhase();
         return;
@@ -1399,6 +1406,9 @@ loop()
     case BEFORE_BURST_FLIGHT_PHASE:
       if (flightPhase3Loop())
       {
+        debugInfo("@Mario Time!\r\n", 14);
+        playMarioTheme();
+
         flightPhase3to4Transition();
         switchToNextFlightPhase();
         return;
@@ -1407,6 +1417,9 @@ loop()
     case DESCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE:
       if (flightPhase4Loop())
       {
+        debugInfo("@Mario Time!\r\n", 14);
+        playMarioTheme();
+
         flightPhase4to5Transition();
         switchToNextFlightPhase();
         return;
