@@ -21,7 +21,7 @@
 
 // Libs includes
 #include <SD.h>
-#include <FSK600BaudTA900TB1500Mod.h>
+
 #include <DS1302.h>
 #include <GPS.h>
 #include <GPS3D.h>
@@ -71,14 +71,6 @@ char nmeaGgaSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
  */
 double previousAltitude;
 
-// ---------------------------------
-// FSK modulator related definitions
-// ---------------------------------
-
-/**
- * FSK modulator object
- */
-FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX_PIN);
 
 // ----------------------------
 // Persistent counters related definitions
@@ -384,7 +376,6 @@ void
 debugInfo(char *message, int chars)
 {
   SERIAL_DEBUG.write((unsigned char *) message, chars);
-  fskModulator.modulateBytes(message, chars);
 }
 
 /**
@@ -573,7 +564,6 @@ commonLoop()
   debugInfo("\r\n", 2);
   debugInfo((char *)kiwiFrame, KIWI_FRAME_LENGTH);
   delay(50);
-  fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
   debugInfo((char *)kiwiFrame, KIWI_FRAME_LENGTH);
   delay(50);
   debugInfo((char *)kiwiFrame, KIWI_FRAME_LENGTH);
@@ -596,10 +586,6 @@ commonLoop()
   LOGGER.logMessage(nmeaGgaSentenceBuffer, false);
   delay(500);
 
-  /* NMEA sentences transmission */
-  fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
-  fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaGgaSentenceBuffer));
-
   /*
    greenLED.quicklyMakeBlinkSeveralTimes(3);
    */
@@ -614,8 +600,6 @@ commonLoop()
   /* pause half a second to ensure SD asynchronous writing to be finished */
   delay(500);
 
-  /* custom frame transmission */
-  fskModulator.modulateBytes(customFrame, strlen(customFrame));
 
   /*
    redLED.quicklyMakeBlinkSeveralTimes(1);
