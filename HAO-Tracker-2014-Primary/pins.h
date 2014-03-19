@@ -16,6 +16,7 @@
 #ifndef PINS_h
 #define PINS_h
 
+#define USER_SWITCH_PIN 29
 #define TAKE_OFF_SWITCH_PIN 12
 #define FSK_MODULATOR_TX_PIN 6
 
