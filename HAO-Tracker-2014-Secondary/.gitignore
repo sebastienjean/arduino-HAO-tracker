@@ -1,0 +1,7 @@
+/Mega2560
+*.o
+/Nano328P
+/.settings
+/.cproject
+/.project
+/Uno
