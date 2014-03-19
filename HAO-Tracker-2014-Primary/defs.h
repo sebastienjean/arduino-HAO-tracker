@@ -52,7 +52,7 @@
 /**
  * Log file path
  */
-#define LOG_FILE_PATH "data.txt"
+#define LOG_FILE_PATH "2014data.txt"
 
 //---------------------------
 // Naming related definitions
@@ -92,45 +92,6 @@
  */
 #define STILLNESS_DURATION_IN_SECONDS_COUNTER_BASE_ADDRESS 0x0008
 
-/**
- * Motorized camera recording status counter base address
- */
-#define MOTORIZED_CAMERA_RECORDING_STATUS_COUNTER_BASE_ADDRESS 0x000A
-
-/**
- * Ground camera recording status counter base address
- */
-#define GROUND_CAMERA_RECORDING_STATUS_COUNTER_BASE_ADDRESS 0x000C
-
-/**
- * Sky camera recording status counter base address
- */
-#define SKY_CAMERA_RECORDING_STATUS_COUNTER_BASE_ADDRESS 0x000E
-
-#define MOTORIZED_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS 0x0010
-
-#define MOTORIZED_CAMERA_OFF_AT_FRAME_COUNTER_BASE_ADDRESS 0x0012
-
-#define MOTORIZED_CAMERA_ON_AT_FRAME_COUNTER_BASE_ADDRESS 0x0014
-
-#define MOTORIZED_CAMERA_RECORD_AT_FRAME_COUNTER_BASE_ADDRESS 0x0016
-
-
-#define GROUND_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS 0x0018
-
-#define GROUND_CAMERA_OFF_AT_FRAME_COUNTER_BASE_ADDRESS 0x001A
-
-#define GROUND_CAMERA_ON_AT_FRAME_COUNTER_BASE_ADDRESS 0x001C
-
-#define GROUND_CAMERA_RECORD_AT_FRAME_COUNTER_BASE_ADDRESS 0x001E
-
-#define SKY_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS 0x0020
-
-#define SKY_CAMERA_OFF_AT_FRAME_COUNTER_BASE_ADDRESS 0x0022
-
-#define SKY_CAMERA_ON_AT_FRAME_COUNTER_BASE_ADDRESS 0x0024
-
-#define SKY_CAMERA_RECORD_AT_FRAME_COUNTER_BASE_ADDRESS 0x0026
 
 //------------------------------------------
 // Flight phase duration related definitions
@@ -217,11 +178,6 @@
 #define FLIGHT_PHASE_2_MAX_SECONDS_DURATION 3600 // 60 minutes to fly from 5k to 20k
 // #define FLIGHT_PHASE_3_MAX_SECONDS_DURATION 1200 // 4000 //3600
 // #define FLIGHT_PHASE_4_MAX_SECONDS_DURATION 1200 // 3600 //4000
-
-// ----------------------------------------------------
-// Delay of the number of frame to reset camera's video
-// ----------------------------------------------------
-#define VIDEO_FRAGMENTATION_LOOPS 15
 
 #endif
 
