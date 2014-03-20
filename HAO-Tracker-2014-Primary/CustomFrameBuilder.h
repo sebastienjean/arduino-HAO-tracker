@@ -166,7 +166,7 @@ public:
    * @param gps positioning data provider
    */
   CustomFrameBuilder(Counters *counters, AnalogSensors *sensors,
-      AnalogSensor *voltage, DS1302 *rtc, GPS3D *gps);
+     AnalogSensor *voltage, DS1302 *rtc, GPS3D *gps);
 
   /**
    * Builds custom frame (time, location, sensor data, ...)

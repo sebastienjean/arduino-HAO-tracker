@@ -50,7 +50,7 @@ private:
   /**
    * Pointer to voltage sensor
    */
-  AnalogSensor *voltage;
+  AnalogChannelAnalogSensor *voltage;
 
   /**
    * Sets the content of a given kiwi frame channel field (fields 1 to 8), from an analog sensor value
@@ -84,7 +84,7 @@ public:
    * @param sensors analog sensor data provider
    * @param voltage voltage data provider
    */
-  KiwiFrameBuilder(AnalogSensors *sensors, AnalogSensor *voltage);
+  KiwiFrameBuilder(AnalogSensors *sensors, AnalogChannelAnalogSensor *voltage);
 
   /**
    * Builds kiwi frame (channel fields, voltage field, checksum) from values retrieved from data providers.

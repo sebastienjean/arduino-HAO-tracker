@@ -13,18 +13,18 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <Arduino.h>
 
-#include "AnalogSensor.h"
+#include "AD7995.h"
+#include "AD7995AnalogSensor.h"
 
-AnalogChannelAnalogSensor::AnalogChannelAnalogSensor(int channel)
+AD7995AnalogSensor::AD7995AnalogSensor(AD7995 *ad7995, int channel)
 {
-  this->channel = channel;
-  pinMode(this->channel, INPUT);
+  this->ad7995 = ad7995;
+  this-> channel = channel;
 }
 
 int
-AnalogChannelAnalogSensor::read(void)
+AD7995AnalogSensor::read(void)
 {
-  return analogRead(this->channel);
+  return this->ad7995->read(this->channel);
 }

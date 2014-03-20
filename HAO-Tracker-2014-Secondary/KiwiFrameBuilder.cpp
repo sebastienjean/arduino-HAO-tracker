@@ -54,7 +54,7 @@ KiwiFrameBuilder::computeKiwiFrameChecksum()
 }
 
 KiwiFrameBuilder::KiwiFrameBuilder(AnalogSensors *sensors,
-    AnalogSensor *voltage)
+    AnalogChannelAnalogSensor *voltage)
 {
   this->sensors = sensors;
   this->voltage = voltage;

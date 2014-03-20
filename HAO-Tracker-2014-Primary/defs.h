@@ -176,8 +176,6 @@
 //-----------------------------------------------------
 #define FLIGHT_PHASE_1_MAX_SECONDS_DURATION 1200 // 20 minutes to takeoff and reach 5km
 #define FLIGHT_PHASE_2_MAX_SECONDS_DURATION 3600 // 60 minutes to fly from 5k to 20k
-// #define FLIGHT_PHASE_3_MAX_SECONDS_DURATION 1200 // 4000 //3600
-// #define FLIGHT_PHASE_4_MAX_SECONDS_DURATION 1200 // 3600 //4000
 
 #endif
 

@@ -14,15 +14,22 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ANALOG_SENSOR_h
-#define ANALOG_SENSOR_h
+#ifndef AD7995_ANALOG_SENSOR_h
+#define AD7995_ANALOG_SENSOR_h
 
+#include "AnalogSensor.h"
+#include "AD7995.h"
 /**
- * This class allows to handle an analog sensor, attached to a given analog channel (A0 ...)
+ * This class allows to handle an analog sensor, attached to a channel of an AD7995 I2C ADC
  */
-class AnalogChannelAnalogSensor
+class AD7995AnalogSensor : public AnalogSensor
 {
 private:
+
+  /**
+   * AD7995 to which the sensor is attached.
+   */
+  AD7995 *ad7995;
 
   /**
    * Analog channel to which the sensor is attached.
@@ -34,9 +41,10 @@ public:
   /**
    * Creates a sensor attached to a given channel.
    *
+   * @param add7995 AD7995 to which the sensor is attached
    * @param channel analog channel to which the sensor is attached
    */
-  AnalogChannelAnalogSensor(int channel);
+  AD7995AnalogSensor(AD7995 *ad7995, int channel);
 
   /**
    * Reads analog sensor value.

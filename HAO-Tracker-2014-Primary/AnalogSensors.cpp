@@ -19,8 +19,7 @@
 #include "AnalogSensors.h"
 #include "AnalogSensor.h"
 
-AnalogSensors::AnalogSensors(AnalogSensor* analogSensors[],
-    int analogSensorsAmount)
+AnalogSensors::AnalogSensors(AnalogSensor* analogSensors[], int analogSensorsAmount)
 {
   for (int i = 0; (i < analogSensorsAmount) && (i < NUM_ANALOG_INPUTS); i++)
     {

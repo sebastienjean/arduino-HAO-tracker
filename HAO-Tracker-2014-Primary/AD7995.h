@@ -13,18 +13,45 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <Arduino.h>
 
-#include "AnalogSensor.h"
+#ifndef AD7995_h
+#define AD7995_h
 
-AnalogChannelAnalogSensor::AnalogChannelAnalogSensor(int channel)
+#define AD7995_0_ADDRESS  0b01010000
+
+#define AD7995_1_ADDRESS  0b01010010
+
+/**
+ * This class allows to handle an I2C AD7995 (both 0 or 1 models) ADC
+ */
+class AD7995
 {
-  this->channel = channel;
-  pinMode(this->channel, INPUT);
-}
+private:
 
-int
-AnalogChannelAnalogSensor::read(void)
-{
-  return analogRead(this->channel);
-}
+  /**
+   * Address on the I2C bus
+   */
+  int address;
+
+public:
+
+  /**
+   * Creates a AD7995 ADC instance.
+   *
+   * @param address address on the I2C bus
+   */
+  AD7995(int address);
+
+  /**
+   * Reads analog sensor value.
+   *
+   * @param channel analog channel number
+   * @return analog sensor value
+   */
+  int
+  read(int channel);
+
+};
+
+#endif
+

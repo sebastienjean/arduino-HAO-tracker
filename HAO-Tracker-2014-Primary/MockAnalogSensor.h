@@ -13,18 +13,41 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <Arduino.h>
 
-#include "AnalogSensor.h"
+#ifndef MOCK_ANALOG_SENSOR_h
+#define MOCK_ANALOG_SENSOR_h
 
-AnalogChannelAnalogSensor::AnalogChannelAnalogSensor(int channel)
+#include <AnalogSensor.h>
+/**
+ * This class allows to handle an analog sensor, attached to a given analog channel (A0 ...)
+ */
+class MockAnalogSensor : public AnalogSensor
 {
-  this->channel = channel;
-  pinMode(this->channel, INPUT);
-}
+private:
 
-int
-AnalogChannelAnalogSensor::read(void)
-{
-  return analogRead(this->channel);
-}
+  /**
+   * Value to be returned
+   */
+  int valueToBeReturned;
+
+public:
+
+  /**
+   * Creates a mock sensor associated to a given return value
+   *
+   * @param valueToBeReturned value to be returned
+   */
+  MockAnalogSensor(int valueToBeReturned);
+
+  /**
+   * Reads analog sensor value.
+   *
+   * @return analog sensor value
+   */
+  int
+  read(void);
+
+};
+
+#endif
+

@@ -15,16 +15,15 @@
  */
 #include <Arduino.h>
 
-#include "AnalogSensor.h"
+#include "MockAnalogSensor.h"
 
-AnalogChannelAnalogSensor::AnalogChannelAnalogSensor(int channel)
+MockAnalogSensor::MockAnalogSensor(int valueToBeReturned)
 {
-  this->channel = channel;
-  pinMode(this->channel, INPUT);
+  this->valueToBeReturned = valueToBeReturned;
 }
 
 int
-AnalogChannelAnalogSensor::read(void)
+MockAnalogSensor::read(void)
 {
-  return analogRead(this->channel);
+  return this->valueToBeReturned;
 }

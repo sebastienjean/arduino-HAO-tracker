@@ -15,16 +15,16 @@
  */
 #include <Arduino.h>
 
-#include "AnalogSensor.h"
+#include "AnalogChannelAnalogSensor.h"
 
-AnalogSensor::AnalogSensor(int channel)
+AnalogChannelAnalogSensor::AnalogChannelAnalogSensor(int channel)
 {
   this->channel = channel;
   pinMode(this->channel, INPUT);
 }
 
 int
-AnalogSensor::read(void)
+AnalogChannelAnalogSensor::read(void)
 {
   return analogRead(this->channel);
 }
