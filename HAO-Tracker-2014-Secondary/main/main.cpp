@@ -205,63 +205,63 @@ Counters counters(countersArray, 4);
 /**
  * External temperature analog sensor
  */
-AnalogSensor externalTemperatureAnalogSensor(EXTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor externalTemperatureAnalogSensor(EXTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * External humidity analog sensor
  */
-AnalogSensor externalHumidityAnalogSensor(EXTERNAL_HUMIDITY_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor externalHumidityAnalogSensor(EXTERNAL_HUMIDITY_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Internal temperature analog sensor
  */
-AnalogSensor internalTemperatureAnalogSensor(INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor internalTemperatureAnalogSensor(INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Accurate luminosity analog sensor
  */
-AnalogSensor upLuminosityAnalogSensor(UP_LUMINOSITY_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor upLuminosityAnalogSensor(UP_LUMINOSITY_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Coarse luminosity analog sensor, side 1
  */
-AnalogSensor side1LuminosityAnalogSensor(SIDE1_LUMINOSITY_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor side1LuminosityAnalogSensor(SIDE1_LUMINOSITY_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Coarse luminosity analog sensor, side 2
  */
-AnalogSensor side2LuminosityAnalogSensor(SIDE2_LUMINOSITY_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor side2LuminosityAnalogSensor(SIDE2_LUMINOSITY_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Differential pressure analog sensor
  */
-AnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Sound level analog sensor
  */
-AnalogSensor soundLevelAnalogSensor(SOUND_LEVEL_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor soundLevelAnalogSensor(SOUND_LEVEL_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Battery temperature analog sensor
  */
-AnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Voltage analog sensor
  */
 // N.B. this analog sensor is handled separately from the others since kiwi frame does
-AnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Middle temperature analog sensor
  */
-AnalogSensor middleTemperatureAnalogSensor(MIDDLE_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor middleTemperatureAnalogSensor(MIDDLE_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Array of analog sensors to be included in custom and (partially) in kiwi frame
  */
-AnalogSensor* sensorsArray[10] =
+AnalogChannelAnalogSensor* sensorsArray[10] =
   { &internalTemperatureAnalogSensor,
     &middleTemperatureAnalogSensor,
     &externalTemperatureAnalogSensor,

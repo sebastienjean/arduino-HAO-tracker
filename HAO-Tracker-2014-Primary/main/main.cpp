@@ -28,6 +28,7 @@
 
 // Modules includes
 #include "AnalogSensor.h"
+#include "AnalogChannelAnalogSensor.h"
 #include "AnalogSensors.h"
 /*
  #include "Led.h"
@@ -128,24 +129,24 @@ Counters counters(countersArray, 4);
 /**
  * Internal temperature analog sensor
  */
-AnalogSensor internalTemperatureAnalogSensor(INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor internalTemperatureAnalogSensor(INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Differential pressure analog sensor
  */
-AnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
 
 
 /**
  * Battery temperature analog sensor
  */
-AnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Voltage analog sensor
  */
 // N.B. this analog sensor is handled separately from the others since kiwi frame does
-AnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
+AnalogChannelAnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 
 
 /**
@@ -476,7 +477,6 @@ flightPhase0Loop()
   if (isAboutToTakeOff())
   {
     debugInfo("@Takeoff!\r\n", 11);
-    delay(SWITCH_MODE_PAUSE_MILLIS);
     debugInfo("@P0L <\r\n", 8);
     return true;
   }

@@ -22,29 +22,15 @@
  */
 class AnalogSensor
 {
-private:
-
-  /**
-   * Analog channel to which the sensor is attached.
-   */
-  int channel;
-
 public:
-
-  /**
-   * Creates a sensor attached to a given channel.
-   *
-   * @param channel analog channel to which the sensor is attached
-   */
-  AnalogSensor(int channel);
 
   /**
    * Reads analog sensor value.
    *
    * @return analog sensor value
    */
-  int
-  read(void);
+  virtual int
+  read(void) = 0;
 
 };
 

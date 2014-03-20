@@ -17,14 +17,14 @@
 
 #include "AnalogSensor.h"
 
-AnalogSensor::AnalogSensor(int channel)
+AnalogChannelAnalogSensor::AnalogChannelAnalogSensor(int channel)
 {
   this->channel = channel;
   pinMode(this->channel, INPUT);
 }
 
 int
-AnalogSensor::read(void)
+AnalogChannelAnalogSensor::read(void)
 {
   return analogRead(this->channel);
 }

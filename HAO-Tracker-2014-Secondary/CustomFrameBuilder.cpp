@@ -179,7 +179,7 @@ CustomFrameBuilder::appendPositioningData()
 }
 
 CustomFrameBuilder::CustomFrameBuilder(Counters *counters,
-    AnalogSensors *sensors, AnalogSensor *voltage, DS1302 *rtc, GPS3D *gps)
+    AnalogSensors *sensors, AnalogChannelAnalogSensor *voltage, DS1302 *rtc, GPS3D *gps)
 {
   this->counters = counters;
   this->rtc = rtc;

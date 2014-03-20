@@ -14,13 +14,14 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ANALOG_SENSOR_h
-#define ANALOG_SENSOR_h
+#ifndef ANALOG_CHANNEL_ANALOG_SENSOR_h
+#define ANALOG_CHANNEL_ANALOG_SENSOR_h
 
+#include <AnalogSensor.h>
 /**
  * This class allows to handle an analog sensor, attached to a given analog channel (A0 ...)
  */
-class AnalogChannelAnalogSensor
+class AnalogChannelAnalogSensor : public AnalogSensor
 {
 private:
 
