@@ -18,7 +18,7 @@
 #define ANALOG_SENSOR_h
 
 /**
- * This class allows to handle an analog sensor, attached to a given analog channel (A0 ...)
+ * This class allows to handle an analog sensor (up to 16-bit resolution)
  */
 class AnalogSensor
 {
