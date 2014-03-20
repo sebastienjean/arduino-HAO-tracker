@@ -17,7 +17,7 @@
 #ifndef ANALOG_CHANNEL_ANALOG_SENSOR_h
 #define ANALOG_CHANNEL_ANALOG_SENSOR_h
 
-#include <AnalogSensor.h>
+#include "AnalogSensor.h"
 /**
  * This class allows to handle an analog sensor, attached to a given analog channel (A0 ...)
  */
