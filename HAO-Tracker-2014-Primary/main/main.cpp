@@ -29,6 +29,7 @@
 // Modules includes
 #include "AnalogSensor.h"
 #include "AnalogChannelAnalogSensor.h"
+#include "MockAnalogSensor.h"
 #include "AnalogSensors.h"
 /*
  #include "Led.h"
@@ -142,6 +143,15 @@ AnalogChannelAnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE
  */
 AnalogChannelAnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
+MockAnalogSensor middleTemperatureAnalogSensor(100);
+
+MockAnalogSensor externalTemperatureAnalogSensor(200);
+MockAnalogSensor externalHumidityAnalogSensor(300);
+MockAnalogSensor upLuminosityAnalogSensor(400);
+MockAnalogSensor side1LuminosityAnalogSensor(500);
+MockAnalogSensor side2LuminosityAnalogSensor(600);
+MockAnalogSensor soundLevelAnalogSensor(700);
+
 /**
  * Voltage analog sensor
  */
@@ -154,14 +164,14 @@ AnalogChannelAnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
  */
 AnalogSensor* sensorsArray[10] =
   { &internalTemperatureAnalogSensor,
-    //&middleTemperatureAnalogSensor,
-    //&externalTemperatureAnalogSensor,
-    //&externalHumidityAnalogSensor,
-    //&differentialPressureAnalogSensor,
-    //&upLuminosityAnalogSensor,
-    //&side1LuminosityAnalogSensor,
-    //&side2LuminosityAnalogSensor,
-    //&soundLevelAnalogSensor,
+    &middleTemperatureAnalogSensor,
+    &externalTemperatureAnalogSensor,
+    &externalHumidityAnalogSensor,
+    &differentialPressureAnalogSensor,
+    &upLuminosityAnalogSensor,
+    &side1LuminosityAnalogSensor,
+    &side2LuminosityAnalogSensor,
+    &soundLevelAnalogSensor,
     &batteryTemperatureAnalogSensor };
 
 /**
