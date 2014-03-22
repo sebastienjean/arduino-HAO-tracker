@@ -14,30 +14,21 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Arduino.h>
-
+// MAIN SECONDARY ==> COMMENT ADDED TO BUILD MAIN
 // Globals includes
 #include "pins.h"
 #include "defs.h"
 
 // Libs includes
 #include <SD.h>
-#include <FSK600BaudTA900TB1500Mod.h>
 #include <DS1302.h>
 #include <GPS.h>
 #include <GPS3D.h>
 #include <FCOEV2.h>
 #include <Rotor.h>
 
-// Modules includes
-#include "AnalogSensor.h"
-#include "AnalogSensors.h"
-/*
- #include "Led.h"
- #include "Leds.h"
- */
 #include "Counter.h"
 #include "Counters.h"
-#include "KiwiFrameBuilder.h"
 #include "CustomFrameBuilder.h"
 #include "Logger.h"
 #include "Tone.h"
@@ -71,14 +62,6 @@ char nmeaGgaSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
  */
 double previousAltitude;
 
-// ---------------------------------
-// FSK modulator related definitions
-// ---------------------------------
-
-/**
- * FSK modulator object
- */
-FSK600BaudTA900TB1500Mod fskModulator(FSK_MODULATOR_TX_PIN);
 
 // ----------------------------
 // Persistent counters related definitions
@@ -198,90 +181,6 @@ Counter* countersArray[4] =
  */
 Counters counters(countersArray, 4);
 
-// ----------------------------------
-// Analog sensors related definitions
-// ----------------------------------
-
-/**
- * External temperature analog sensor
- */
-AnalogChannelAnalogSensor externalTemperatureAnalogSensor(EXTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
-
-/**
- * External humidity analog sensor
- */
-AnalogChannelAnalogSensor externalHumidityAnalogSensor(EXTERNAL_HUMIDITY_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Internal temperature analog sensor
- */
-AnalogChannelAnalogSensor internalTemperatureAnalogSensor(INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Accurate luminosity analog sensor
- */
-AnalogChannelAnalogSensor upLuminosityAnalogSensor(UP_LUMINOSITY_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Coarse luminosity analog sensor, side 1
- */
-AnalogChannelAnalogSensor side1LuminosityAnalogSensor(SIDE1_LUMINOSITY_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Coarse luminosity analog sensor, side 2
- */
-AnalogChannelAnalogSensor side2LuminosityAnalogSensor(SIDE2_LUMINOSITY_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Differential pressure analog sensor
- */
-AnalogChannelAnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Sound level analog sensor
- */
-AnalogChannelAnalogSensor soundLevelAnalogSensor(SOUND_LEVEL_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Battery temperature analog sensor
- */
-AnalogChannelAnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Voltage analog sensor
- */
-// N.B. this analog sensor is handled separately from the others since kiwi frame does
-AnalogChannelAnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Middle temperature analog sensor
- */
-AnalogChannelAnalogSensor middleTemperatureAnalogSensor(MIDDLE_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Array of analog sensors to be included in custom and (partially) in kiwi frame
- */
-AnalogChannelAnalogSensor* sensorsArray[10] =
-  { &internalTemperatureAnalogSensor,
-    &middleTemperatureAnalogSensor,
-    &externalTemperatureAnalogSensor,
-    &externalHumidityAnalogSensor,
-    &differentialPressureAnalogSensor,
-    &upLuminosityAnalogSensor,
-    &side1LuminosityAnalogSensor,
-    &side2LuminosityAnalogSensor,
-    &soundLevelAnalogSensor,
-    &batteryTemperatureAnalogSensor };
-
-/**
- * Analog sensors to be included in custom frame
- */
-AnalogSensors customFrameAnalogSensors(sensorsArray, 10);
-
-/**
- * Analog sensors to be included in kiwi frame
- */
-AnalogSensors kiwiFrameAnalogSensors(sensorsArray, 8);
 
 // -----------------------------------
 // Real Time Clock related definitions
@@ -301,24 +200,6 @@ DS1302 rtc(RTC_CE_PIN, RTC_IO_PIN, RTC_SCLK_PIN);
  */
 char customFrame[CUSTOM_FRAME_MAX_LENGTH];
 
-/**
- * Custom frame builder object
- */
-CustomFrameBuilder customFrameBuilder(&counters, &customFrameAnalogSensors, &voltage, &rtc, &nmeaGPS);
-
-// ------------------------------
-// KIWI frame related definitions
-// ------------------------------
-
-/**
- * External buffer used to build and send Kiwi frame
- */
-unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
-
-/**
- * Kiwi frame builder object
- */
-KiwiFrameBuilder kiwiFrameBuilder(&kiwiFrameAnalogSensors, &voltage);
 
 // --------------------------
 // Camera related definitions
@@ -341,7 +222,6 @@ FCOEV2 skyCamera(SKY_CAMERA_PWM_PIN, SKY_CAMERA_PWR_PIN);
 
 Rotor rotor(ROTOR_PWM_PIN);
 
-Tone toneGenerator(FSK_MODULATOR_TX_PIN);
 
 // ------------------------
 // LEDs related definitions
@@ -384,30 +264,6 @@ void
 debugInfo(char *message, int chars)
 {
   SERIAL_DEBUG.write((unsigned char *) message, chars);
-  fskModulator.modulateBytes(message, chars);
-}
-
-/**
- * Internal function used to play Mario Theme each time a transition occurs.
- */
-void
-playMarioTheme()
-{
-  int oct = 5;
-  int bpm = 216;
-
-  toneGenerator.melody(Mi, oct, croche, bpm);
-  toneGenerator.melody(Mi, oct, croche, bpm);
-  toneGenerator.melody(0, oct, dsoupir, bpm);
-  toneGenerator.melody(Mi, oct, croche, bpm);
-  toneGenerator.melody(0, oct, dsoupir, bpm);
-  toneGenerator.melody(Do, oct, croche, bpm);
-  toneGenerator.melody(Mi, oct, noire, bpm);
-
-  toneGenerator.melody(Sol, oct, noire, bpm);
-  toneGenerator.melody(0, oct, soupir, bpm);
-  toneGenerator.melody(Sol, oct - 1, noire, bpm);
-  toneGenerator.melody(0, oct, soupir, bpm);
 }
 
 /**
@@ -565,20 +421,7 @@ commonLoop()
    */
   delay(1000);
 
-  /* kiwi frame building */
-  kiwiFrameBuilder.buildKiwiFrame(kiwiFrame);
 
-  /* kiwi frame transmission */
-  //fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
-  debugInfo("\r\n", 2);
-  debugInfo((char *)kiwiFrame, KIWI_FRAME_LENGTH);
-  delay(50);
-  fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
-  debugInfo((char *)kiwiFrame, KIWI_FRAME_LENGTH);
-  delay(50);
-  debugInfo((char *)kiwiFrame, KIWI_FRAME_LENGTH);
-  delay(50);
-  debugInfo("\r\n", 2);
 
   /*
    greenLED.quicklyMakeBlinkSeveralTimes(2);
@@ -596,16 +439,9 @@ commonLoop()
   LOGGER.logMessage(nmeaGgaSentenceBuffer, false);
   delay(500);
 
-  /* NMEA sentences transmission */
-  fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
-  fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaGgaSentenceBuffer));
-
   /*
    greenLED.quicklyMakeBlinkSeveralTimes(3);
    */
-
-  /* custom frame building */
-  customFrameBuilder.buildCustomFrame(customFrame);
 
   /* custom frame debug */SERIAL_DEBUG.print(customFrame);
 
@@ -614,8 +450,6 @@ commonLoop()
   /* pause half a second to ensure SD asynchronous writing to be finished */
   delay(500);
 
-  /* custom frame transmission */
-  fskModulator.modulateBytes(customFrame, strlen(customFrame));
 
   /*
    redLED.quicklyMakeBlinkSeveralTimes(1);
@@ -1312,9 +1146,6 @@ setup()
 
   debugInfo("@Reset\n\r", 8);
 
-  debugInfo("@Mario Time!\r\n", 14);
-  playMarioTheme();
-
   /*
    leds.on();
    delay(1000);
@@ -1375,8 +1206,7 @@ loop()
     case BEFORE_TAKING_OFF_FLIGHT_PHASE:
       if (flightPhase0Loop())
       {
-        debugInfo("@Mario Time!\r\n", 14);
-        playMarioTheme();
+        debugInfo("@flight step 0\r\n", 16);
 
         flightPhase0to1Transition();
         switchToNextFlightPhase();
@@ -1387,8 +1217,7 @@ loop()
     case ASCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE:
       if (flightPhase1Loop())
       {
-        debugInfo("@Mario Time!\r\n", 14);
-        playMarioTheme();
+        debugInfo("@flight step 1\r\n", 16);
 
         flightPhase1to2Transition();
         switchToNextFlightPhase();
@@ -1399,8 +1228,7 @@ loop()
     case ASCENDING_BETWEEN_LOWER_AND_UPPER_LIMIT_FLIGHT_PHASE:
       if (flightPhase2Loop())
       {
-        debugInfo("@Mario Time!\r\n", 14);
-        playMarioTheme();
+        debugInfo("@flight step 2\r\n", 16);
 
         flightPhase2to3Transition();
         switchToNextFlightPhase();
@@ -1411,8 +1239,7 @@ loop()
     case BEFORE_BURST_FLIGHT_PHASE:
       if (flightPhase3Loop())
       {
-        debugInfo("@Mario Time!\r\n", 14);
-        playMarioTheme();
+        debugInfo("@flight step 3\r\n", 16);
 
         flightPhase3to4Transition();
         switchToNextFlightPhase();
@@ -1422,8 +1249,7 @@ loop()
     case DESCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE:
       if (flightPhase4Loop())
       {
-        debugInfo("@Mario Time!\r\n", 14);
-        playMarioTheme();
+        debugInfo("@flight step 4\r\n", 16);
 
         flightPhase4to5Transition();
         switchToNextFlightPhase();
