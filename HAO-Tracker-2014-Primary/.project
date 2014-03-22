@@ -3,7 +3,10 @@
 	<name>HAO-Tracker-2014-Primary</name>
 	<comment></comment>
 	<projects>
+		<project>AnalogSensors</project>
+		<project>arduino-ds1302</project>
 		<project>ArduinoCore</project>
+		<project>EEPROM</project>
 		<project>FSK600Bauds900Hz1500HzModulation</project>
 		<project>GPS</project>
 		<project>SD</project>

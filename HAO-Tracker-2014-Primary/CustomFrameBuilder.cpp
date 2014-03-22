@@ -15,16 +15,17 @@
  */
 #include <Arduino.h>
 #include <stdlib.h>
+
 #include <GPS2D.h>
 #include <GPS3D.h>
+#include <AnalogSensor.h>
+#include <AnalogSensors.h>
+#include <DS1302.h>
 
 #include "defs.h"
 #include "CustomFrameBuilder.h"
-#include "AnalogSensor.h"
-#include "AnalogSensors.h"
 #include "Counters.h"
-//#include "DS1302_RTC.h"
-#include "DS1302.h"
+
 
 void
 CustomFrameBuilder::appendStartOfFrameChar()

@@ -17,8 +17,8 @@
 #ifndef KIWI_FRAME_BUILDER_h
 #define KIWI_FRAME_BUILDER_h
 
-#include "AnalogSensor.h"
-#include "AnalogSensors.h"
+#include <AnalogSensor.h>
+#include <AnalogSensors.h>
 
 /**
  * Kiwi frame length

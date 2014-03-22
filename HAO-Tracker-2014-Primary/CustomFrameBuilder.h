@@ -18,11 +18,12 @@
 #define CUSTOM_FRAME_BUILDER_h
 
 #include <GPS3D.h>
+#include <DS1302.h>
+#include <AnalogSensor.h>
+#include <AnalogSensors.h>
 
 #include "Counters.h"
-#include "DS1302.h"
-#include "AnalogSensor.h"
-#include "AnalogSensors.h"
+
 
 
 /**

@@ -23,14 +23,14 @@
 #include <SD.h>
 #include <FSK600BaudTA900TB1500Mod.h>
 #include <DS1302.h>
-#include <GPS.h>
+//#include <GPS.h>
 #include <GPS3D.h>
+//#include <AnalogSensor.h>
+#include <AnalogChannelAnalogSensor.h>
+#include <MockAnalogSensor.h>
+#include <AnalogSensors.h>
 
 // Modules includes
-#include "AnalogSensor.h"
-#include "AnalogChannelAnalogSensor.h"
-#include "MockAnalogSensor.h"
-#include "AnalogSensors.h"
 /*
  #include "Led.h"
  #include "Leds.h"
