@@ -177,12 +177,12 @@ AnalogSensor* sensorsArray[10] =
 /**
  * Analog sensors to be included in custom frame
  */
-AnalogSensors customFrameAnalogSensors(sensorsArray, 10);
+AnalogSensors customFrameAnalogSensors((AnalogSensor **) &sensorsArray, 10);
 
 /**
  * Analog sensors to be included in kiwi frame
  */
-AnalogSensors kiwiFrameAnalogSensors(sensorsArray, 8);
+AnalogSensors kiwiFrameAnalogSensors((AnalogSensor **) &sensorsArray, 8);
 
 // -----------------------------------
 // Real Time Clock related definitions
