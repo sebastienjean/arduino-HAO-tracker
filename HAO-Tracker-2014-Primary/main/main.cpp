@@ -23,18 +23,12 @@
 #include <SD.h>
 #include <FSK600BaudTA900TB1500Mod.h>
 #include <DS1302.h>
-//#include <GPS.h>
 #include <GPS3D.h>
-//#include <AnalogSensor.h>
 #include <AnalogChannelAnalogSensor.h>
 #include <MockAnalogSensor.h>
 #include <AnalogSensors.h>
 
 // Modules includes
-/*
- #include "Led.h"
- #include "Leds.h"
- */
 #include "Counter.h"
 #include "Counters.h"
 #include "KiwiFrameBuilder.h"
