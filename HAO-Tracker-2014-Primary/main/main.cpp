@@ -27,10 +27,11 @@
 #include <AnalogChannelAnalogSensor.h>
 #include <MockAnalogSensor.h>
 #include <AnalogSensors.h>
+#include <Counter.h>
+#include <Counters.h>
 
 // Modules includes
-#include "Counter.h"
-#include "Counters.h"
+
 #include "KiwiFrameBuilder.h"
 #include "CustomFrameBuilder.h"
 #include "Logger.h"
