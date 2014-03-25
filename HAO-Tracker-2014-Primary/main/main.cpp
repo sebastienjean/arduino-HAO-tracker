@@ -116,7 +116,7 @@ Counter* countersArray[4] =
 /**
  * Counters to be included in custom frame
  */
-Counters counters(countersArray, 4);
+Counters counters((Counter **) &countersArray, 4);
 
 // ----------------------------------
 // Analog sensors related definitions
