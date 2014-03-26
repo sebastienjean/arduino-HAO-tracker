@@ -29,7 +29,7 @@
 #include <AnalogSensors.h>
 #include <Counter.h>
 #include <Counters.h>
-#include <Logger.h>
+#include <SDFileLogger.h>
 
 // Modules includes
 #include "KiwiFrameBuilder.h"
@@ -45,7 +45,7 @@
  */
 #define serialNmeaGPSPort Serial1
 
-Logger sdLogger (&SD, LOG_FILE_PATH);
+SDFileLogger sdFileLogger(&SD, LOG_FILE_PATH);
 
 /**
  * GPS3D object, whose raw NMEA sentences will be forwarded on debug serial
@@ -309,7 +309,7 @@ clearAllPersistentData()
     counters.reset();
     stillnessDurationInLoopsCounter.reset();
 
-    return sdLogger.reset();
+    return sdFileLogger.clear();
   }
   return false;
 }
@@ -394,8 +394,8 @@ commonLoop()
    */
 
   /* NMEA sentences logging */
-  sdLogger.logMessage(nmeaRmcSentenceBuffer, false);
-  sdLogger.logMessage(nmeaGgaSentenceBuffer, false);
+  sdFileLogger.logMessage(nmeaRmcSentenceBuffer, false);
+  sdFileLogger.logMessage(nmeaGgaSentenceBuffer, false);
   delay(500);
 
   /* NMEA sentences transmission */
@@ -412,7 +412,7 @@ commonLoop()
   /* custom frame debug */SERIAL_DEBUG.print(customFrame);
 
   /* custom frame logging */
-  sdLogger.logMessage(customFrame, false);
+  sdFileLogger.logMessage(customFrame, false);
   /* pause half a second to ensure SD asynchronous writing to be finished */
   delay(500);
 
