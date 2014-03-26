@@ -299,17 +299,22 @@ initLogging()
  * @return log file deletion status
  */
 boolean
-clearAllPersistentData()
+clearAllPersistentDataOnRequest()
 {
   delay(1000);
 
   if (digitalRead(USER_SWITCH_PIN) == LOW)
   {
+    debugInfo("@Clear\r\n", 8);
     // reset all counters
     counters.reset();
     stillnessDurationInLoopsCounter.reset();
 
-    return sdFileLogger.clear();
+    if (sdFileLogger.clear())
+    {
+      debugInfo("@SD Cleared\r\n", 8);
+    }
+    return true;
   }
   return false;
 }
@@ -361,17 +366,12 @@ commonLoop()
 
   /* Loop start sequence */
 
-  /*
-   redLED.quicklyMakeBlinkSeveralTimes(1);
-   greenLED.quicklyMakeBlinkSeveralTimes(1);
-   */
   delay(1000);
 
   /* kiwi frame building */
   kiwiFrameBuilder.buildKiwiFrame(kiwiFrame);
 
   /* kiwi frame transmission */
-  //fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
   debugInfo("\r\n", 2);
   debugInfo((char *)kiwiFrame, KIWI_FRAME_LENGTH);
   delay(50);
@@ -382,16 +382,8 @@ commonLoop()
   delay(50);
   debugInfo("\r\n", 2);
 
-  /*
-   greenLED.quicklyMakeBlinkSeveralTimes(2);
-   */
-
   /* positioning data reading (and debug) */
   nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer);
-
-  /*
-   blueLED.showStatus(nmeaGPS.getFix());
-   */
 
   /* NMEA sentences logging */
   sdFileLogger.logMessage(nmeaRmcSentenceBuffer, false);
@@ -402,10 +394,6 @@ commonLoop()
   fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
   fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaGgaSentenceBuffer));
 
-  /*
-   greenLED.quicklyMakeBlinkSeveralTimes(3);
-   */
-
   /* custom frame building */
   customFrameBuilder.buildCustomFrame(customFrame);
 
@@ -413,15 +401,12 @@ commonLoop()
 
   /* custom frame logging */
   sdFileLogger.logMessage(customFrame, false);
+
   /* pause half a second to ensure SD asynchronous writing to be finished */
   delay(500);
 
   /* custom frame transmission */
   fskModulator.modulateBytes(customFrame, strlen(customFrame));
-
-  /*
-   redLED.quicklyMakeBlinkSeveralTimes(1);
-   */
 
   /* frame counter update */
   frameCounter.increment(1);
@@ -518,8 +503,6 @@ flightPhase1Loop()
   delay(FLIGHT_PHASE_1_PAUSE_MILLIS);
   debugInfo("@P1L <\r\n", 8);
   /* flight phase transition detection */
-  //if (((nmeaGPS.getFix()) && (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER))
-  //    || (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_1_MAX_SECONDS_DURATION))
   if (nmeaGPS.getFix())
   {
     if (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER)
@@ -643,43 +626,21 @@ setup()
   debugInfo("@Mario Time!\r\n", 14);
   playMarioTheme();
 
-  /*
-   leds.on();
-   delay(1000);
-   leds.off();
-   */
-
   debugInfo("@SD_I...", 8);
   if (!initLogging())
   {
     debugInfo("KO\r\n", 4);
-    /*
-     orangeLED.showStatus(false);
-     */
   }
   else
   {
     debugInfo("OK\r\n", 4);
-    /*
-     orangeLED.showStatus(true);
-     */
   }
 
-  if (clearAllPersistentData())
-  {
-    debugInfo("@Clear\r\n", 8);
-    /*
-     leds.quicklyMakeBlinkSeveralTimes(10);
-     orangeLED.showStatus(true);
-     */
-  }
-  else
+  if (!clearAllPersistentDataOnRequest())
   {
     debugInfo("@Restart\r\n", 10);
   }
-  /*
-   orangeLED.showStatus(LOGGER.logMessage("Reset", true));
-   */
+
 
   initGpsSerial();
   previousAltitude = 0;
