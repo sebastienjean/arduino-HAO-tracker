@@ -298,6 +298,13 @@ initLogging()
  *
  * @return log file deletion status
  */
+void
+initTakeOffSwitch()
+{
+  pinMode(TAKE_OFF_SWITCH_PIN, INPUT);
+  digitalWrite(TAKE_OFF_SWITCH_PIN, HIGH);
+}
+
 boolean
 clearAllPersistentDataOnRequest()
 {
@@ -312,7 +319,7 @@ clearAllPersistentDataOnRequest()
 
     if (sdFileLogger.clear())
     {
-      debugInfo("@SD Cleared\r\n", 8);
+      debugInfo("@SD Cleared\r\n", 13);
     }
     return true;
   }
@@ -322,13 +329,6 @@ clearAllPersistentDataOnRequest()
 /**
  * Internal function used to initialize takeoff switch
  */
-void
-initTakeOffSwitch()
-{
-  pinMode(TAKE_OFF_SWITCH_PIN, INPUT);
-  digitalWrite(TAKE_OFF_SWITCH_PIN, HIGH);
-}
-
 /**
  * Takeoff detection (using takeoff switch)
  *
