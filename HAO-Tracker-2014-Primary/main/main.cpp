@@ -45,6 +45,8 @@
  */
 #define serialNmeaGPSPort Serial1
 
+Logger sdLogger (&SD, LOG_FILE_PATH);
+
 /**
  * GPS3D object, whose raw NMEA sentences will be forwarded on debug serial
  */
@@ -287,9 +289,7 @@ initUserSwitch()
 boolean
 initLogging()
 {
-  boolean initStatus = initSD();
-  LOGGER.begin(LOG_FILE_PATH);
-  return initStatus;
+  return initSD();
 }
 
 /**
@@ -309,7 +309,7 @@ clearAllPersistentData()
     counters.reset();
     stillnessDurationInLoopsCounter.reset();
 
-    return LOGGER.reset();
+    return sdLogger.reset();
   }
   return false;
 }
@@ -394,8 +394,8 @@ commonLoop()
    */
 
   /* NMEA sentences logging */
-  LOGGER.logMessage(nmeaRmcSentenceBuffer, false);
-  LOGGER.logMessage(nmeaGgaSentenceBuffer, false);
+  sdLogger.logMessage(nmeaRmcSentenceBuffer, false);
+  sdLogger.logMessage(nmeaGgaSentenceBuffer, false);
   delay(500);
 
   /* NMEA sentences transmission */
@@ -412,7 +412,7 @@ commonLoop()
   /* custom frame debug */SERIAL_DEBUG.print(customFrame);
 
   /* custom frame logging */
-  LOGGER.logMessage(customFrame, false);
+  sdLogger.logMessage(customFrame, false);
   /* pause half a second to ensure SD asynchronous writing to be finished */
   delay(500);
 
