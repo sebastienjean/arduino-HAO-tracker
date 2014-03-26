@@ -223,16 +223,6 @@ Tone toneGenerator(FSK_MODULATOR_TX_PIN);
  * @param string length (included line-termination chars)
  */
 void
-debugInfo(char *message, int chars)
-{
-  SERIAL_DEBUG.write((unsigned char *) message, chars);
-  fskModulator.modulateBytes(message, chars);
-}
-
-/**
- * Internal function used to play Mario Theme each time a transition occurs.
- */
-void
 playMarioTheme()
 {
   int oct = 5;
@@ -252,15 +242,54 @@ playMarioTheme()
   toneGenerator.melody(0, oct, soupir, bpm);
 }
 
+void
+debugInfo(char *message, int chars)
+{
+  SERIAL_DEBUG.write((unsigned char *) message, chars);
+  fskModulator.modulateBytes(message, chars);
+}
+
+/**
+ * Internal function used to play Mario Theme each time a transition occurs.
+ */
+boolean
+initSD()
+{
+  pinMode(SD_CARD_CHIP_SELECT_PIN, OUTPUT);
+  return SD.begin(SD_CARD_CHIP_SELECT_PIN);
+}
+
+
 /**
  * Internal function used to initialize logging (SD).
  *
  * @return logging initialization success status
  */
+void
+initDebugSerial()
+{
+  SERIAL_DEBUG.begin(SERIAL_DEBUG_BAUDRATE);
+}
+
+void
+initGpsSerial()
+{
+  serialNmeaGPSPort.begin(SERIAL_NMEA_GPS_BAUDRATE);
+}
+
+void
+initUserSwitch()
+{
+  pinMode(USER_SWITCH_PIN, INPUT);
+  digitalWrite(USER_SWITCH_PIN, HIGH);
+}
+
 boolean
 initLogging()
 {
-  return LOGGER.begin(LOG_FILE_PATH, SD_CHIP_SELECT_PIN);
+  boolean initStatus = initSD();
+  LOGGER.begin(LOG_FILE_PATH);
+  return initStatus;
 }
 
 /**
@@ -309,31 +338,15 @@ isAboutToTakeOff()
 /**
  * Internal function used to initialize user switch
  */
-void
-initUserSwitch()
-{
-  pinMode(USER_SWITCH_PIN, INPUT);
-  digitalWrite(USER_SWITCH_PIN, HIGH);
-}
-
 /**
  * Internal function used to initialize debug
  */
-void
-initDebugSerial()
-{
-  SERIAL_DEBUG.begin(SERIAL_DEBUG_BAUDRATE);
-}
-
+/**
+ * Internal function used to initialize SD
+ */
 /**
  * Internal function used to initialize GPS serial
  */
-void
-initGpsSerial()
-{
-  serialNmeaGPSPort.begin(SERIAL_NMEA_GPS_BAUDRATE);
-}
-
 void
 switchToNextFlightPhase()
 {
