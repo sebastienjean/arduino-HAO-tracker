@@ -10,6 +10,7 @@
 		<project>EEPROM</project>
 		<project>FSK600Bauds900Hz1500HzModulation</project>
 		<project>GPS</project>
+		<project>Logger</project>
 		<project>SD</project>
 		<project>SoftwareSerial</project>
 	</projects>

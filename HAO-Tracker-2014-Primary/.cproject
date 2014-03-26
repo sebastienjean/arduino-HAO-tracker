@@ -52,6 +52,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/utility}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino-ds1302}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FlyCamOneEcoV2}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Logger}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/modules}&quot;"/>
 								</option>
 								<option id="de.innot.avreclipse.compiler.option.def.4844805" name="Define Syms (-D)" superClass="de.innot.avreclipse.compiler.option.def" valueType="definedSymbols">
@@ -75,6 +76,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/utility}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino-ds1302}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FlyCamOneEcoV2}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Logger}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/modules}&quot;"/>
 								</option>
 								<option id="de.innot.avreclipse.cppcompiler.option.optimize.other.32008829" name="Other Optimization Flags" superClass="de.innot.avreclipse.cppcompiler.option.optimize.other" value="-ffunction-sections -fdata-sections" valueType="string"/>
@@ -96,11 +98,13 @@
 								<option id="de.innot.avreclipse.cpplinker.option.libs.885956593" name="Libraries (-l)" superClass="de.innot.avreclipse.cpplinker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="AnalogSensors"/>
 									<listOptionValue builtIn="false" value="Counters"/>
+									<listOptionValue builtIn="false" value="Logger"/>
 									<listOptionValue builtIn="false" value="ArduinoCore"/>
 								</option>
 								<option id="de.innot.avreclipse.cpplinker.option.libpath.1925474821" name="Libraries Path (-L)" superClass="de.innot.avreclipse.cpplinker.option.libpath" valueType="stringList">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/Mega2560}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/AnalogSensors/Mega2560}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Logger/Mega2560}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Counters/Mega2560}&quot;"/>
 								</option>
 								<option id="de.innot.avreclipse.cpplinker.option.otherobjs.272862930" name="Other Objects (*.o)" superClass="de.innot.avreclipse.cpplinker.option.otherobjs" valueType="userObjs">

@@ -29,12 +29,11 @@
 #include <AnalogSensors.h>
 #include <Counter.h>
 #include <Counters.h>
+#include <Logger.h>
 
 // Modules includes
-
 #include "KiwiFrameBuilder.h"
 #include "CustomFrameBuilder.h"
-#include "Logger.h"
 #include "Tone.h"
 
 // -----------------------
@@ -769,4 +768,3 @@ main(void)
 
   return 0;
 }
-
