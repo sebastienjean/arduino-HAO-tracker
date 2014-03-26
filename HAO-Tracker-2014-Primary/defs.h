@@ -61,7 +61,7 @@
 /**
  * HAO name
  */
-#define HAO_NAME "STRATERRESTRE"
+#define HAO_NAME "FIREFLY26"
 
 //-----------------------------
 // Counters related definitions
