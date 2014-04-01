@@ -48,4 +48,4 @@ Logger::reset(void)
   return SD.remove(this->filePath);
 }
 
-Logger LOGGER;
+Logger sdLogger;

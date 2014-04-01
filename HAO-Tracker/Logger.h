@@ -63,7 +63,7 @@ public:
 /**
  * Singleton instance
  */
-extern Logger LOGGER;
+extern Logger sdLogger;
 
 #endif
 

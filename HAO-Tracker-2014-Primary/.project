@@ -13,6 +13,7 @@
 		<project>Logger</project>
 		<project>SD</project>
 		<project>SoftwareSerial</project>
+		<project>Tones</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

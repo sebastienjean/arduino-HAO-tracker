@@ -30,11 +30,14 @@
 #include <Counter.h>
 #include <Counters.h>
 #include <SDFileLogger.h>
+#include <Note.h>
+#include <AudioToneGenerator.h>
+#include <NoteGenerator.h>
+#include <MelodyGenerator.h>
 
 // Modules includes
 #include "KiwiFrameBuilder.h"
 #include "CustomFrameBuilder.h"
-#include "Tone.h"
 
 // -----------------------
 // GPS related definitions
@@ -192,7 +195,38 @@ unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
  */
 KiwiFrameBuilder kiwiFrameBuilder(&kiwiFrameAnalogSensors, &voltage);
 
-Tone toneGenerator(FSK_MODULATOR_TX_PIN);
+Note note1(Note::E, 6 , Note::SIXTEENTH);
+Note note1s(Note::SILENCE, 6 , Note::TWO_HUNDRED_SIXTY_FOURTH);
+Note note2(Note::E, 6 , Note::EIGHTH);
+Note note2s(Note::SILENCE, 6 , Note::TWO_HUNDRED_SIXTY_FOURTH);
+Note note3(Note::E, 6 , Note::SIXTEENTH);
+Note note4(Note::SILENCE, 6 , Note::SIXTEENTH);
+Note note5(Note::C, 6 , Note::SIXTEENTH);
+Note note5s(Note::SILENCE, 6 , Note::TWO_HUNDRED_SIXTY_FOURTH);
+Note note6(Note::E, 6 , Note::EIGHTH);
+Note note6s(Note::SILENCE, 6 , Note::TWO_HUNDRED_SIXTY_FOURTH);
+Note note7(Note::G, 6 , Note::QUARTER);
+Note note7s(Note::SILENCE, 6 , Note::TWO_HUNDRED_SIXTY_FOURTH);
+Note note8(Note::G, 5 , Note::QUARTER);
+
+Note* marioThemeMelody[13] =
+  { &note1,
+    &note1s,
+    &note2,
+    &note2s,
+    &note3,
+    &note4,
+    &note5,
+    &note5s,
+    &note6,
+    &note6s,
+    &note7,
+    &note7s,
+    &note8};
+
+AudioToneGenerator audioToneGenerator(FSK_MODULATOR_TX_PIN);
+NoteGenerator noteGenerator(&audioToneGenerator);
+MelodyGenerator melodyGenerator(&noteGenerator);
 
 /**
  * Internal function used to send debug info both on debug serial and radio.
@@ -202,21 +236,8 @@ Tone toneGenerator(FSK_MODULATOR_TX_PIN);
 void
 playMarioTheme()
 {
-  int oct = 5;
-  int bpm = 216;
-
-  toneGenerator.melody(Mi, oct, croche, bpm);
-  toneGenerator.melody(Mi, oct, croche, bpm);
-  toneGenerator.melody(0, oct, dsoupir, bpm);
-  toneGenerator.melody(Mi, oct, croche, bpm);
-  toneGenerator.melody(0, oct, dsoupir, bpm);
-  toneGenerator.melody(Do, oct, croche, bpm);
-  toneGenerator.melody(Mi, oct, noire, bpm);
-
-  toneGenerator.melody(Sol, oct, noire, bpm);
-  toneGenerator.melody(0, oct, soupir, bpm);
-  toneGenerator.melody(Sol, oct - 1, noire, bpm);
-  toneGenerator.melody(0, oct, soupir, bpm);
+  melodyGenerator.setNotes(13, (Note **) &marioThemeMelody);
+  melodyGenerator.generateMelody(150);
 }
 
 void
@@ -310,6 +331,8 @@ setup()
   initDebugSerial();
 
   debugInfo("@Reset\n\r", 8);
+
+
 
   debugInfo("@Mario Time!\r\n", 14);
   playMarioTheme();
