@@ -38,6 +38,7 @@
 // Modules includes
 #include "KiwiFrameBuilder.h"
 #include "CustomFrameBuilder.h"
+#include "MarioThemePlayer.h"
 
 // -----------------------
 // GPS related definitions
@@ -195,51 +196,16 @@ unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
  */
 KiwiFrameBuilder kiwiFrameBuilder(&kiwiFrameAnalogSensors, &voltage);
 
-Note note1(Note::E, 6 , Note::SIXTEENTH);
-Note note1s(Note::SILENCE, 6 , Note::TWO_HUNDRED_SIXTY_FOURTH);
-Note note2(Note::E, 6 , Note::EIGHTH);
-Note note2s(Note::SILENCE, 6 , Note::TWO_HUNDRED_SIXTY_FOURTH);
-Note note3(Note::E, 6 , Note::SIXTEENTH);
-Note note4(Note::SILENCE, 6 , Note::SIXTEENTH);
-Note note5(Note::C, 6 , Note::SIXTEENTH);
-Note note5s(Note::SILENCE, 6 , Note::TWO_HUNDRED_SIXTY_FOURTH);
-Note note6(Note::E, 6 , Note::EIGHTH);
-Note note6s(Note::SILENCE, 6 , Note::TWO_HUNDRED_SIXTY_FOURTH);
-Note note7(Note::G, 6 , Note::QUARTER);
-Note note7s(Note::SILENCE, 6 , Note::TWO_HUNDRED_SIXTY_FOURTH);
-Note note8(Note::G, 5 , Note::QUARTER);
-
-Note* marioThemeMelody[13] =
-  { &note1,
-    &note1s,
-    &note2,
-    &note2s,
-    &note3,
-    &note4,
-    &note5,
-    &note5s,
-    &note6,
-    &note6s,
-    &note7,
-    &note7s,
-    &note8};
-
-AudioToneGenerator audioToneGenerator(FSK_MODULATOR_TX_PIN);
-NoteGenerator noteGenerator(&audioToneGenerator);
-MelodyGenerator melodyGenerator(&noteGenerator);
+/**
+ * Mario theme player (just because it is so cool to play it)
+ */
+MarioThemePlayer marioThemePlayer(FSK_MODULATOR_TX_PIN);
 
 /**
  * Internal function used to send debug info both on debug serial and radio.
  * @param message a NUL-terminated string, supposed to include line-termination chars if needed.
  * @param string length (included line-termination chars)
  */
-void
-playMarioTheme()
-{
-  melodyGenerator.setNotes(13, (Note **) &marioThemeMelody);
-  melodyGenerator.generateMelody(150);
-}
-
 void
 debugInfo(char *message, int chars)
 {
@@ -248,7 +214,7 @@ debugInfo(char *message, int chars)
 }
 
 /**
- * Internal function used to play Mario Theme each time a transition occurs.
+ * Internal function used to to initialize SD.
  */
 boolean
 initSD()
@@ -332,10 +298,9 @@ setup()
 
   debugInfo("@Reset\n\r", 8);
 
-
-
   debugInfo("@Mario Time!\r\n", 14);
-  playMarioTheme();
+
+  marioThemePlayer.playMarioTheme();
 
   debugInfo("@SD_I...", 8);
   if (!initLogging())
