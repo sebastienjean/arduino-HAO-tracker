@@ -22,7 +22,7 @@
 
 #define MARIO_THEME_MELODY_LENGTH  13
 
-#define MARIO_THEME_BPM 150
+#define MARIO_THEME_BPM 120
 
 class MarioThemePlayer
 {

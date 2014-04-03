@@ -19,7 +19,7 @@
 
   const Note* MarioThemePlayer::MARIO_THEME_MELODY[MARIO_THEME_MELODY_LENGTH] =
       {
-       new Note(Note::SILENCE, 6, Note::TWO_HUNDRED_SIXTY_FOURTH),
+       new Note(Note::E, 6, Note::SIXTEENTH),
        new Note(Note::SILENCE, 6, Note::TWO_HUNDRED_SIXTY_FOURTH),
        new Note(Note::E, 6, Note::EIGHTH),
        new Note(Note::SILENCE, 6, Note::TWO_HUNDRED_SIXTY_FOURTH),
