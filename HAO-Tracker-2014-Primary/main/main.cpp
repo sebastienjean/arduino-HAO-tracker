@@ -34,6 +34,8 @@
 #include <AudioToneGenerator.h>
 #include <NoteGenerator.h>
 #include <MelodyGenerator.h>
+#include <AD7995.h>
+#include <AD7995AnalogSensor.h>
 
 // Modules includes
 #include "KiwiFrameBuilder.h"
@@ -120,9 +122,11 @@ AnalogChannelAnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE
  */
 AnalogChannelAnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
-MockAnalogSensor middleTemperatureAnalogSensor(100);
-MockAnalogSensor externalTemperatureAnalogSensor(200);
-MockAnalogSensor externalHumidityAnalogSensor(300);
+AD7995 onBoardAD7995(AD7995_0_ADDRESS);
+
+AD7995AnalogSensor middleTemperatureAnalogSensor(&onBoardAD7995, 0);
+AD7995AnalogSensor externalTemperatureAnalogSensor(&onBoardAD7995, 1);
+AD7995AnalogSensor externalHumidityAnalogSensor(&onBoardAD7995, 2);
 MockAnalogSensor upLuminosityAnalogSensor(400);
 MockAnalogSensor side1LuminosityAnalogSensor(500);
 MockAnalogSensor side2LuminosityAnalogSensor(600);
@@ -293,14 +297,19 @@ clearAllPersistentDataOnRequest()
 void
 setup()
 {
-  initUserSwitch();
+  marioThemePlayer.playMarioTheme();
+
   initDebugSerial();
 
   debugInfo("@Reset\n\r", 8);
 
-  debugInfo("@Mario Time!\r\n", 14);
+  Serial.println(middleTemperatureAnalogSensor.read(), DEC);
+  Serial.println(externalTemperatureAnalogSensor.read(), DEC);
+  Serial.println(externalHumidityAnalogSensor.read(), DEC);
+  AD7995AnalogSensor externalTemperatureAnalogSensor(&onBoardAD7995, 1);
+  AD7995AnalogSensor externalHumidityAnalogSensor(&onBoardAD7995, 2);
 
-  marioThemePlayer.playMarioTheme();
+  initUserSwitch();
 
   debugInfo("@SD_I...", 8);
   if (!initLogging())

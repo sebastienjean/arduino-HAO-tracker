@@ -103,6 +103,7 @@
 									<listOptionValue builtIn="false" value="Logger"/>
 									<listOptionValue builtIn="false" value="ArduinoCore"/>
 									<listOptionValue builtIn="false" value="Tones"/>
+									<listOptionValue builtIn="false" value="Wire"/>
 								</option>
 								<option id="de.innot.avreclipse.cpplinker.option.libpath.1925474821" name="Libraries Path (-L)" superClass="de.innot.avreclipse.cpplinker.option.libpath" valueType="stringList">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ArduinoCore/Mega2560}&quot;"/>
@@ -110,6 +111,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Logger/Mega2560}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Counters/Mega2560}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Tones/Mega2560}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Wire/Mega2560}&quot;"/>
 								</option>
 								<option id="de.innot.avreclipse.cpplinker.option.otherobjs.272862930" name="Other Objects (*.o)" superClass="de.innot.avreclipse.cpplinker.option.otherobjs" valueType="userObjs">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FSK600Bauds900Hz1500HzModulation/Mega2560/FSK600BaudTA900TB1500Mod.o}&quot;"/>
