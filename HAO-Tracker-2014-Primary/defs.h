@@ -77,11 +77,24 @@
  */
 #define RESET_COUNTER_BASE_ADDRESS 0x0002
 
-
+/**
+ * State of configurable address bit 0 of onboard first MCP3428
+ */
 #define MCP3428_0_ADDRESS_BIT0 LOW
+
+/**
+ * State of configurable address bit 1 of onboard first MCP3428
+ */
 #define MCP3428_0_ADDRESS_BIT1 LOW
 
+/**
+ * State of configurable address bit 0 of onboard second MCP3428
+ */
 #define MCP3428_1_ADDRESS_BIT0 HIGH
+
+/**
+ * State of configurable address bit 1 of onboard second MCP3428
+ */
 #define MCP3428_1_ADDRESS_BIT1 HIGH
 
 #endif
