@@ -418,7 +418,7 @@ playMarioTheme()
 boolean
 initLogging()
 {
-  return LOGGER.begin(LOG_FILE_PATH, SD_CHIP_SELECT_PIN);
+  return sdLogger.begin(LOG_FILE_PATH, SD_CHIP_SELECT_PIN);
 }
 
 /**
@@ -442,7 +442,7 @@ clearAllPersistentData()
     groundCameraRecordingStatusCounter.reset();
     skyCameraRecordingStatusCounter.reset();
 
-    return LOGGER.reset();
+    return sdLogger.reset();
   }
   return false;
 }
@@ -592,8 +592,8 @@ commonLoop()
    */
 
   /* NMEA sentences logging */
-  LOGGER.logMessage(nmeaRmcSentenceBuffer, false);
-  LOGGER.logMessage(nmeaGgaSentenceBuffer, false);
+  sdLogger.logMessage(nmeaRmcSentenceBuffer, false);
+  sdLogger.logMessage(nmeaGgaSentenceBuffer, false);
   delay(500);
 
   /* NMEA sentences transmission */
@@ -610,7 +610,7 @@ commonLoop()
   /* custom frame debug */SERIAL_DEBUG.print(customFrame);
 
   /* custom frame logging */
-  LOGGER.logMessage(customFrame, false);
+  sdLogger.logMessage(customFrame, false);
   /* pause half a second to ensure SD asynchronous writing to be finished */
   delay(500);
 

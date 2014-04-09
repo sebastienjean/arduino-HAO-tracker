@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?fileVersion 4.0.0?>
-
-<cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="de.innot.avreclipse.configuration.app.release.1602708466.804897449">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="de.innot.avreclipse.configuration.app.release.1602708466.804897449" moduleId="org.eclipse.cdt.core.settings" name="Mega2560">
@@ -105,6 +103,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/GPS.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/GPS2D.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/GPS3D.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/IGps3d.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/Sd2Card.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/SdFile.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SD/Mega2560/utility/SdVolume.o}&quot;"/>
