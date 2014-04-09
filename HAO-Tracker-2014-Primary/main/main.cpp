@@ -34,8 +34,8 @@
 #include <AudioToneGenerator.h>
 #include <NoteGenerator.h>
 #include <MelodyGenerator.h>
-#include <AD7995.h>
-#include <AD7995AnalogSensor.h>
+#include <MCP3428.h>
+#include <MCP3428AnalogSensor.h>
 
 // Modules includes
 #include "KiwiFrameBuilder.h"
@@ -107,6 +107,10 @@ Counters counters((Counter **) &countersArray, 2);
 // Analog sensors related definitions
 // ----------------------------------
 
+
+#define ACCELERATION_X_ANALOG_SENSOR_CHANNEL A4
+#define ACCELERATION_Y_ANALOG_SENSOR_CHANNEL A5
+#define ACCELERATION_Z_ANALOG_SENSOR_CHANNEL A6
 /**
  * Internal temperature analog sensor
  */
@@ -118,19 +122,47 @@ BuiltInAnalogSensor internalTemperatureAnalogSensor(INTERNAL_TEMPERATURE_ANALOG_
 BuiltInAnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
 
 /**
+ * Battery voltage analog sensor
+ */
+BuiltInAnalogSensor batteryVoltageAnalogSensor(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
+
+/**
  * Battery temperature analog sensor
  */
 BuiltInAnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
-AD7995 onBoardAD7995(AD7995_0_ADDRESS);
+/**
+ * X-Axis acceleration analog sensor
+ */
+BuiltInAnalogSensor accelerationXAnalogSensor(ACCELERATION_X_ANALOG_SENSOR_CHANNEL);
 
-AD7995AnalogSensor middleTemperatureAnalogSensor(&onBoardAD7995, 0);
-AD7995AnalogSensor externalTemperatureAnalogSensor(&onBoardAD7995, 1);
-AD7995AnalogSensor externalHumidityAnalogSensor(&onBoardAD7995, 2);
-MockAnalogSensor upLuminosityAnalogSensor(400);
-MockAnalogSensor side1LuminosityAnalogSensor(500);
-MockAnalogSensor side2LuminosityAnalogSensor(600);
-MockAnalogSensor soundLevelAnalogSensor(700);
+/**
+ * Y-Axis acceleration analog sensor
+ */
+BuiltInAnalogSensor accelerationYAnalogSensor(ACCELERATION_Y_ANALOG_SENSOR_CHANNEL);
+
+/**
+ * Z-Axis acceleration analog sensor
+ */
+BuiltInAnalogSensor accelerationZAnalogSensor(ACCELERATION_Z_ANALOG_SENSOR_CHANNEL);
+
+/**
+ * On board first MCP3428 I2C ADC
+ */
+MCP3428 onBoardFirstMCP3428(MCP3428_0_ADDRESS_BIT0, MCP3428_0_ADDRESS_BIT1);
+
+/**
+ * On board second MCP3428 I2C ADC
+ */
+MCP3428 onBoardSecondMCP3428(MCP3428_1_ADDRESS_BIT0, MCP3428_1_ADDRESS_BIT1);
+
+MCP3428AnalogSensor middleTemperatureAnalogSensor(&onBoardFirstMCP3428, 0);
+MCP3428AnalogSensor externalTemperatureAnalogSensor(&onBoardFirstMCP3428, 1);
+MCP3428AnalogSensor externalHumidityAnalogSensor(&onBoardFirstMCP3428, 2);
+
+MCP3428AnalogSensor visibleLuminosityAnalogSensor(&onBoardSecondMCP3428, 0);
+MCP3428AnalogSensor irLuminosityAnalogSensor(&onBoardSecondMCP3428, 1);
+MCP3428AnalogSensor uvLuminosityAnalogSensor(&onBoardSecondMCP3428, 2);
 
 /**
  * Voltage analog sensor
@@ -141,22 +173,24 @@ BuiltInAnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 /**
  * Array of analog sensors to be included in custom and (partially) in kiwi frame
  */
-AnalogSensor* sensorsArray[10] =
+AnalogSensor* sensorsArray[12] =
   { &internalTemperatureAnalogSensor,
     &middleTemperatureAnalogSensor,
     &externalTemperatureAnalogSensor,
     &externalHumidityAnalogSensor,
     &differentialPressureAnalogSensor,
-    &upLuminosityAnalogSensor,
-    &side1LuminosityAnalogSensor,
-    &side2LuminosityAnalogSensor,
-    &soundLevelAnalogSensor,
+    &accelerationXAnalogSensor,
+    &accelerationYAnalogSensor,
+    &accelerationZAnalogSensor,
+    &visibleLuminosityAnalogSensor,
+    &irLuminosityAnalogSensor,
+    &uvLuminosityAnalogSensor,
     &batteryTemperatureAnalogSensor };
 
 /**
  * Analog sensors to be included in custom frame
  */
-AnalogSensors customFrameAnalogSensors((AnalogSensor **) &sensorsArray, 10);
+AnalogSensors customFrameAnalogSensors((AnalogSensor **) &sensorsArray, 12);
 
 /**
  * Analog sensors to be included in kiwi frame
@@ -302,12 +336,6 @@ setup()
   initDebugSerial();
 
   debugInfo("@Reset\n\r", 8);
-
-  Serial.println(middleTemperatureAnalogSensor.read(), DEC);
-  Serial.println(externalTemperatureAnalogSensor.read(), DEC);
-  Serial.println(externalHumidityAnalogSensor.read(), DEC);
-  AD7995AnalogSensor externalTemperatureAnalogSensor(&onBoardAD7995, 1);
-  AD7995AnalogSensor externalHumidityAnalogSensor(&onBoardAD7995, 2);
 
   initUserSwitch();
 
