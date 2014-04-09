@@ -24,7 +24,7 @@
 #include <FSK600BaudTA900TB1500Mod.h>
 #include <DS1302.h>
 #include <GPS3D.h>
-#include <AnalogChannelAnalogSensor.h>
+#include <BuiltInAnalogSensor.h>
 #include <MockAnalogSensor.h>
 #include <AnalogSensors.h>
 #include <Counter.h>
@@ -110,17 +110,17 @@ Counters counters((Counter **) &countersArray, 2);
 /**
  * Internal temperature analog sensor
  */
-AnalogChannelAnalogSensor internalTemperatureAnalogSensor(INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+BuiltInAnalogSensor internalTemperatureAnalogSensor(INTERNAL_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Differential pressure analog sensor
  */
-AnalogChannelAnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
+BuiltInAnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Battery temperature analog sensor
  */
-AnalogChannelAnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
+BuiltInAnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
 AD7995 onBoardAD7995(AD7995_0_ADDRESS);
 
@@ -136,7 +136,7 @@ MockAnalogSensor soundLevelAnalogSensor(700);
  * Voltage analog sensor
  */
 // N.B. this analog sensor is handled separately from the others since kiwi frame does
-AnalogChannelAnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
+BuiltInAnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Array of analog sensors to be included in custom and (partially) in kiwi frame
