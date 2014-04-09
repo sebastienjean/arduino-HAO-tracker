@@ -35,4 +35,7 @@
 #define RTC_IO_PIN   9
 #define RTC_SCLK_PIN 10
 
+#define LED_WHITE 11
+#define LED_GREEN 08
+
 #endif
