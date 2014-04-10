@@ -15,12 +15,7 @@
  */
 #include <Arduino.h>
 
-#include <AnalogSensor.h>
-#include <AnalogSensors.h>
-
-#include "defs.h"
 #include "KiwiFrameBuilder.h"
-
 
 void
 KiwiFrameBuilder::setKiwiFrameChannelField(int fieldNumber, int value)
