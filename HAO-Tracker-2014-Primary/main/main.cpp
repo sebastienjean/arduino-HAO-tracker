@@ -19,29 +19,18 @@
 #include "pins.h"
 #include "defs.h"
 
-// Libs includes
-#include <SD.h>
-#include <FSK600BaudTA900TB1500Mod.h>
-#include <DS1302.h>
-#include <GPS3D.h>
-#include <BuiltInAnalogSensor.h>
-#include <MockAnalogSensor.h>
-#include <AnalogSensors.h>
-#include <Counter.h>
-#include <Counters.h>
-#include <SDFileLogger.h>
-#include <Note.h>
-#include <AudioToneGenerator.h>
-#include <NoteGenerator.h>
-#include <MelodyGenerator.h>
-#include <MCP3428.h>
-#include <MCP3428AnalogSensor.h>
-#include <HMC6352HeadingPseudoAnalogSensor.h>
-
 // Modules includes
 #include "KiwiFrameBuilder.h"
 #include "CustomFrameBuilder.h"
 #include "MarioThemePlayer.h"
+
+// Libs includes
+#include <SD.h>
+#include <SDFileLogger.h>
+#include <FSK600BaudTA900TB1500Mod.h>
+#include <BuiltInAnalogSensor.h>
+#include <MCP3428AnalogSensor.h>
+#include <HMC6352HeadingPseudoAnalogSensor.h>
 
 // -----------------------
 // GPS related definitions
