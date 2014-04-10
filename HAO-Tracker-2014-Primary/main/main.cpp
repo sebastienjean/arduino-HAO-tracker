@@ -97,10 +97,6 @@ Counters counters((Counter **) &countersArray, NUMBER_OF_COUNTERS_IN_CUSTOM_FRAM
 // Analog sensors related definitions
 // ----------------------------------
 
-
-#define ACCELERATION_X_ANALOG_SENSOR_CHANNEL A4
-#define ACCELERATION_Y_ANALOG_SENSOR_CHANNEL A5
-#define ACCELERATION_Z_ANALOG_SENSOR_CHANNEL A6
 /**
  * Internal temperature analog sensor
  */
@@ -146,12 +142,34 @@ MCP3428 onBoardFirstMCP3428(MCP3428_0_ADDRESS_BIT0, MCP3428_0_ADDRESS_BIT1);
  */
 MCP3428 onBoardSecondMCP3428(MCP3428_1_ADDRESS_BIT0, MCP3428_1_ADDRESS_BIT1);
 
-MCP3428AnalogSensor middleTemperatureAnalogSensor(&onBoardFirstMCP3428, 0);
-MCP3428AnalogSensor externalTemperatureAnalogSensor(&onBoardFirstMCP3428, 1);
+/**
+ * External temperature sensor
+ */
+MCP3428AnalogSensor externalTemperatureAnalogSensor(&onBoardFirstMCP3428, 0);
+
+/**
+ * Middle temperature sensor
+ */
+MCP3428AnalogSensor middleTemperatureAnalogSensor(&onBoardFirstMCP3428, 1);
+
+/**
+ * Humidity sensor
+ */
 MCP3428AnalogSensor externalHumidityAnalogSensor(&onBoardFirstMCP3428, 2);
 
+/**
+ * Visible luminosity sensor
+ */
 MCP3428AnalogSensor visibleLuminosityAnalogSensor(&onBoardSecondMCP3428, 0);
+
+/**
+ * IR luminosity sensor
+ */
 MCP3428AnalogSensor irLuminosityAnalogSensor(&onBoardSecondMCP3428, 1);
+
+/**
+ * UV luminosity sensor
+ */
 MCP3428AnalogSensor uvLuminosityAnalogSensor(&onBoardSecondMCP3428, 2);
 
 /**
