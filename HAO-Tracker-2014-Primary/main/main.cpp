@@ -29,7 +29,7 @@
 #include <SDFileLogger.h>
 #include <FSK600BaudTA900TB1500Mod.h>
 #include <BuiltInAnalogSensor.h>
-#include <MCP3428AnalogSensor.h>
+#include <MCP3428AnalogToDigitalConverter.h>
 #include <HMC6352HeadingPseudoAnalogSensor.h>
 
 // -----------------------
@@ -135,42 +135,42 @@ BuiltInAnalogSensor accelerationZAnalogSensor(ACCELERATION_Z_ANALOG_SENSOR_CHANN
 /**
  * On board first MCP3428 I2C ADC
  */
-MCP3428 onBoardFirstMCP3428(MCP3428_0_ADDRESS_BIT0, MCP3428_0_ADDRESS_BIT1);
+MCP3428AnalogToDigitalConverter onBoardFirstMCP3428(MCP3428_0_ADDRESS_BIT0, MCP3428_0_ADDRESS_BIT1);
 
 /**
  * On board second MCP3428 I2C ADC
  */
-MCP3428 onBoardSecondMCP3428(MCP3428_1_ADDRESS_BIT0, MCP3428_1_ADDRESS_BIT1);
+MCP3428AnalogToDigitalConverter onBoardSecondMCP3428(MCP3428_1_ADDRESS_BIT0, MCP3428_1_ADDRESS_BIT1);
 
 /**
  * External temperature sensor
  */
-MCP3428AnalogSensor externalTemperatureAnalogSensor(&onBoardFirstMCP3428, 0);
+AnalogSensor externalTemperatureAnalogSensor(&onBoardFirstMCP3428, 0);
 
 /**
  * Middle temperature sensor
  */
-MCP3428AnalogSensor middleTemperatureAnalogSensor(&onBoardFirstMCP3428, 1);
+AnalogSensor middleTemperatureAnalogSensor(&onBoardFirstMCP3428, 1);
 
 /**
  * Humidity sensor
  */
-MCP3428AnalogSensor externalHumidityAnalogSensor(&onBoardFirstMCP3428, 2);
+AnalogSensor externalHumidityAnalogSensor(&onBoardFirstMCP3428, 2);
 
 /**
  * Visible luminosity sensor
  */
-MCP3428AnalogSensor visibleLuminosityAnalogSensor(&onBoardSecondMCP3428, 0);
+AnalogSensor visibleLuminosityAnalogSensor(&onBoardSecondMCP3428, 0);
 
 /**
  * IR luminosity sensor
  */
-MCP3428AnalogSensor irLuminosityAnalogSensor(&onBoardSecondMCP3428, 1);
+AnalogSensor irLuminosityAnalogSensor(&onBoardSecondMCP3428, 1);
 
 /**
  * UV luminosity sensor
  */
-MCP3428AnalogSensor uvLuminosityAnalogSensor(&onBoardSecondMCP3428, 2);
+AnalogSensor uvLuminosityAnalogSensor(&onBoardSecondMCP3428, 2);
 
 /**
  * Compass heading pseudo analog sensor
