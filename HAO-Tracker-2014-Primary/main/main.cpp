@@ -36,6 +36,7 @@
 #include <MelodyGenerator.h>
 #include <MCP3428.h>
 #include <MCP3428AnalogSensor.h>
+#include <HMC6352HeadingPseudoAnalogSensor.h>
 
 // Modules includes
 #include "KiwiFrameBuilder.h"
@@ -94,14 +95,14 @@ Counter resetCounter(RESET_COUNTER_BASE_ADDRESS);
 /**
  * Array of counters to be included in custom frame
  */
-Counter* countersArray[2] =
+Counter* countersArray[NUMBER_OF_COUNTERS_IN_CUSTOM_FRAME] =
   { &frameCounter,
     &resetCounter, };
 
 /**
  * Counters to be included in custom frame
  */
-Counters counters((Counter **) &countersArray, 2);
+Counters counters((Counter **) &countersArray, NUMBER_OF_COUNTERS_IN_CUSTOM_FRAME);
 
 // ----------------------------------
 // Analog sensors related definitions
@@ -165,15 +166,20 @@ MCP3428AnalogSensor irLuminosityAnalogSensor(&onBoardSecondMCP3428, 1);
 MCP3428AnalogSensor uvLuminosityAnalogSensor(&onBoardSecondMCP3428, 2);
 
 /**
+ * Compass heading pseudo analog sensor
+ */
+HMC6352HeadingPseudoAnalogSensor headingPseudoAnalogSensor;
+
+/**
  * Voltage analog sensor
  */
 // N.B. this analog sensor is handled separately from the others since kiwi frame does
-BuiltInAnalogSensor voltage(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
+BuiltInAnalogSensor voltageAnalogSensor(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Array of analog sensors to be included in custom and (partially) in kiwi frame
  */
-AnalogSensor* sensorsArray[12] =
+AnalogSensor* sensorsArray[NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME] =
   { &internalTemperatureAnalogSensor,
     &middleTemperatureAnalogSensor,
     &externalTemperatureAnalogSensor,
@@ -185,17 +191,18 @@ AnalogSensor* sensorsArray[12] =
     &visibleLuminosityAnalogSensor,
     &irLuminosityAnalogSensor,
     &uvLuminosityAnalogSensor,
-    &batteryTemperatureAnalogSensor };
+    &batteryTemperatureAnalogSensor,
+    &headingPseudoAnalogSensor};
 
 /**
  * Analog sensors to be included in custom frame
  */
-AnalogSensors customFrameAnalogSensors((AnalogSensor **) &sensorsArray, 12);
+AnalogSensors customFrameAnalogSensors((AnalogSensor **) &sensorsArray, NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME);
 
 /**
  * Analog sensors to be included in kiwi frame
  */
-AnalogSensors kiwiFrameAnalogSensors((AnalogSensor **) &sensorsArray, 8);
+AnalogSensors kiwiFrameAnalogSensors((AnalogSensor **) &sensorsArray, NUMBER_OF_ANALOG_SENSORS_IN_KIWI_FRAME);
 
 // -----------------------------------
 // Real Time Clock related definitions
@@ -218,7 +225,7 @@ char customFrame[CUSTOM_FRAME_MAX_LENGTH];
 /**
  * Custom frame builder object
  */
-CustomFrameBuilder customFrameBuilder(&counters, &customFrameAnalogSensors, &voltage, &rtc, &nmeaGPS);
+CustomFrameBuilder customFrameBuilder(&counters, &customFrameAnalogSensors, &voltageAnalogSensor, &rtc, &nmeaGPS);
 
 // ------------------------------
 // KIWI frame related definitions
@@ -232,7 +239,7 @@ unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
 /**
  * Kiwi frame builder object
  */
-KiwiFrameBuilder kiwiFrameBuilder(&kiwiFrameAnalogSensors, &voltage);
+KiwiFrameBuilder kiwiFrameBuilder(&kiwiFrameAnalogSensors, &voltageAnalogSensor);
 
 /**
  * Mario theme player (just because it is so cool to play it)
