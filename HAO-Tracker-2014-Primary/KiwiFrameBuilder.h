@@ -32,6 +32,7 @@
 
 /**
  * This class allows to build KIWI (CNES/Planete-Sciences legacy format) frame to be sent by the HAO, retrieving data from sensors, RTC, GPS, ...
+ * The considered frame format is the one defined in v3.0 of CNES Kiwi Millenium user manual (12/03/2009)
  */
 class KiwiFrameBuilder
 {

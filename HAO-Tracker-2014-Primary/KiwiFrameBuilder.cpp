@@ -25,7 +25,7 @@
 void
 KiwiFrameBuilder::setKiwiFrameChannelField(int fieldNumber, int value)
 {
-  if ((fieldNumber < 1) || (fieldNumber > 8))
+  if ((fieldNumber < 1) || (fieldNumber > KIWI_FRAME_CHANNELS_AMOUNT))
     return;
 
   kiwiFrame[fieldNumber] = (unsigned char) (value / 4);
