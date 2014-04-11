@@ -30,6 +30,21 @@
 #define KIWI_FRAME_CHANNELS_AMOUNT 8
 
 /**
+ * KIWI ADC resolution (in bits)
+ */
+#define KIWI_ADC_RESOLUTION 8
+
+/**
+ * KIWI ADC voltage reference (in volts)
+ */
+#define KIWI_ADC_VOLTAGE_REFERENCE 5.0
+
+/**
+ * KIWI ADC voltage downscaling factor (real value / sensed value)
+ */
+#define KIWI_VOLTAGE_DOWNSCALING_FACTOR 3.0
+
+/**
  * This class allows to build KIWI (CNES/Planete-Sciences legacy format) frame to be sent by the HAO, retrieving data from sensors, RTC, GPS, ...
  * The considered frame format is the one defined in v3.0 of CNES Kiwi Millenium user manual (12/03/2009)
  */
@@ -40,17 +55,23 @@ private:
   /**
    * Internal pointer on kiwi frame buffer used across several internal functions
    */
-  unsigned char *kiwiFrame;
+  uint8_t *kiwiFrame;
 
   /**
    * Pointer to sensors
    */
-  AnalogSensors *sensors;
+  AnalogSensors *analogSensors;
 
   /**
    * Pointer to voltage sensor
    */
-  AnalogSensor *voltage;
+  AnalogSensor *voltageAnalogSensor;
+
+  /**
+   * Downscaling factor between real voltage value and analog sensor value
+   */
+  float voltageDownscalingFactor;
+
 
   /**
    * Sets the content of a given kiwi frame channel field (fields 1 to 8), from an analog sensor value
@@ -59,7 +80,7 @@ private:
    * @param value sensor value
    */
   void
-  setKiwiFrameChannelField(int fieldNumber, int value);
+  setKiwiFrameChannelField(uint8_t fieldNumber, uint16_t value, uint8_t adcResolution);
 
   /**
    * Sets the content of a the kiwi frame voltage field (field 9), from a voltage sensor value
@@ -67,7 +88,7 @@ private:
    * @param value voltage sensor value
    */
   void
-  setKiwiFrameVoltageField(int value);
+  setKiwiFrameVoltageField(uint16_t value);
 
   /**
    * Computes and sets the kiwi frame checksum field (at offset KIWI_FRAME_LENGTH-1]
@@ -81,10 +102,11 @@ public:
   /**
    * Creates a new kiwi frame builder retrieving data from given providers.
    *
-   * @param sensors analog sensor data provider
-   * @param voltage voltage data provider
+   * @param analogSensors analog sensor data provider
+   * @param voltageAnalogSensor voltage data provider
+   * @param voltageDownscalingFactor downscaling factor between real voltage value and analog sensor value
    */
-  KiwiFrameBuilder(AnalogSensors *sensors, AnalogSensor *voltage);
+  KiwiFrameBuilder(AnalogSensors *analogSensors, AnalogSensor *voltageAnalogSensor, float voltageDownscalingFactor);
 
   /**
    * Builds kiwi frame (channel fields, voltage field, checksum) from values retrieved from data providers.
@@ -92,7 +114,7 @@ public:
    * to store kiwi frame bytes
    */
   void
-  buildKiwiFrame(unsigned char *kiwiFrame);
+  buildKiwiFrame(uint8_t *kiwiFrame);
 };
 
 #endif

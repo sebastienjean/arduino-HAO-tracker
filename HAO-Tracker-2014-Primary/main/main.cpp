@@ -246,7 +246,7 @@ unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
 /**
  * Kiwi frame builder object
  */
-KiwiFrameBuilder kiwiFrameBuilder(&kiwiFrameAnalogSensors, &voltageAnalogSensor);
+KiwiFrameBuilder kiwiFrameBuilder(&kiwiFrameAnalogSensors, &voltageAnalogSensor, 2.0);
 
 /**
  * Mario theme player (just because it is so cool to play it)
