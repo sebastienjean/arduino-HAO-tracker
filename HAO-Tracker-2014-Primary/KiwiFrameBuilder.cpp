@@ -66,7 +66,7 @@ KiwiFrameBuilder::KiwiFrameBuilder(AnalogSensors *sensors, AnalogSensor *voltage
 }
 
 void
-KiwiFrameBuilder::buildKiwiFrame(unsigned char *kiwiFrame)
+KiwiFrameBuilder::buildKiwiFrame(uint8_t *kiwiFrame)
 {
   this->kiwiFrame = kiwiFrame;
 
@@ -79,11 +79,11 @@ KiwiFrameBuilder::buildKiwiFrame(unsigned char *kiwiFrame)
     }
 
   // channels : analog sensors
-  for (uint8_t analogSensorNumber = 0;
-      (analogSensorNumber < this->analogSensors->getAmount()) && (analogSensorNumber < KIWI_FRAME_CHANNELS_AMOUNT); analogSensorNumber++)
+  for (uint8_t analogSensorNumber = 1;
+      (analogSensorNumber <= this->analogSensors->getAmount()) && (analogSensorNumber <= KIWI_FRAME_CHANNELS_AMOUNT); analogSensorNumber++)
     {
       AnalogSensor *analogSensor = this->analogSensors->getAnalogSensor(analogSensorNumber);
-      setKiwiFrameChannelField(analogSensorNumber+1, analogSensor->read(), analogSensor->getAdcResolution());
+      setKiwiFrameChannelField(analogSensorNumber, analogSensor->read(), analogSensor->getAdcResolution());
     }
 
   // voltage
