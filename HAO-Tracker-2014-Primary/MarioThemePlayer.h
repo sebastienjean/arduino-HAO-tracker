@@ -34,7 +34,7 @@ private:
 
 public:
 
-  MarioThemePlayer(int outputPin);
+  MarioThemePlayer(uint8_t outputPin);
 
   /**
    * Plays Mario theme

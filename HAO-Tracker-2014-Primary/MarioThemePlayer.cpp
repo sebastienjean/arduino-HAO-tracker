@@ -34,7 +34,7 @@
        new Note(Note::G, 5, Note::QUARTER)
       };
 
-MarioThemePlayer::MarioThemePlayer(int outputPin)
+MarioThemePlayer::MarioThemePlayer(uint8_t outputPin)
 {
   this->melodyGenerator = new MelodyGenerator(new NoteGenerator(new AudioToneGenerator(outputPin)));
   this->melodyGenerator->setNotes(MARIO_THEME_MELODY_LENGTH, (Note **) (&MARIO_THEME_MELODY));
