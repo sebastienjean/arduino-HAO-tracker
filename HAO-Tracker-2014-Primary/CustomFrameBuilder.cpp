@@ -16,15 +16,14 @@
 #include <Arduino.h>
 #include <stdlib.h>
 
-#include <GPS2D.h>
-#include <GPS3D.h>
-#include <AnalogSensor.h>
 #include <AnalogSensors.h>
+#include <Counters.h>
+#include <GPS3D.h>
 #include <DS1302.h>
 
 #include "defs.h"
 #include "CustomFrameBuilder.h"
-#include "Counters.h"
+
 
 void
 CustomFrameBuilder::appendStartOfFrameChar()
@@ -87,14 +86,14 @@ CustomFrameBuilder::appendRtcTime()
 void
 CustomFrameBuilder::appendAnalogSensorValues()
 {
-  for (int analogSensorNumber = 1; analogSensorNumber <= this->sensors->getAmount(); analogSensorNumber++)
+  for (int analogSensorNumber = 1; analogSensorNumber <= this->analogSensors->getAmount(); analogSensorNumber++)
   {
     // append next sensor value
-    itoa(this->sensors->read(analogSensorNumber), this->whereToAppend, 10);
+    itoa(this->analogSensors->read(analogSensorNumber), this->whereToAppend, 10);
     this->whereToAppend += strlen(this->whereToAppend);
 
     // separator (if not last)
-    if (analogSensorNumber < this->sensors->getAmount())
+    if (analogSensorNumber < this->analogSensors->getAmount())
     {
       this->appendFieldSeparatorChar();
     }
@@ -102,9 +101,9 @@ CustomFrameBuilder::appendAnalogSensorValues()
 }
 
 void
-CustomFrameBuilder::appendVoltage()
+CustomFrameBuilder::appendVoltageAnalogSensorValue()
 {
-  itoa(this->voltage->read(), this->whereToAppend, 10);
+  itoa(this->voltageAnalogSensors->read(), this->whereToAppend, 10);
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
@@ -178,13 +177,13 @@ CustomFrameBuilder::appendPositioningData()
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
-CustomFrameBuilder::CustomFrameBuilder(Counters *counters, AnalogSensors *sensors, AnalogSensor *voltage, DS1302 *rtc, GPS3D *gps)
+CustomFrameBuilder::CustomFrameBuilder(Counters *counters, AnalogSensors *analogSensors, AnalogSensor *voltageAnalogSensor, DS1302 *rtc, GPS3D *gps)
 {
   this->counters = counters;
   this->rtc = rtc;
-  this->sensors = sensors;
+  this->analogSensors = analogSensors;
   this->gps = gps;
-  this->voltage = voltage;
+  this->voltageAnalogSensors = voltageAnalogSensors;
 }
 
 void
@@ -231,7 +230,7 @@ CustomFrameBuilder::buildCustomFrame(char *customFrame)
   this->appendFieldSeparatorChar();
 
   // voltage
-  this->appendVoltage();
+  this->appendVoltageAnalogSensorValue();
 
   // end of frame
   this->appendEndOfFrameString();

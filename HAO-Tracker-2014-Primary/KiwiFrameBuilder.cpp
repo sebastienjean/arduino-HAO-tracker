@@ -22,7 +22,7 @@ KiwiFrameBuilder::setKiwiFrameChannelField(uint8_t fieldNumber, uint16_t value, 
 {
   if ((fieldNumber < 1) || (fieldNumber > KIWI_FRAME_CHANNELS_AMOUNT))
     return;
-  for ( uint8_t resolutionFactor = adcResolution - KIWI_ADC_RESOLUTION; resolutionFactor > 0; resolutionFactor--)
+  for (uint8_t resolutionFactor = adcResolution - KIWI_ADC_RESOLUTION; resolutionFactor > 0; resolutionFactor--)
     value = value / 2;
 
   kiwiFrame[fieldNumber] = (uint8_t) value;
@@ -35,33 +35,32 @@ KiwiFrameBuilder::setKiwiFrameVoltageField(uint16_t value)
 {
   float voltageAdcStep = KIWI_ADC_VOLTAGE_REFERENCE;
 
-  for ( uint8_t resolution = (this->voltageAnalogSensor->getAdcResolution()); resolution > 0; resolution--)
+  for (uint8_t resolution = (this->voltageAnalogSensor->getAdcResolution()); resolution > 0; resolution--)
     voltageAdcStep = voltageAdcStep / 2.0;
 
-  float realVoltage = (value*voltageAdcStep)*this->voltageDownscalingFactor;
-  float kiwiVoltage = realVoltage  / ((float) KIWI_VOLTAGE_DOWNSCALING_FACTOR);
+  float realVoltage = (value * voltageAdcStep) * this->voltageDownscalingFactor;
+  float kiwiVoltage = realVoltage / ((float) KIWI_VOLTAGE_DOWNSCALING_FACTOR);
   uint16_t kiwiValue = (uint16_t) (kiwiVoltage / voltageAdcStep);
 
-  this->setKiwiFrameChannelField(9, kiwiValue,this->voltageAnalogSensor->getAdcResolution());
+  this->setKiwiFrameChannelField(KIWI_VOLTAGE_FIELD_OFFSET, kiwiValue, this->voltageAnalogSensor->getAdcResolution());
 }
 
 void
 KiwiFrameBuilder::computeKiwiFrameChecksum()
 {
-  unsigned int kiwiFrameChecksum = 0;
-  for (int cpt = 1; cpt < KIWI_FRAME_LENGTH - 1; cpt++)
-    kiwiFrameChecksum = kiwiFrameChecksum
-        + (unsigned char) (this->kiwiFrame[cpt]);
+  uint16_t kiwiFrameChecksum = 0;
+  for (uint8_t frameOffset = 1; frameOffset < KIWI_FRAME_LENGTH - 1; frameOffset++)
+    kiwiFrameChecksum = kiwiFrameChecksum + (uint8_t) (this->kiwiFrame[frameOffset]);
 
   kiwiFrameChecksum = kiwiFrameChecksum % 256;
   kiwiFrameChecksum = kiwiFrameChecksum / 2;
-  this->kiwiFrame[KIWI_FRAME_LENGTH - 1] = (unsigned char) kiwiFrameChecksum;
+  this->kiwiFrame[KIWI_FRAME_LENGTH - 1] = (uint8_t) kiwiFrameChecksum;
 }
 
-KiwiFrameBuilder::KiwiFrameBuilder(AnalogSensors *sensors, AnalogSensor *voltage, float voltageDownscalingFactor)
+KiwiFrameBuilder::KiwiFrameBuilder(AnalogSensors *analogSensors, AnalogSensor *voltageAnalogSensor, float voltageDownscalingFactor)
 {
-  this->analogSensors = sensors;
-  this->voltageAnalogSensor = voltage;
+  this->analogSensors = analogSensors;
+  this->voltageAnalogSensor = voltageAnalogSensor;
   this->voltageDownscalingFactor = voltageDownscalingFactor;
 }
 
@@ -74,17 +73,17 @@ KiwiFrameBuilder::buildKiwiFrame(uint8_t *kiwiFrame)
   this->kiwiFrame[0] = 0xFF;
 
   for (uint8_t kiwiFrameOffset = 1; kiwiFrameOffset < KIWI_FRAME_LENGTH; kiwiFrameOffset++)
-    {
-      this->kiwiFrame[kiwiFrameOffset] = 0x00;
-    }
+  {
+    this->kiwiFrame[kiwiFrameOffset] = 0x00;
+  }
 
   // channels : analog sensors
-  for (uint8_t analogSensorNumber = 1;
-      (analogSensorNumber <= this->analogSensors->getAmount()) && (analogSensorNumber <= KIWI_FRAME_CHANNELS_AMOUNT); analogSensorNumber++)
-    {
-      AnalogSensor *analogSensor = this->analogSensors->getAnalogSensor(analogSensorNumber);
-      setKiwiFrameChannelField(analogSensorNumber, analogSensor->read(), analogSensor->getAdcResolution());
-    }
+  for (uint8_t analogSensorNumber = 1; (analogSensorNumber <= this->analogSensors->getAmount()) && (analogSensorNumber <= KIWI_FRAME_CHANNELS_AMOUNT);
+      analogSensorNumber++)
+  {
+    AnalogSensor *analogSensor = this->analogSensors->getAnalogSensor(analogSensorNumber);
+    setKiwiFrameChannelField(analogSensorNumber, analogSensor->read(), analogSensor->getAdcResolution());
+  }
 
   // voltage
   setKiwiFrameVoltageField(this->voltageAnalogSensor->read());

@@ -73,12 +73,12 @@ private:
   /**
    * Pointer to sensors
    */
-  AnalogSensors *sensors;
+  AnalogSensors *analogSensors;
 
   /**
    * Pointer to voltage sensor
    */
-  AnalogSensor *voltage;
+  AnalogSensor *voltageAnalogSensors;
 
   /**
    * Pointer to GPS
@@ -146,7 +146,7 @@ private:
    *
    */
   void
-  appendVoltage(void);
+  appendVoltageAnalogSensorValue(void);
 
   /**
    * Internal function used to append positioning data to custom frame
@@ -161,13 +161,13 @@ public:
    * Creates a new frame builder retrieving data from given providers
    *
    * @param counters counter data provider
-   * @param sensors analog sensor data provider
-   * @param voltage voltage data provider
+   * @param analogSensors analog sensor data provider
+   * @param voltageAnalogSensor voltage data provider
    * @param rtc timing data provider
    * @param gps positioning data provider
    */
-  CustomFrameBuilder(Counters *counters, AnalogSensors *sensors,
-     AnalogSensor *voltage, DS1302 *rtc, GPS3D *gps);
+  CustomFrameBuilder(Counters *counters, AnalogSensors *analogSensors,
+     AnalogSensor *voltageAnalogSensor, DS1302 *rtc, GPS3D *gps);
 
   /**
    * Builds custom frame (time, location, sensor data, ...)

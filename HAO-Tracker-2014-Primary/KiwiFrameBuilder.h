@@ -30,6 +30,11 @@
 #define KIWI_FRAME_CHANNELS_AMOUNT 8
 
 /**
+ * KIWI frame voltage field offset
+ */
+#define KIWI_VOLTAGE_FIELD_OFFSET 9
+
+/**
  * KIWI ADC resolution (in bits)
  */
 #define KIWI_ADC_RESOLUTION 8
