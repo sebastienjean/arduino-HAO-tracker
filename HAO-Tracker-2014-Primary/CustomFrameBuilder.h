@@ -78,7 +78,7 @@ private:
   /**
    * Pointer to voltage sensor
    */
-  AnalogSensor *voltageAnalogSensors;
+  AnalogSensor *voltageAnalogSensor;
 
   /**
    * Pointer to GPS

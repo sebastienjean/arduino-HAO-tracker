@@ -103,7 +103,7 @@ CustomFrameBuilder::appendAnalogSensorValues()
 void
 CustomFrameBuilder::appendVoltageAnalogSensorValue()
 {
-  itoa(this->voltageAnalogSensors->read(), this->whereToAppend, 10);
+  itoa(this->voltageAnalogSensor->read(), this->whereToAppend, 10);
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
@@ -183,7 +183,7 @@ CustomFrameBuilder::CustomFrameBuilder(Counters *counters, AnalogSensors *analog
   this->rtc = rtc;
   this->analogSensors = analogSensors;
   this->gps = gps;
-  this->voltageAnalogSensors = voltageAnalogSensors;
+  this->voltageAnalogSensor = voltageAnalogSensor;
 }
 
 void
