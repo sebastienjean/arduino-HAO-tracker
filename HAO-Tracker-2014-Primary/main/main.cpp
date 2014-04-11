@@ -110,7 +110,7 @@ BuiltInAnalogSensor differentialPressureAnalogSensor(DIFFERENTIAL_PRESSURE_ANALO
 /**
  * Battery voltage analog sensor
  */
-BuiltInAnalogSensor batteryVoltageAnalogSensor(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
+BuiltInAnalogSensor batteryHalfInputVoltageAnalogSensor(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
 
 /**
  * Battery temperature analog sensor
