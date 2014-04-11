@@ -29,7 +29,7 @@
 /**
  * Maximum length of custom frame
  */
-#define CUSTOM_FRAME_MAX_LENGTH 200
+#define CUSTOM_FRAME_MAX_LENGTH 300
 
 /**
  * Custom frame field separator character

@@ -26,7 +26,6 @@
 #include "CustomFrameBuilder.h"
 #include "Counters.h"
 
-
 void
 CustomFrameBuilder::appendStartOfFrameChar()
 {
@@ -57,17 +56,17 @@ void
 CustomFrameBuilder::appendCounters()
 {
   for (int i = 1; i <= this->counters->getAmount(); i++)
-    {
-      // append next counter value
-      itoa(this->counters->read(i), this->whereToAppend, 10);
-      this->whereToAppend += strlen(this->whereToAppend);
+  {
+    // append next counter value
+    itoa(this->counters->read(i), this->whereToAppend, 10);
+    this->whereToAppend += strlen(this->whereToAppend);
 
-      // separator (if not last)
-      if (i < this->counters->getAmount())
-        {
-          this->appendFieldSeparatorChar();
-        }
+    // separator (if not last)
+    if (i < this->counters->getAmount())
+    {
+      this->appendFieldSeparatorChar();
     }
+  }
 }
 
 void
@@ -88,18 +87,18 @@ CustomFrameBuilder::appendRtcTime()
 void
 CustomFrameBuilder::appendAnalogSensorValues()
 {
-  for (int i = 1; i <= this->sensors->getAmount(); i++)
-    {
-      // append next sensor value
-      itoa(this->sensors->read(i), this->whereToAppend, 10);
-      this->whereToAppend += strlen(this->whereToAppend);
+  for (int analogSensorNumber = 1; analogSensorNumber <= this->sensors->getAmount(); analogSensorNumber++)
+  {
+    // append next sensor value
+    itoa(this->sensors->read(analogSensorNumber), this->whereToAppend, 10);
+    this->whereToAppend += strlen(this->whereToAppend);
 
-      // separator (if not last)
-      if (i < this->sensors->getAmount())
-        {
-          this->appendFieldSeparatorChar();
-        }
+    // separator (if not last)
+    if (analogSensorNumber < this->sensors->getAmount())
+    {
+      this->appendFieldSeparatorChar();
     }
+  }
 }
 
 void
@@ -121,13 +120,13 @@ CustomFrameBuilder::appendPositioningData()
 
   // fix
   if (this->gps->getFix())
-    {
-      this->whereToAppend++[0] = 'A';
-    }
+  {
+    this->whereToAppend++[0] = 'A';
+  }
   else
-    {
-      this->whereToAppend++[0] = 'V';
-    }
+  {
+    this->whereToAppend++[0] = 'V';
+  }
 
   // separator
   this->appendFieldSeparatorChar();
@@ -179,8 +178,7 @@ CustomFrameBuilder::appendPositioningData()
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
-CustomFrameBuilder::CustomFrameBuilder(Counters *counters,
-    AnalogSensors *sensors, AnalogSensor *voltage, DS1302 *rtc, GPS3D *gps)
+CustomFrameBuilder::CustomFrameBuilder(Counters *counters, AnalogSensors *sensors, AnalogSensor *voltage, DS1302 *rtc, GPS3D *gps)
 {
   this->counters = counters;
   this->rtc = rtc;
