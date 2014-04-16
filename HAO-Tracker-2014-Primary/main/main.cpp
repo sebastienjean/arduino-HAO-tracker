@@ -366,6 +366,7 @@ setup()
   if (!clearAllPersistentDataOnRequest())
   {
     debugInfo("@Restart\r\n", 10);
+    resetCounter.increment(1);
   }
 
   initGpsSerial();
