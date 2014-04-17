@@ -199,7 +199,7 @@ AnalogSensor* sensorsArray[NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME] =
     &irLuminosityAnalogSensor,
     &uvLuminosityAnalogSensor,
     &batteryTemperatureAnalogSensor,
-    &headingPseudoAnalogSensor};
+    &headingPseudoAnalogSensor };
 
 /**
  * Analog sensors to be included in custom frame
@@ -401,16 +401,21 @@ loop()
   debugInfo("\r\n", 2);
 
   /* positioning data reading (and debug) */
-  nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer);
+  if (nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer) == GPS_OK)
+  {
+    sdFileLogger.logMessage(nmeaRmcSentenceBuffer, false);
+    sdFileLogger.logMessage(nmeaGgaSentenceBuffer, false);
+    delay(500);
 
-  /* NMEA sentences logging */
-  sdFileLogger.logMessage(nmeaRmcSentenceBuffer, false);
-  sdFileLogger.logMessage(nmeaGgaSentenceBuffer, false);
-  delay(500);
-
-  /* NMEA sentences transmission */
-  fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
-  fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaGgaSentenceBuffer));
+    /* NMEA sentences transmission */
+    fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
+    fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaGgaSentenceBuffer));
+  }
+  else
+  {
+    SERIAL_DEBUG.print("$GP_KO\r\n");
+    fskModulator.modulateBytes("$GP_KO\r\n", 8);
+  }
 
   /* custom frame building */
   customFrameBuilder.buildCustomFrame(customFrame);
