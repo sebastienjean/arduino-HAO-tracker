@@ -21,17 +21,17 @@
 
 // Libs includes
 #include <SD.h>
-#include <DS1302.h>
+//#include <DS1302.h>
 #include <GPS.h>
 #include <GPS3D.h>
 #include <FCOEV2.h>
 #include <Rotor.h>
+#include <Counter.h>
+#include <Counters.h>
+#include <Logger.h>
+#include <SDFileLogger.h>
 
-#include "Counter.h"
-#include "Counters.h"
 #include "CustomFrameBuilder.h"
-#include "Logger.h"
-#include "Tone.h"
 
 // -----------------------
 // GPS related definitions
@@ -41,6 +41,8 @@
  * Serial port used for GPS
  */
 #define serialNmeaGPSPort Serial1
+
+SDFileLogger sdLogger(&SD, LOG_FILE_PATH);
 
 /**
  * GPS3D object, whose raw NMEA sentences will be forwarded on debug serial
@@ -61,7 +63,6 @@ char nmeaGgaSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
  * HAO previous altitude (used during ascending phase)
  */
 double previousAltitude;
-
 
 // ----------------------------
 // Persistent counters related definitions
@@ -88,39 +89,9 @@ Counter currentFlightPhaseCounter(CURRENT_FLIGHT_PHASE_COUNTER_BASE_ADDRESS);
 Counter stillnessDurationInLoopsCounter(STILLNESS_DURATION_IN_SECONDS_COUNTER_BASE_ADDRESS);
 
 /**
- * Motorized camera recording status persistent counter
- */
-Counter motorizedCameraRecordingStatusCounter(MOTORIZED_CAMERA_RECORDING_STATUS_COUNTER_BASE_ADDRESS);
-
-/**
- * Ground camera recording status persistent counter
- */
-Counter groundCameraRecordingStatusCounter(GROUND_CAMERA_RECORDING_STATUS_COUNTER_BASE_ADDRESS);
-
-/**
- * Sky camera recording status persistent counter
- */
-Counter skyCameraRecordingStatusCounter(SKY_CAMERA_RECORDING_STATUS_COUNTER_BASE_ADDRESS);
-
-/**
  * Motorized camera fragment-at-frame persistent counter
  */
 Counter motorizedCameraFragmentAtFrameCounter(MOTORIZED_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS);
-
-/**
- * Motorized camera off-at-frame persistent counter
- */
-Counter motorizedCameraOffAtFrameCounter(MOTORIZED_CAMERA_OFF_AT_FRAME_COUNTER_BASE_ADDRESS);
-
-/**
- * Motorized camera on-at-frame persistent counter
- */
-Counter motorizedCameraOnAtFrameCounter(MOTORIZED_CAMERA_ON_AT_FRAME_COUNTER_BASE_ADDRESS);
-
-/**
- * Motorized camera record-at-frame persistent counter
- */
-Counter motorizedCameraRecordAtFrameCounter(MOTORIZED_CAMERA_RECORD_AT_FRAME_COUNTER_BASE_ADDRESS);
 
 /**
  * Ground camera fragment-at-frame persistent counter
@@ -128,39 +99,14 @@ Counter motorizedCameraRecordAtFrameCounter(MOTORIZED_CAMERA_RECORD_AT_FRAME_COU
 Counter groundCameraFragmentAtFrameCounter(GROUND_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS);
 
 /**
- * Ground camera off-at-frame persistent counter
- */
-Counter groundCameraOffAtFrameCounter(GROUND_CAMERA_OFF_AT_FRAME_COUNTER_BASE_ADDRESS);
-
-/**
- * Ground camera on-at-frame persistent counter
- */
-Counter groundCameraOnAtFrameCounter(GROUND_CAMERA_ON_AT_FRAME_COUNTER_BASE_ADDRESS);
-
-/**
- * Ground camera record-at-frame persistent counter
- */
-Counter groundCameraRecordAtFrameCounter(GROUND_CAMERA_RECORD_AT_FRAME_COUNTER_BASE_ADDRESS);
-
-/**
  * Sky camera fragment-at-frame persistent counter
  */
 Counter skyCameraFragmentAtFrameCounter(SKY_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS);
 
 /**
- * Sky camera off-at-frame persistent counter
+ * Horizon camera fragment-at-frame persistent counter
  */
-Counter skyCameraOffAtFrameCounter(SKY_CAMERA_OFF_AT_FRAME_COUNTER_BASE_ADDRESS);
-
-/**
- * Sky camera on-at-frame persistent counter
- */
-Counter skyCameraOnAtFrameCounter(SKY_CAMERA_ON_AT_FRAME_COUNTER_BASE_ADDRESS);
-
-/**
- * Sky camera record-at-frame persistent counter
- */
-Counter skyCameraRecordAtFrameCounter(SKY_CAMERA_RECORD_AT_FRAME_COUNTER_BASE_ADDRESS);
+Counter horizonCameraFragmentAtFrameCounter(HORIZON_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS);
 
 /**
  * Current flight phase duration persistent counter
@@ -170,41 +116,34 @@ Counter currentFlightPhaseDurationCounter(FLIGHT_PHASE_DURATION_COUNTER_BASE_ADD
 /**
  * Array of counters to be included in custom frame
  */
-Counter* countersArray[4] =
+Counter* countersArray[8] =
   { &frameCounter,
     &resetCounter,
     &currentFlightPhaseCounter,
-    &currentFlightPhaseDurationCounter };
-
-/**
- * Counters to be included in custom frame
- */
-Counters counters(countersArray, 4);
-
-
-// -----------------------------------
-// Real Time Clock related definitions
-// -----------------------------------
-
-/**
- * RTC object
- */
-DS1302 rtc(RTC_CE_PIN, RTC_IO_PIN, RTC_SCLK_PIN);
-
-// --------------------------------
-// Custom frame related definitions
-// --------------------------------
+    &currentFlightPhaseDurationCounter,
+    &motorizedCameraFragmentAtFrameCounter,
+    &groundCameraFragmentAtFrameCounter,
+    &skyCameraFragmentAtFrameCounter,
+    &horizonCameraFragmentAtFrameCounter };
 
 /**
  * External buffer used to build and send custom frame
  */
 char customFrame[CUSTOM_FRAME_MAX_LENGTH];
 
+/**
+ * Counters to be included in custom frame
+ */
+Counters counters(countersArray, 8);
+
+/**
+ * Custom frame builder object
+ */
+CustomFrameBuilder customFrameBuilder(&counters);
 
 // --------------------------
 // Camera related definitions
 // --------------------------
-
 /**
  * Motorized camera object
  */
@@ -220,40 +159,17 @@ FCOEV2 groundCamera(GROUND_CAMERA_PWM_PIN, GROUND_CAMERA_PWR_PIN);
  */
 FCOEV2 skyCamera(SKY_CAMERA_PWM_PIN, SKY_CAMERA_PWR_PIN);
 
+/**
+ * Horizon camera object
+ */
+FCOEV2 horizonCamera(HORIZON_CAMERA_PWM_PIN, HORIZON_CAMERA_PWR_PIN);
+
+/**
+ * Rotor object
+ */
 Rotor rotor(ROTOR_PWM_PIN);
 
-
-// ------------------------
-// LEDs related definitions
-// ------------------------
-
-/**
- * Red LED object
- */
-// Led redLED(RED_LED_PIN);
-/**
- * Orange LED object
- */
-// Led orangeLED(ORANGE_LED_PIN);
-/**
- * Green LED object
- */
-// Led greenLED(GREEN_LED_PIN);
-/**
- * Blue LED object
- */
-// Led blueLED(BLUE_LED_PIN);
-/**
- * Array of LEDs
- */
-/*
- Led* ledArray[4] =
- { &redLED,
- &orangeLED,
- &greenLED,
- &blueLED };
- Leds leds(ledArray, 4);
- */
+volatile unsigned long startOfLoopTimeMillis;
 
 /**
  * Internal function used to send debug info both on debug serial and radio.
@@ -267,6 +183,16 @@ debugInfo(char *message, int chars)
 }
 
 /**
+ * Internal function used to to initialize SD.
+ */
+boolean
+initSD()
+{
+  pinMode(SD_CARD_CHIP_SELECT_PIN, OUTPUT);
+  return SD.begin(SD_CARD_CHIP_SELECT_PIN);
+}
+
+/**
  * Internal function used to initialize logging (SD).
  *
  * @return logging initialization success status
@@ -274,7 +200,7 @@ debugInfo(char *message, int chars)
 boolean
 initLogging()
 {
-  return sdLogger.begin(LOG_FILE_PATH, SD_CHIP_SELECT_PIN);
+  return initSD();
 }
 
 /**
@@ -283,22 +209,27 @@ initLogging()
  *
  * @return log file deletion status
  */
+/**
+ * Internal function used to clear persistent data (counters and SD) if requested by user at reset.
+ *
+ * @return <tt>true</tt> if all persistent data have been cleared
+ */
 boolean
-clearAllPersistentData()
+clearAllPersistentDataOnRequest()
 {
   delay(1000);
 
   if (digitalRead(USER_SWITCH_PIN) == LOW)
   {
+    debugInfo("@Clear\r\n", 8);
     // reset all counters
     counters.reset();
-    stillnessDurationInLoopsCounter.reset();
 
-    motorizedCameraRecordingStatusCounter.reset();
-    groundCameraRecordingStatusCounter.reset();
-    skyCameraRecordingStatusCounter.reset();
-
-    return sdLogger.reset();
+    if (sdLogger.clear())
+    {
+      debugInfo("@SD Cleared\r\n", 13);
+    }
+    return true;
   }
   return false;
 }
@@ -369,36 +300,14 @@ initCameras()
   rotor.goTop();
   delay(500);
 
-  /* turning cameras off and on again (following Roy's advice) */
+  /* turning cameras off */
 
   debugInfo("@Cam-All-Off\r\n", 14);
   motorizedCamera.switchOff();
   groundCamera.switchOff();
   skyCamera.switchOff();
+  horizonCamera.switchOff();
   delay(SWITCH_MODE_PAUSE_MILLIS);
-
-  debugInfo("@Cam-All-On\r\n", 13);
-  motorizedCamera.switchOn();
-  groundCamera.switchOn();
-  skyCamera.switchOn();
-  delay(SWITCH_ON_PAUSE_MILLIS);
-
-  /* restarting recording if needed */
-  if (motorizedCameraRecordingStatusCounter.read() == CAMERA_RUNNING)
-  {
-    debugInfo("@Cam-M-Action\r\n", 15);
-    motorizedCamera.toggleAction();
-  }
-  if (groundCameraRecordingStatusCounter.read() == CAMERA_RUNNING)
-  {
-    debugInfo("@Cam-G-Action\r\n", 15);
-    groundCamera.toggleAction();
-  }
-  if (skyCameraRecordingStatusCounter.read() == CAMERA_RUNNING)
-  {
-    debugInfo("@Cam-S-Action\r\n", 15);
-    skyCamera.toggleAction();
-  }
 }
 
 void
@@ -415,24 +324,20 @@ commonLoop()
 
   /* Loop start sequence */
 
-  /*
-   redLED.quicklyMakeBlinkSeveralTimes(1);
-   greenLED.quicklyMakeBlinkSeveralTimes(1);
-   */
-  delay(1000);
+  /* custom frame building */
+  customFrameBuilder.buildCustomFrame(customFrame);
 
+  /* custom frame debug */
+  SERIAL_DEBUG.print(customFrame);
 
+  /* custom frame logging */
+  sdLogger.logMessage(customFrame, false);
 
-  /*
-   greenLED.quicklyMakeBlinkSeveralTimes(2);
-   */
+  /* pause half a second to ensure SD asynchronous writing to be finished */
+  delay(500);
 
   /* positioning data reading (and debug) */
   nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer);
-
-  /*
-   blueLED.showStatus(nmeaGPS.getFix());
-   */
 
   /* NMEA sentences logging */
   sdLogger.logMessage(nmeaRmcSentenceBuffer, false);
@@ -441,18 +346,6 @@ commonLoop()
 
   /*
    greenLED.quicklyMakeBlinkSeveralTimes(3);
-   */
-
-  /* custom frame debug */SERIAL_DEBUG.print(customFrame);
-
-  /* custom frame logging */
-  sdLogger.logMessage(customFrame, false);
-  /* pause half a second to ensure SD asynchronous writing to be finished */
-  delay(500);
-
-
-  /*
-   redLED.quicklyMakeBlinkSeveralTimes(1);
    */
 
   /* frame counter update */
@@ -473,6 +366,8 @@ flightPhase0CameraProcessing()
   motorizedCamera.switchOff();
   groundCamera.switchOff();
   skyCamera.switchOff();
+  horizonCamera.switchOff();
+  delay(SWITCH_MODE_PAUSE_MILLIS);
 }
 
 /**
@@ -484,21 +379,29 @@ flightPhase0to1Transition()
   debugInfo("@T-0-1\r\n", 8);
 
   /* turning camera On, default mode is video */
+  debugInfo("@Cam-All-Off\r\n", 13);
+  motorizedCamera.switchOff();
+  groundCamera.switchOff();
+  skyCamera.switchOff();
+  horizonCamera.switchOff();
+  delay(SWITCH_MODE_PAUSE_MILLIS);
 
   debugInfo("@Cam-All-On\r\n", 13);
   motorizedCamera.switchOn();
   groundCamera.switchOn();
   skyCamera.switchOn();
+  horizonCamera.switchOn();
   delay(SWITCH_ON_PAUSE_MILLIS);
 
   motorizedCameraFragmentAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS);
   groundCameraFragmentAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS + 1);
   skyCameraFragmentAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS + 2);
+  horizonCameraFragmentAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS + 3);
 
-  /* rotor in bottom position */
+  /* rotor in middle position */
 
-  debugInfo("@Rotor-B\r\n", 10);
-  rotor.goBottom();
+  debugInfo("@Rotor-M\r\n", 10);
+  rotor.goMiddle();
 
   /* starting recording */
 
@@ -506,11 +409,8 @@ flightPhase0to1Transition()
   motorizedCamera.toggleAction();
   groundCamera.toggleAction();
   skyCamera.toggleAction();
+  horizonCamera.toggleAction();
   delay(SWITCH_MODE_PAUSE_MILLIS);
-
-  motorizedCameraRecordingStatusCounter.set(CAMERA_RUNNING);
-  groundCameraRecordingStatusCounter.set(CAMERA_RUNNING);
-  skyCameraRecordingStatusCounter.set(CAMERA_RUNNING);
 }
 
 /**
@@ -524,14 +424,19 @@ flightPhase1CameraProcessing()
 {
   if (frameCounter.read() == motorizedCameraFragmentAtFrameCounter.read())
   {
+    debugInfo("@Rotor-M\r\n", 10);
+    rotor.goMiddle();
+
     debugInfo("@Cam-M-VF\r\n", 11);
-
-    debugInfo("@Rotor-B\r\n", 10);
-    rotor.goBottom();
-
+    debugInfo("@Cam-M-Off\r\n", 13);
+    motorizedCamera.switchOff();
+    delay(SWITCH_MODE_PAUSE_MILLIS);
+    debugInfo("@Cam-M-On\r\n", 12);
+    motorizedCamera.switchOn();
+    delay(SWITCH_ON_PAUSE_MILLIS);
+    debugInfo("@Cam-M-A\r\n", 11);
     motorizedCamera.toggleAction();
     delay(SWITCH_MODE_PAUSE_MILLIS);
-    motorizedCamera.toggleAction();
 
     motorizedCameraFragmentAtFrameCounter.increment(VIDEO_FRAGMENTATION_LOOPS);
   }
@@ -539,10 +444,15 @@ flightPhase1CameraProcessing()
   if (frameCounter.read() == groundCameraFragmentAtFrameCounter.read())
   {
     debugInfo("@Cam-G-VF\r\n", 11);
-
+    debugInfo("@Cam-G-Off\r\n", 13);
+    groundCamera.switchOff();
+    delay(SWITCH_MODE_PAUSE_MILLIS);
+    debugInfo("@Cam-G-On\r\n", 12);
+    groundCamera.switchOn();
+    delay(SWITCH_ON_PAUSE_MILLIS);
+    debugInfo("@Cam-G-A\r\n", 11);
     groundCamera.toggleAction();
     delay(SWITCH_MODE_PAUSE_MILLIS);
-    groundCamera.toggleAction();
 
     groundCameraFragmentAtFrameCounter.increment(VIDEO_FRAGMENTATION_LOOPS);
   }
@@ -550,12 +460,33 @@ flightPhase1CameraProcessing()
   if (frameCounter.read() == skyCameraFragmentAtFrameCounter.read())
   {
     debugInfo("@Cam-S-VF\r\n", 11);
-
+    debugInfo("@Cam-S-Off\r\n", 13);
+    skyCamera.switchOff();
+    delay(SWITCH_MODE_PAUSE_MILLIS);
+    debugInfo("@Cam-S-On\r\n", 12);
+    skyCamera.switchOn();
+    delay(SWITCH_ON_PAUSE_MILLIS);
+    debugInfo("@Cam-S-A\r\n", 11);
     skyCamera.toggleAction();
     delay(SWITCH_MODE_PAUSE_MILLIS);
-    skyCamera.toggleAction();
 
     skyCameraFragmentAtFrameCounter.increment(VIDEO_FRAGMENTATION_LOOPS);
+  }
+
+  if (frameCounter.read() == horizonCameraFragmentAtFrameCounter.read())
+  {
+    debugInfo("@Cam-H-VF\r\n", 11);
+    debugInfo("@Cam-H-Off\r\n", 13);
+    horizonCamera.switchOff();
+    delay(SWITCH_MODE_PAUSE_MILLIS);
+    debugInfo("@Cam-H-On\r\n", 12);
+    horizonCamera.switchOn();
+    delay(SWITCH_ON_PAUSE_MILLIS);
+    debugInfo("@Cam-H-A\r\n", 11);
+    horizonCamera.toggleAction();
+    delay(SWITCH_MODE_PAUSE_MILLIS);
+
+    horizonCameraFragmentAtFrameCounter.increment(VIDEO_FRAGMENTATION_LOOPS);
   }
 }
 
@@ -573,11 +504,8 @@ flightPhase1to2Transition()
   motorizedCamera.toggleAction();
   groundCamera.toggleAction();
   skyCamera.toggleAction();
+  horizonCamera.toggleAction();
   delay(SWITCH_MODE_PAUSE_MILLIS);
-
-  motorizedCameraRecordingStatusCounter.set(CAMERA_IDLE);
-  groundCameraRecordingStatusCounter.set(CAMERA_IDLE);
-  skyCameraRecordingStatusCounter.set(CAMERA_IDLE);
 
   /* turning camera off and on again */
 
@@ -585,36 +513,35 @@ flightPhase1to2Transition()
   motorizedCamera.switchOff();
   groundCamera.switchOff();
   skyCamera.switchOff();
+  horizonCamera.switchOff();
   delay(SWITCH_MODE_PAUSE_MILLIS);
 
   debugInfo("@Cam-All-On\r\n", 13);
   motorizedCamera.switchOn();
   groundCamera.switchOn();
   skyCamera.switchOn();
+  horizonCamera.switchOn();
   delay(SWITCH_ON_PAUSE_MILLIS);
 
   debugInfo("@Rotor-M\r\n", 10);
   rotor.goMiddle();
 
+  debugInfo("@Cam-All-SeP\r\n", 14);
+  motorizedCamera.switchToNextMode();
+  groundCamera.switchToNextMode();
+  skyCamera.switchToNextMode();
+  horizonCamera.switchToNextMode();
+  delay(SWITCH_MODE_PAUSE_MILLIS);
+
   debugInfo("@Cam-All-Action\r\n", 17);
   motorizedCamera.toggleAction();
   groundCamera.toggleAction();
   skyCamera.toggleAction();
+  horizonCamera.toggleAction();
   delay(SWITCH_MODE_PAUSE_MILLIS);
 
-  motorizedCameraRecordingStatusCounter.set(CAMERA_RUNNING);
-  groundCameraRecordingStatusCounter.set(CAMERA_RUNNING);
-  skyCameraRecordingStatusCounter.set(CAMERA_RUNNING);
+  horizonCameraFragmentAtFrameCounter.set(frameCounter.read() + (10 * VIDEO_FRAGMENTATION_LOOPS));
 
-  motorizedCameraOffAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS);
-  motorizedCameraOnAtFrameCounter.reset();
-  motorizedCameraRecordAtFrameCounter.reset();
-  groundCameraOffAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS + 1);
-  groundCameraOnAtFrameCounter.reset();
-  groundCameraRecordAtFrameCounter.reset();
-  skyCameraOffAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS + 2);
-  skyCameraOnAtFrameCounter.reset();
-  skyCameraRecordAtFrameCounter.reset();
 }
 
 /**
@@ -626,101 +553,10 @@ flightPhase1to2Transition()
 void
 flightPhase2CameraProcessing()
 {
-  if (frameCounter.read() == motorizedCameraOffAtFrameCounter.read())
+  if (frameCounter.read() == horizonCameraFragmentAtFrameCounter.read())
   {
-    debugInfo("@Cam-M-Stop\r\n", 13);
-    motorizedCamera.toggleAction();
-    delay(SWITCH_MODE_PAUSE_MILLIS);
-
-    debugInfo("@Cam-M-Off\r\n", 12);
-    motorizedCamera.switchOff();
-    motorizedCameraRecordingStatusCounter.set(CAMERA_IDLE);
-    motorizedCameraOnAtFrameCounter.set(frameCounter.read() + (2 * VIDEO_FRAGMENTATION_LOOPS));
-  }
-
-  if (frameCounter.read() == motorizedCameraOnAtFrameCounter.read())
-  {
-    debugInfo("@Cam-M-On\r\n", 11);
-    motorizedCamera.switchOn();
-    /* no use to wait a lot, the camera will power up during next loop */
-    delay(SWITCH_MODE_PAUSE_MILLIS);
-    delay(SWITCH_MODE_PAUSE_MILLIS);
-    motorizedCameraRecordAtFrameCounter.set(frameCounter.read() + 1);
-  }
-
-  if (frameCounter.read() == motorizedCameraRecordAtFrameCounter.read())
-  {
-    debugInfo("@Rotor-M\r\n", 10);
-    rotor.goMiddle();
-
-    debugInfo("@Cam-M-Action\r\n", 15);
-    motorizedCamera.toggleAction();
-    motorizedCameraRecordingStatusCounter.set(CAMERA_RUNNING);
-    motorizedCameraOffAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS);
-  }
-
-  if (frameCounter.read() == groundCameraOffAtFrameCounter.read())
-  {
-    debugInfo("@Cam-G-Stop\r\n", 13);
-    groundCamera.toggleAction();
-    delay(SWITCH_MODE_PAUSE_MILLIS);
-
-    debugInfo("@Cam-G-Off\r\n", 12);
-    groundCamera.switchOff();
-
-    groundCameraRecordingStatusCounter.set(CAMERA_IDLE);
-    groundCameraOnAtFrameCounter.set(frameCounter.read() + (2 * VIDEO_FRAGMENTATION_LOOPS));
-  }
-
-  if (frameCounter.read() == groundCameraOnAtFrameCounter.read())
-  {
-    debugInfo("@Cam-M-On\r\n", 11);
-    groundCamera.switchOn();
-    /* no use to wait a lot, the camera will power up during next loop */
-    delay(SWITCH_MODE_PAUSE_MILLIS);
-    delay(SWITCH_MODE_PAUSE_MILLIS);
-    groundCameraRecordAtFrameCounter.set(frameCounter.read() + 1);
-  }
-
-  if (frameCounter.read() == groundCameraRecordAtFrameCounter.read())
-  {
-    debugInfo("@Cam-G-Action\r\n", 15);
-    groundCamera.toggleAction();
-
-    groundCameraRecordingStatusCounter.set(CAMERA_RUNNING);
-    groundCameraOffAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS);
-  }
-
-  if (frameCounter.read() == skyCameraOffAtFrameCounter.read())
-  {
-    debugInfo("@Cam-S-Stop\r\n", 13);
-    skyCamera.toggleAction();
-    delay(SWITCH_MODE_PAUSE_MILLIS);
-
-    debugInfo("@Cam-G-Off\r\n", 12);
-    skyCamera.switchOff();
-
-    skyCameraRecordingStatusCounter.set(CAMERA_IDLE);
-    skyCameraOnAtFrameCounter.set(frameCounter.read() + (2 * VIDEO_FRAGMENTATION_LOOPS));
-  }
-
-  if (frameCounter.read() == skyCameraOnAtFrameCounter.read())
-  {
-    debugInfo("@Cam-G-On\r\n", 12);
-    skyCamera.switchOn();
-    /* no use to wait a lot, the camera will power up during next loop */
-    delay(SWITCH_MODE_PAUSE_MILLIS);
-    delay(SWITCH_MODE_PAUSE_MILLIS);
-    skyCameraRecordAtFrameCounter.set(frameCounter.read() + 1);
-  }
-
-  if (frameCounter.read() == skyCameraRecordAtFrameCounter.read())
-  {
-    debugInfo("@Cam-S-Action\r\n", 15);
-    skyCamera.toggleAction();
-
-    skyCameraRecordingStatusCounter.set(CAMERA_RUNNING);
-    skyCameraOffAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS);
+    debugInfo("@SeP-F\r\n", 8);
+    flightPhase1to2Transition();
   }
 }
 
@@ -738,11 +574,8 @@ flightPhase2to3Transition()
   motorizedCamera.toggleAction();
   groundCamera.toggleAction();
   skyCamera.toggleAction();
+  horizonCamera.toggleAction();
   delay(SWITCH_MODE_PAUSE_MILLIS);
-
-  motorizedCameraRecordingStatusCounter.set(CAMERA_IDLE);
-  groundCameraRecordingStatusCounter.set(CAMERA_IDLE);
-  skyCameraRecordingStatusCounter.set(CAMERA_IDLE);
 
   /* turning camera off and on again */
 
@@ -750,17 +583,20 @@ flightPhase2to3Transition()
   motorizedCamera.switchOff();
   groundCamera.switchOff();
   skyCamera.switchOff();
+  horizonCamera.switchOff();
   delay(SWITCH_MODE_PAUSE_MILLIS);
 
   debugInfo("@Cam-All-On\r\n", 13);
   motorizedCamera.switchOn();
   groundCamera.switchOn();
   skyCamera.switchOn();
+  horizonCamera.switchOn();
   delay(SWITCH_ON_PAUSE_MILLIS);
 
   motorizedCameraFragmentAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS);
   groundCameraFragmentAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS + 1);
   skyCameraFragmentAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS + 2);
+  horizonCameraFragmentAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS + 2);
 
   debugInfo("@Rotor-T\r\n", 10);
   rotor.goTop();
@@ -769,11 +605,8 @@ flightPhase2to3Transition()
   motorizedCamera.toggleAction();
   groundCamera.toggleAction();
   skyCamera.toggleAction();
+  horizonCamera.toggleAction();
   delay(SWITCH_MODE_PAUSE_MILLIS);
-
-  motorizedCameraRecordingStatusCounter.set(CAMERA_RUNNING);
-  groundCameraRecordingStatusCounter.set(CAMERA_RUNNING);
-  skyCameraRecordingStatusCounter.set(CAMERA_RUNNING);
 }
 
 /**
@@ -787,14 +620,19 @@ flightPhase3CameraProcessing()
 {
   if (frameCounter.read() == motorizedCameraFragmentAtFrameCounter.read())
   {
-    debugInfo("@Cam-M-VF\r\n", 11);
-
     debugInfo("@Rotor-T\r\n", 10);
     rotor.goTop();
 
+    debugInfo("@Cam-M-VF\r\n", 11);
+    debugInfo("@Cam-M-Off\r\n", 13);
+    motorizedCamera.switchOff();
+    delay(SWITCH_MODE_PAUSE_MILLIS);
+    debugInfo("@Cam-M-On\r\n", 12);
+    motorizedCamera.switchOn();
+    delay(SWITCH_ON_PAUSE_MILLIS);
+    debugInfo("@Cam-M-A\r\n", 11);
     motorizedCamera.toggleAction();
     delay(SWITCH_MODE_PAUSE_MILLIS);
-    motorizedCamera.toggleAction();
 
     motorizedCameraFragmentAtFrameCounter.increment(VIDEO_FRAGMENTATION_LOOPS);
   }
@@ -802,10 +640,15 @@ flightPhase3CameraProcessing()
   if (frameCounter.read() == groundCameraFragmentAtFrameCounter.read())
   {
     debugInfo("@Cam-G-VF\r\n", 11);
-
+    debugInfo("@Cam-G-Off\r\n", 13);
+    groundCamera.switchOff();
+    delay(SWITCH_MODE_PAUSE_MILLIS);
+    debugInfo("@Cam-G-On\r\n", 12);
+    groundCamera.switchOn();
+    delay(SWITCH_ON_PAUSE_MILLIS);
+    debugInfo("@Cam-G-A\r\n", 11);
     groundCamera.toggleAction();
     delay(SWITCH_MODE_PAUSE_MILLIS);
-    groundCamera.toggleAction();
 
     groundCameraFragmentAtFrameCounter.increment(VIDEO_FRAGMENTATION_LOOPS);
   }
@@ -813,12 +656,33 @@ flightPhase3CameraProcessing()
   if (frameCounter.read() == skyCameraFragmentAtFrameCounter.read())
   {
     debugInfo("@Cam-S-VF\r\n", 11);
-
+    debugInfo("@Cam-S-Off\r\n", 13);
+    skyCamera.switchOff();
+    delay(SWITCH_MODE_PAUSE_MILLIS);
+    debugInfo("@Cam-S-On\r\n", 12);
+    skyCamera.switchOn();
+    delay(SWITCH_ON_PAUSE_MILLIS);
+    debugInfo("@Cam-S-A\r\n", 11);
     skyCamera.toggleAction();
     delay(SWITCH_MODE_PAUSE_MILLIS);
-    skyCamera.toggleAction();
 
     skyCameraFragmentAtFrameCounter.increment(VIDEO_FRAGMENTATION_LOOPS);
+  }
+
+  if (frameCounter.read() == horizonCameraFragmentAtFrameCounter.read())
+  {
+    debugInfo("@Cam-H-VF\r\n", 11);
+    debugInfo("@Cam-H-Off\r\n", 13);
+    horizonCamera.switchOff();
+    delay(SWITCH_MODE_PAUSE_MILLIS);
+    debugInfo("@Cam-H-On\r\n", 12);
+    horizonCamera.switchOn();
+    delay(SWITCH_ON_PAUSE_MILLIS);
+    debugInfo("@Cam-H-A\r\n", 11);
+    horizonCamera.toggleAction();
+    delay(SWITCH_MODE_PAUSE_MILLIS);
+
+    horizonCameraFragmentAtFrameCounter.increment(VIDEO_FRAGMENTATION_LOOPS);
   }
 }
 
@@ -835,11 +699,8 @@ flightPhase3to4Transition()
   motorizedCamera.toggleAction();
   groundCamera.toggleAction();
   skyCamera.toggleAction();
+  horizonCamera.toggleAction();
   delay(SWITCH_MODE_PAUSE_MILLIS);
-
-  motorizedCameraRecordingStatusCounter.set(CAMERA_IDLE);
-  groundCameraRecordingStatusCounter.set(CAMERA_IDLE);
-  skyCameraRecordingStatusCounter.set(CAMERA_IDLE);
 
   /* turning camera off and on again */
 
@@ -847,30 +708,30 @@ flightPhase3to4Transition()
   motorizedCamera.switchOff();
   groundCamera.switchOff();
   skyCamera.switchOff();
+  horizonCamera.switchOff();
   delay(SWITCH_MODE_PAUSE_MILLIS);
 
   debugInfo("@Cam-All-On\r\n", 13);
   motorizedCamera.switchOn();
   groundCamera.switchOn();
   skyCamera.switchOn();
+  horizonCamera.switchOn();
   delay(SWITCH_ON_PAUSE_MILLIS);
 
   motorizedCameraFragmentAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS);
   groundCameraFragmentAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS + 1);
   skyCameraFragmentAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS + 2);
+  horizonCameraFragmentAtFrameCounter.set(frameCounter.read() + VIDEO_FRAGMENTATION_LOOPS + 3);
 
-  debugInfo("@Rotor-B\r\n", 10);
-  rotor.goBottom();
+  debugInfo("@Rotor-M\r\n", 10);
+  rotor.goMiddle();
 
   debugInfo("@Cam-All-Action\r\n", 17);
   motorizedCamera.toggleAction();
   groundCamera.toggleAction();
   skyCamera.toggleAction();
+  horizonCamera.toggleAction();
   delay(SWITCH_MODE_PAUSE_MILLIS);
-
-  motorizedCameraRecordingStatusCounter.set(CAMERA_RUNNING);
-  groundCameraRecordingStatusCounter.set(CAMERA_RUNNING);
-  skyCameraRecordingStatusCounter.set(CAMERA_RUNNING);
 }
 
 /**
@@ -882,41 +743,8 @@ flightPhase3to4Transition()
 void
 flightPhase4CameraProcessing()
 {
-  if (frameCounter.read() == motorizedCameraFragmentAtFrameCounter.read())
-  {
-    debugInfo("@Cam-M-VF\r\n", 11);
-
-    debugInfo("@Rotor-B\r\n", 10);
-    rotor.goBottom();
-
-    motorizedCamera.toggleAction();
-    delay(SWITCH_MODE_PAUSE_MILLIS);
-    motorizedCamera.toggleAction();
-
-    motorizedCameraFragmentAtFrameCounter.increment(VIDEO_FRAGMENTATION_LOOPS);
-  }
-
-  if (frameCounter.read() == groundCameraFragmentAtFrameCounter.read())
-  {
-    debugInfo("@Cam-G-VF\r\n", 11);
-
-    groundCamera.toggleAction();
-    delay(SWITCH_MODE_PAUSE_MILLIS);
-    groundCamera.toggleAction();
-
-    groundCameraFragmentAtFrameCounter.increment(VIDEO_FRAGMENTATION_LOOPS);
-  }
-
-  if (frameCounter.read() == skyCameraFragmentAtFrameCounter.read())
-  {
-    debugInfo("@Cam-S-VF\r\n", 11);
-
-    skyCamera.toggleAction();
-    delay(SWITCH_MODE_PAUSE_MILLIS);
-    skyCamera.toggleAction();
-
-    skyCameraFragmentAtFrameCounter.increment(VIDEO_FRAGMENTATION_LOOPS);
-  }
+  // same as Phase 1
+  flightPhase1CameraProcessing();
 }
 
 void
@@ -931,10 +759,7 @@ flightPhase4to5Transition()
   motorizedCamera.toggleAction();
   groundCamera.toggleAction();
   skyCamera.toggleAction();
-
-  motorizedCameraRecordingStatusCounter.set(CAMERA_IDLE);
-  groundCameraRecordingStatusCounter.set(CAMERA_IDLE);
-  skyCameraRecordingStatusCounter.set(CAMERA_IDLE);
+  horizonCamera.toggleAction();
 
   /* turning camera off and on again */
 
@@ -942,6 +767,8 @@ flightPhase4to5Transition()
   motorizedCamera.switchOff();
   groundCamera.switchOff();
   skyCamera.switchOff();
+  horizonCamera.switchOff();
+  delay(SWITCH_MODE_PAUSE_MILLIS);
 }
 
 /**
@@ -956,6 +783,8 @@ flightPhase5CameraProcessing()
   motorizedCamera.switchOff();
   groundCamera.switchOff();
   skyCamera.switchOff();
+  horizonCamera.switchOff();
+  delay(SWITCH_MODE_PAUSE_MILLIS);
 }
 
 /**
@@ -1006,9 +835,7 @@ flightPhase1Loop()
   debugInfo("@P1L-C <\r\n", 10);
   delay(FLIGHT_PHASE_1_PAUSE_MILLIS);
   debugInfo("@P1L <\r\n", 8);
-  /* flight phase transition detection */
-  //if (((nmeaGPS.getFix()) && (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER))
-  //    || (currentFlightPhaseDurationCounter.read() > FLIGHT_PHASE_1_MAX_SECONDS_DURATION))
+
   if (nmeaGPS.getFix())
   {
     if (nmeaGPS.getAltitude() > FLIGHT_PHASE_1_TO_2_ALTITUDE_TRIGGER)
@@ -1146,49 +973,42 @@ setup()
 
   debugInfo("@Reset\n\r", 8);
 
-  /*
-   leds.on();
-   delay(1000);
-   leds.off();
-   */
-
   debugInfo("@SD_I...", 8);
   if (!initLogging())
-  {
     debugInfo("KO\r\n", 4);
-    /*
-     orangeLED.showStatus(false);
-     */
-  }
   else
-  {
     debugInfo("OK\r\n", 4);
-    /*
-     orangeLED.showStatus(true);
-     */
-  }
 
-  if (clearAllPersistentData())
-  {
-    debugInfo("@Clear\r\n", 8);
-    /*
-     leds.quicklyMakeBlinkSeveralTimes(10);
-     orangeLED.showStatus(true);
-     */
-  }
-  else
+  if (!clearAllPersistentDataOnRequest())
   {
     debugInfo("@Restart\r\n", 10);
+    resetCounter.increment(1);
   }
-  /*
-   orangeLED.showStatus(LOGGER.logMessage("Reset", true));
-   */
 
   initGpsSerial();
   previousAltitude = 0;
 
   debugInfo("@Cam_I\r\n", 8);
   initCameras();
+
+  debugInfo("@CFP\r\n", 6);
+  switch (currentFlightPhaseCounter.read())
+  {
+    case ASCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE:
+      flightPhase0to1Transition();
+      break;
+    case ASCENDING_BETWEEN_LOWER_AND_UPPER_LIMIT_FLIGHT_PHASE:
+      flightPhase1to2Transition();
+      break;
+    case BEFORE_BURST_FLIGHT_PHASE:
+      flightPhase2to3Transition();
+      break;
+    case DESCENDING_BELOW_LOWER_LIMIT_FLIGHT_PHASE:
+      flightPhase3to4Transition();
+      break;
+    default:
+      break;
+  }
 }
 
 /**
@@ -1197,7 +1017,7 @@ setup()
 void
 loop()
 {
-  unsigned long startOfLoopTimeMillis = millis();
+  startOfLoopTimeMillis = millis();
 
   commonLoop();
 
@@ -1261,7 +1081,7 @@ loop()
       break;
   }
 
-  currentFlightPhaseDurationCounter.increment(((millis() - startOfLoopTimeMillis) * 5) / 2500);
+  currentFlightPhaseDurationCounter.increment((millis() - startOfLoopTimeMillis) / 1000);
 }
 
 /**

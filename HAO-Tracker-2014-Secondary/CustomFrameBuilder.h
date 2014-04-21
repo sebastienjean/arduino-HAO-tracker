@@ -17,18 +17,14 @@
 #ifndef CUSTOM_FRAME_BUILDER_h
 #define CUSTOM_FRAME_BUILDER_h
 
-#include <GPS3D.h>
+#include <Counters.h>
 
-#include "Counters.h"
-#include "DS1302.h"
-#include "AnalogSensor.h"
-#include "AnalogSensors.h"
 
 
 /**
  * Maximum length of custom frame
  */
-#define CUSTOM_FRAME_MAX_LENGTH 200
+#define CUSTOM_FRAME_MAX_LENGTH 300
 
 /**
  * Custom frame field separator character
@@ -63,26 +59,6 @@ private:
    * Pointer to counters
    */
   Counters *counters;
-
-  /**
-   * Pointer to Real Time Clock
-   */
-  DS1302 *rtc;
-
-  /**
-   * Pointer to sensors
-   */
-  AnalogSensors *sensors;
-
-  /**
-   * Pointer to voltage sensor
-   */
-  AnalogChannelAnalogSensor *voltage;
-
-  /**
-   * Pointer to GPS
-   */
-  GPS3D *gps;
 
   /**
    * Internal function used to append start-of-frame char to custom frame
@@ -126,33 +102,6 @@ private:
   void
   appendSystemTime(void);
 
-  /**
-   * Internal function used to append RTC time to custom frame
-   *
-   */
-  void
-  appendRtcTime(void);
-
-  /**
-   * Internal function used to append analog sensor values to custom frame
-   *
-   */
-  void
-  appendAnalogSensorValues(void);
-
-  /**
-   * Internal function used to append voltage value to custom frame
-   *
-   */
-  void
-  appendVoltage(void);
-
-  /**
-   * Internal function used to append positioning data to custom frame
-   *
-   */
-  void
-  appendPositioningData(void);
 
 public:
 
@@ -160,13 +109,8 @@ public:
    * Creates a new frame builder retrieving data from given providers
    *
    * @param counters counter data provider
-   * @param sensors analog sensor data provider
-   * @param voltage voltage data provider
-   * @param rtc timing data provider
-   * @param gps positioning data provider
    */
-  CustomFrameBuilder(Counters *counters, AnalogSensors *sensors,
-      AnalogChannelAnalogSensor *voltage, DS1302 *rtc, GPS3D *gps);
+  CustomFrameBuilder(Counters *counters);
 
   /**
    * Builds custom frame (time, location, sensor data, ...)

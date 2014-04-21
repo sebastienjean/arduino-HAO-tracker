@@ -3,11 +3,13 @@
 	<name>HAO-Tracker-2014-Secondary</name>
 	<comment></comment>
 	<projects>
+		<project>arduino-ds1302</project>
 		<project>ArduinoCore</project>
-		<project>FSK600Bauds900Hz1500HzModulation</project>
+		<project>Counters</project>
+		<project>FlyCamOneEcoV2</project>
 		<project>GPS</project>
 		<project>SD</project>
-		<project>SoftwareSerial</project>
+		<project>Wire</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

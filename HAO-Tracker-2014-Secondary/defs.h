@@ -52,7 +52,7 @@
 /**
  * Log file path
  */
-#define LOG_FILE_PATH "data.txt"
+#define LOG_FILE_PATH "log2014s.txt"
 
 //---------------------------
 // Naming related definitions
@@ -61,7 +61,7 @@
 /**
  * HAO name
  */
-#define HAO_NAME "STRATERRESTRE"
+#define HAO_NAME "FIREFLY26"
 
 //-----------------------------
 // Counters related definitions
@@ -92,45 +92,13 @@
  */
 #define STILLNESS_DURATION_IN_SECONDS_COUNTER_BASE_ADDRESS 0x0008
 
-/**
- * Motorized camera recording status counter base address
- */
-#define MOTORIZED_CAMERA_RECORDING_STATUS_COUNTER_BASE_ADDRESS 0x000A
+#define MOTORIZED_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS 0x000A
 
-/**
- * Ground camera recording status counter base address
- */
-#define GROUND_CAMERA_RECORDING_STATUS_COUNTER_BASE_ADDRESS 0x000C
+#define GROUND_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS 0x000C
 
-/**
- * Sky camera recording status counter base address
- */
-#define SKY_CAMERA_RECORDING_STATUS_COUNTER_BASE_ADDRESS 0x000E
+#define SKY_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS 0x000E
 
-#define MOTORIZED_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS 0x0010
-
-#define MOTORIZED_CAMERA_OFF_AT_FRAME_COUNTER_BASE_ADDRESS 0x0012
-
-#define MOTORIZED_CAMERA_ON_AT_FRAME_COUNTER_BASE_ADDRESS 0x0014
-
-#define MOTORIZED_CAMERA_RECORD_AT_FRAME_COUNTER_BASE_ADDRESS 0x0016
-
-
-#define GROUND_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS 0x0018
-
-#define GROUND_CAMERA_OFF_AT_FRAME_COUNTER_BASE_ADDRESS 0x001A
-
-#define GROUND_CAMERA_ON_AT_FRAME_COUNTER_BASE_ADDRESS 0x001C
-
-#define GROUND_CAMERA_RECORD_AT_FRAME_COUNTER_BASE_ADDRESS 0x001E
-
-#define SKY_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS 0x0020
-
-#define SKY_CAMERA_OFF_AT_FRAME_COUNTER_BASE_ADDRESS 0x0022
-
-#define SKY_CAMERA_ON_AT_FRAME_COUNTER_BASE_ADDRESS 0x0024
-
-#define SKY_CAMERA_RECORD_AT_FRAME_COUNTER_BASE_ADDRESS 0x0026
+#define HORIZON_CAMERA_FRAGMENT_AT_FRAME_COUNTER_BASE_ADDRESS 0x0010
 
 //------------------------------------------
 // Flight phase duration related definitions
@@ -139,32 +107,32 @@
 /**
  * Flight phase number 0 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_0_PAUSE_MILLIS 15000
+#define FLIGHT_PHASE_0_PAUSE_MILLIS 10000
 
 /**
  * Flight phase number 1 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_1_PAUSE_MILLIS 1
+#define FLIGHT_PHASE_1_PAUSE_MILLIS 5000
 
 /**
  * Flight phase number 2 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_2_PAUSE_MILLIS 1
+#define FLIGHT_PHASE_2_PAUSE_MILLIS 5000
 
 /**
  * Flight phase number 3 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_3_PAUSE_MILLIS 1
+#define FLIGHT_PHASE_3_PAUSE_MILLIS 1000
 
 /**
  * Flight phase number 4 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_4_PAUSE_MILLIS 1
+#define FLIGHT_PHASE_4_PAUSE_MILLIS 1000
 
 /**
  * Flight phase number 5 pause duration (in milliseconds)
  */
-#define FLIGHT_PHASE_5_PAUSE_MILLIS 15000
+#define FLIGHT_PHASE_5_PAUSE_MILLIS 30000
 
 //-------------------------------------------
 // Flight phase numbering related definitions
@@ -207,16 +175,15 @@
 #define FLIGHT_PHASE_2_TO_3_ALTITUDE_TRIGGER 20000
 #define FLIGHT_PHASE_3_TO_4_ALTITUDE_TRIGGER 5000
 #define DELTA_ALTITUDE_IN_METERS_CONSIDERED_AS_STILLNESS 150
+
 #define STILLNESS_DURATION_IN_LOOPS_LIMIT 10
 
 
 //-----------------------------------------------------
 // Flight phase duration triggering related definitions
 //-----------------------------------------------------
-#define FLIGHT_PHASE_1_MAX_SECONDS_DURATION 1200 // 20 minutes to takeoff and reach 5km
-#define FLIGHT_PHASE_2_MAX_SECONDS_DURATION 3600 // 60 minutes to fly from 5k to 20k
-// #define FLIGHT_PHASE_3_MAX_SECONDS_DURATION 1200 // 4000 //3600
-// #define FLIGHT_PHASE_4_MAX_SECONDS_DURATION 1200 // 3600 //4000
+#define FLIGHT_PHASE_1_MAX_SECONDS_DURATION 100 // 1200 s = 20 minutes to takeoff and reach 5km
+#define FLIGHT_PHASE_2_MAX_SECONDS_DURATION 200 // 3600s = 60 minutes to fly from 5k to 20k
 
 // ----------------------------------------------------
 // Delay of the number of frame to reset camera's video

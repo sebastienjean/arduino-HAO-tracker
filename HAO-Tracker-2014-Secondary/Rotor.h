@@ -27,17 +27,17 @@
 /**
  * Width, in microseconds, of MIDDLE pulse.
  */
-#define MIDDLE_HIGH_MICROS 1400
+#define MIDDLE_HIGH_MICROS 1500
 
 /**
  * Width, in microseconds, of TOP pulse.
  */
-#define TOP_HIGH_MICROS 500
+#define TOP_HIGH_MICROS 600
 
 /**
  * Width, in microseconds, of BOTTOM pulse.
  */
-#define BOTTOM_HIGH_MICROS 2500
+#define BOTTOM_HIGH_MICROS 2600
 
 /**
  * PWM period, in milliseconds.
