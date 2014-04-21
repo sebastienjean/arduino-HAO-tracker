@@ -44,12 +44,12 @@
 /**
  * Battery voltage sensor analog channel
  */
-#define BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL A2
+#define BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL A3
 
 /**
  * Battery temperature sensor analog channel
  */
-#define BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL A3
+#define BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL A2
 
 /**
  * X-axis acceleration sensor analog channel

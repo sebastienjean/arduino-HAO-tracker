@@ -178,12 +178,6 @@ AnalogSensor uvLuminosityAnalogSensor(&onBoardSecondMCP3428, 2);
 HMC6352HeadingPseudoAnalogSensor headingPseudoAnalogSensor;
 
 /**
- * Voltage analog sensor
- */
-// N.B. this analog sensor is handled separately from the others since kiwi frame does
-BuiltInAnalogSensor voltageAnalogSensor(BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL);
-
-/**
  * Array of analog sensors to be included in custom and (partially) in kiwi frame
  */
 AnalogSensor* sensorsArray[NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME] =
@@ -199,7 +193,8 @@ AnalogSensor* sensorsArray[NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME] =
     &irLuminosityAnalogSensor,
     &uvLuminosityAnalogSensor,
     &batteryTemperatureAnalogSensor,
-    &headingPseudoAnalogSensor };
+    &headingPseudoAnalogSensor,
+    &batteryHalfInputVoltageAnalogSensor};
 
 /**
  * Analog sensors to be included in custom frame
@@ -232,7 +227,7 @@ char customFrame[CUSTOM_FRAME_MAX_LENGTH];
 /**
  * Custom frame builder object
  */
-CustomFrameBuilder customFrameBuilder(&counters, &customFrameAnalogSensors, &voltageAnalogSensor, &rtc, &nmeaGPS);
+CustomFrameBuilder customFrameBuilder(&counters, &customFrameAnalogSensors, &rtc, &nmeaGPS);
 
 // ------------------------------
 // KIWI frame related definitions
@@ -246,7 +241,7 @@ unsigned char kiwiFrame[KIWI_FRAME_LENGTH];
 /**
  * Kiwi frame builder object
  */
-KiwiFrameBuilder kiwiFrameBuilder(&kiwiFrameAnalogSensors, &voltageAnalogSensor, 2.0);
+KiwiFrameBuilder kiwiFrameBuilder(&kiwiFrameAnalogSensors, &batteryHalfInputVoltageAnalogSensor, 2.0);
 
 /**
  * Mario theme player (just because it is so cool to play it)
@@ -392,14 +387,13 @@ loop()
   /* kiwi frame transmission */
   debugInfo("\r\n", 2);
   debugInfo((char *) kiwiFrame, KIWI_FRAME_LENGTH);
+  debugInfo("\r\n", 2);
+  fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
   delay(50);
   fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
-  debugInfo((char *) kiwiFrame, KIWI_FRAME_LENGTH);
   delay(50);
-  debugInfo((char *) kiwiFrame, KIWI_FRAME_LENGTH);
+  fskModulator.modulateBytes((char *) kiwiFrame, KIWI_FRAME_LENGTH);
   delay(50);
-  debugInfo("\r\n", 2);
-
   /* positioning data reading (and debug) */
   if (nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer) == GPS_OK)
   {

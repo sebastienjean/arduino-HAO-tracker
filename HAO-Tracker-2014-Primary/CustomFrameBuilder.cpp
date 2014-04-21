@@ -101,13 +101,6 @@ CustomFrameBuilder::appendAnalogSensorValues()
 }
 
 void
-CustomFrameBuilder::appendVoltageAnalogSensorValue()
-{
-  itoa(this->voltageAnalogSensor->read(), this->whereToAppend, 10);
-  this->whereToAppend += strlen(this->whereToAppend);
-}
-
-void
 CustomFrameBuilder::appendPositioningData()
 {
   // time of fix
@@ -177,13 +170,12 @@ CustomFrameBuilder::appendPositioningData()
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
-CustomFrameBuilder::CustomFrameBuilder(Counters *counters, AnalogSensors *analogSensors, AnalogSensor *voltageAnalogSensor, DS1302 *rtc, GPS3D *gps)
+CustomFrameBuilder::CustomFrameBuilder(Counters *counters, AnalogSensors *analogSensors, DS1302 *rtc, GPS3D *gps)
 {
   this->counters = counters;
   this->rtc = rtc;
   this->analogSensors = analogSensors;
   this->gps = gps;
-  this->voltageAnalogSensor = voltageAnalogSensor;
 }
 
 void
@@ -225,12 +217,6 @@ CustomFrameBuilder::buildCustomFrame(char *customFrame)
 
   // analog sensors
   this->appendAnalogSensorValues();
-
-  // separator
-  this->appendFieldSeparatorChar();
-
-  // voltage
-  this->appendVoltageAnalogSensorValue();
 
   // end of frame
   this->appendEndOfFrameString();

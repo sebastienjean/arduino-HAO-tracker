@@ -20,7 +20,7 @@
 // Frames related definitions
 //---------------------------
 
-#define NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME 13
+#define NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME 14
 
 #define NUMBER_OF_ANALOG_SENSORS_IN_KIWI_FRAME 8
 

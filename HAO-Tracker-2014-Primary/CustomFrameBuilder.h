@@ -24,8 +24,6 @@
 
 #include "Counters.h"
 
-
-
 /**
  * Maximum length of custom frame
  */
@@ -74,11 +72,6 @@ private:
    * Pointer to sensors
    */
   AnalogSensors *analogSensors;
-
-  /**
-   * Pointer to voltage sensor
-   */
-  AnalogSensor *voltageAnalogSensor;
 
   /**
    * Pointer to GPS
@@ -142,13 +135,6 @@ private:
   appendAnalogSensorValues(void);
 
   /**
-   * Internal function used to append voltage value to custom frame
-   *
-   */
-  void
-  appendVoltageAnalogSensorValue(void);
-
-  /**
    * Internal function used to append positioning data to custom frame
    *
    */
@@ -166,8 +152,7 @@ public:
    * @param rtc timing data provider
    * @param gps positioning data provider
    */
-  CustomFrameBuilder(Counters *counters, AnalogSensors *analogSensors,
-     AnalogSensor *voltageAnalogSensor, DS1302 *rtc, GPS3D *gps);
+  CustomFrameBuilder(Counters *counters, AnalogSensors *analogSensors, DS1302 *rtc, GPS3D *gps);
 
   /**
    * Builds custom frame (time, location, sensor data, ...)
