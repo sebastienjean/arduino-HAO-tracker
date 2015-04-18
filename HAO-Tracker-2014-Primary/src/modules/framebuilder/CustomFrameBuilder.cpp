@@ -16,13 +16,13 @@
 #include <Arduino.h>
 #include <stdlib.h>
 
-#include <AnalogSensors.h>
+#include <core/AnalogSensors.h>
 #include <Counters.h>
-#include <GPS3D.h>
+#include <core/GPS3D.h>
 #include <DS1302.h>
 
-#include "defs.h"
-#include "CustomFrameBuilder.h"
+#include <main/defs.h>
+#include <modules/framebuilder/CustomFrameBuilder.h>
 
 
 void

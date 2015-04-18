@@ -17,12 +17,14 @@
 #ifndef CUSTOM_FRAME_BUILDER_h
 #define CUSTOM_FRAME_BUILDER_h
 
-#include <GPS3D.h>
-#include <DS1302.h>
-#include <AnalogSensor.h>
-#include <AnalogSensors.h>
+#include <core/GPS3D.h>
 
-#include "Counters.h"
+#include <DS1302.h>
+
+#include <core/AnalogSensor.h>
+#include <core/AnalogSensors.h>
+
+#include <Counters.h>
 
 /**
  * Maximum length of custom frame

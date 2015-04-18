@@ -15,7 +15,7 @@
  */
 #include <Arduino.h>
 
-#include <MarioThemePlayer.h>
+#include <modules/themeplayer/MarioThemePlayer.h>
 
   const Note* MarioThemePlayer::MARIO_THEME_MELODY[MARIO_THEME_MELODY_LENGTH] =
       {

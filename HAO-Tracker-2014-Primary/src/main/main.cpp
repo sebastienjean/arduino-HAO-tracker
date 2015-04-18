@@ -16,21 +16,21 @@
 #include <Arduino.h>
 
 // Globals includes
-#include "pins.h"
-#include "defs.h"
+#include <pins.h>
+#include <main/defs.h>
 
 // Modules includes
-#include "KiwiFrameBuilder.h"
-#include "CustomFrameBuilder.h"
-#include "MarioThemePlayer.h"
+#include <modules/framebuilder/KiwiFrameBuilder.h>
+#include <modules/framebuilder/CustomFrameBuilder.h>
+#include <modules/themeplayer/MarioThemePlayer.h>
 
 // Libs includes
 #include <SD.h>
-#include <SDFileLogger.h>
+#include <SD/SDFileLogger.h>
 #include <FSK600BaudTA900TB1500Mod.h>
-#include <BuiltInAnalogSensor.h>
-#include <MCP3428AnalogToDigitalConverter.h>
-#include <HMC6352HeadingPseudoAnalogSensor.h>
+#include <core/BuiltInAnalogSensor.h>
+#include <adc/mcp3428/MCP3428AnalogToDigitalConverter.h>
+#include <sensor/HMC6352HeadingPseudoAnalogSensor.h>
 
 // -----------------------
 // GPS related definitions

@@ -15,7 +15,7 @@
  */
 #include <Arduino.h>
 
-#include "KiwiFrameBuilder.h"
+#include <modules/framebuilder/KiwiFrameBuilder.h>
 
 void
 KiwiFrameBuilder::setKiwiFrameChannelField(uint8_t fieldNumber, uint16_t value, uint8_t adcResolution)
