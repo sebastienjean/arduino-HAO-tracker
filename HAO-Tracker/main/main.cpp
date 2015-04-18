@@ -16,31 +16,31 @@
 #include <Arduino.h>
 
 // Globals includes
-#include "pins.h"
-#include "defs.h"
+#include <pins.h>
+#include <defs.h>
 
 // Libs includes
 #include <SD.h>
 #include <FSK600BaudTA900TB1500Mod.h>
 #include <DS1302.h>
-#include <GPS.h>
-#include <GPS3D.h>
+#include <core/GPS.h>
+#include <core/GPS3D.h>
 #include <FCOEV2.h>
 #include <Rotor.h>
 
 // Modules includes
-#include "AnalogSensor.h"
-#include "AnalogSensors.h"
+#include <AnalogSensor.h>
+#include <AnalogSensors.h>
 /*
  #include "Led.h"
  #include "Leds.h"
  */
-#include "Counter.h"
-#include "Counters.h"
-#include "KiwiFrameBuilder.h"
-#include "CustomFrameBuilder.h"
-#include "Logger.h"
-#include "Tone.h"
+#include <Counter.h>
+#include <Counters.h>
+#include <KiwiFrameBuilder.h>
+#include <CustomFrameBuilder.h>
+#include <Logger.h>
+#include <Tone.h>
 
 // -----------------------
 // GPS related definitions
