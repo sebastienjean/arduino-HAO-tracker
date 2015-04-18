@@ -8,8 +8,6 @@
 		<project>Counters</project>
 		<project>FlyCamOneEcoV2</project>
 		<project>GPS</project>
-		<project>SD</project>
-		<project>Wire</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

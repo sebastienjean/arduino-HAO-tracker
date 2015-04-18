@@ -18,8 +18,9 @@
 
 #include <Counters.h>
 
-#include "defs.h"
-#include "CustomFrameBuilder.h"
+#include <main/defs.h>
+
+#include <modules/framebuilder/CustomFrameBuilder.h>
 
 CustomFrameBuilder::CustomFrameBuilder(Counters *counters)
 {

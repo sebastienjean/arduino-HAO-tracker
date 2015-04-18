@@ -14,7 +14,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Arduino.h>
-#include <rotor.h>
+
+#include <modules/rotor/rotor.h>
 
 Rotor::Rotor(uint8_t pwmPin)
 {

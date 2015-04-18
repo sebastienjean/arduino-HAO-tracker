@@ -15,23 +15,26 @@
  */
 #include <Arduino.h>
 // MAIN SECONDARY ==> COMMENT ADDED TO BUILD MAIN
+
 // Globals includes
-#include "pins.h"
-#include "defs.h"
+#include <pins.h>
+#include <main/defs.h>
 
 // Libs includes
 #include <SD.h>
-//#include <DS1302.h>
-#include <GPS.h>
-#include <GPS3D.h>
-#include <FCOEV2.h>
-#include <Rotor.h>
+
 #include <Counter.h>
 #include <Counters.h>
-#include <Logger.h>
-#include <SDFileLogger.h>
+#include <core/Logger.h>
+#include <SD/SDFileLogger.h>
 
-#include "CustomFrameBuilder.h"
+#include <core/GPS.h>
+#include <core/GPS3D.h>
+#include <FCOEV2.h>
+
+// Modules include
+#include <modules/rotor/Rotor.h>
+#include <modules/framebuilder/CustomFrameBuilder.h>
 
 // -----------------------
 // GPS related definitions
