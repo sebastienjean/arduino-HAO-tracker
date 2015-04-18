@@ -147,7 +147,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/src/core/GPS2D.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/src/core/GPS3D.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/src/core/IGps3d.o}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FlyCamOneEcoV2/Mega2560/src/FCOEV2.o}&quot;"/>
 								</option>
 								<inputType id="de.innot.avreclipse.tool.cpplinker.input.158647553" name="OBJ Files" superClass="de.innot.avreclipse.tool.cpplinker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
