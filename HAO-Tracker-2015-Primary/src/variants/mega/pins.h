@@ -22,11 +22,6 @@
 #define USER_SWITCH_PIN 5
 
 /**
- * Switch used to notify that taking-off is close
- */
-#define TAKE_OFF_SWITCH_PIN 12
-
-/**
  * output pin for FSK modulated signal
  */
 #define FSK_MODULATOR_TX_PIN 6
@@ -42,14 +37,14 @@
 #define DIFFERENTIAL_PRESSURE_ANALOG_SENSOR_CHANNEL A1
 
 /**
- * Battery voltage sensor analog channel
- */
-#define BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL A3
-
-/**
  * Battery temperature sensor analog channel
  */
 #define BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL A2
+
+/**
+ * Battery voltage sensor analog channel
+ */
+#define BATTERY_VOLTAGE_ANALOG_SENSOR_CHANNEL A3
 
 /**
  * X-axis acceleration sensor analog channel
@@ -87,9 +82,9 @@
 #define RTC_SCLK_PIN 10
 
 /**
- * White LED pin
+ * Red LED pin
  */
-#define LED_WHITE 11
+#define RED_LED_PIN 11
 
 /**
  * Green LED pin
