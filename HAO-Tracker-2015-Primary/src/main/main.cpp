@@ -168,11 +168,6 @@ AnalogSensor visibleLuminosityAnalogSensor(&onBoardSecondMCP3428, 0);
 AnalogSensor irLuminosityAnalogSensor(&onBoardSecondMCP3428, 1);
 
 /**
- * UV luminosity sensor
- */
-AnalogSensor uvLuminosityAnalogSensor(&onBoardSecondMCP3428, 2);
-
-/**
  * Compass heading pseudo analog sensor
  */
 HMC6352HeadingPseudoAnalogSensor headingPseudoAnalogSensor;
@@ -191,7 +186,6 @@ AnalogSensor* sensorsArray[NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME] =
     &accelerationZAnalogSensor,
     &visibleLuminosityAnalogSensor,
     &irLuminosityAnalogSensor,
-    &uvLuminosityAnalogSensor,
     &batteryTemperatureAnalogSensor,
     &headingPseudoAnalogSensor,
     &batteryHalfInputVoltageAnalogSensor };

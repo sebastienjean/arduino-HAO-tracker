@@ -23,7 +23,7 @@
 <yAccelerationAnalogSensor>,			"\\d{1,4}"
 <zAccelerationAnalogSensor>,			"\\d{1,4}"
 <visibleLuminosityAnalogSensor>,		"\\d{1,5}"
-<uvLuminosityAnalogSensor>,				"\\d{1,5}"
+<irLuminosityAnalogSensor>,				"\\d{1,5}"
 <batteryTemperatureAnalogSensor>,		"\\d{1,4}"
 <headingPseudoAnalogSensor>,			"\\d{1,4}"
 <batteryVoltageAnalogSensor>			"\\d{1,4}"
