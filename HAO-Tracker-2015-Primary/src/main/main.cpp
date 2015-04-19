@@ -241,42 +241,18 @@ MarioThemePlayer marioThemePlayer(FSK_MODULATOR_TX_PIN);
 
 /**
  * Internal function used to send debug info both on debug serial and radio.
- * @param message a NUL-terminated string, supposed to include line-termination chars if needed.
- * @param string length (included line-termination chars)
+ * @param message a NUL-terminated string, supposed to include line-termination chars)
  */
 void
-debugInfo(char *message, int chars)
+debugInfo(char *message)
 {
-  SERIAL_DEBUG.write((unsigned char *) message, chars);
-  fskModulator.modulateBytes(message, chars);
+  SERIAL_DEBUG.print(message);
+  fskModulator.modulateBytes(message, strlen(message));
 }
 
 /**
  * Internal function used to to initialize SD.
  */
-void
-initSD()
-{
-  pinMode(SD_CARD_CHIP_SELECT_PIN, OUTPUT);
-
-  debugInfo("@SD_", 4);
-
-  if (!SD.begin(SD_CARD_CHIP_SELECT_PIN))
-  {
-    debugInfo("KO\r\n", 4);
-  }
-  else
-  {
-    debugInfo("OK\r\n", 4);
-  }
-
-  if (!clearAllPersistentDataOnRequest())
-  {
-    debugInfo("@Restart\r\n", 10);
-    resetCounter.increment(1);
-  }
-}
-
 /**
  * Internal function used to initialize serial debug.
  */
@@ -284,7 +260,7 @@ void
 initDebugSerial()
 {
   SERIAL_DEBUG.begin(SERIAL_DEBUG_BAUDRATE);
-  debugInfo("@Reset\n\r", 8);
+  debugInfo("@Reset\n\r");
 }
 
 /**
@@ -318,13 +294,13 @@ clearAllPersistentDataOnRequest()
 
   if (digitalRead(USER_SWITCH_PIN) == LOW)
   {
-    debugInfo("@Clear\r\n", 8);
+    debugInfo("@Clear\r\n");
     // reset all counters
     counters.reset();
 
     if (sdFileLogger.clear())
     {
-      debugInfo("@SD Cleared\r\n", 13);
+      debugInfo("@SD Cleared\r\n");
     }
     return true;
   }
@@ -334,6 +310,29 @@ clearAllPersistentDataOnRequest()
 /**
  * LEDs initialization
  */
+void
+initSD()
+{
+  pinMode(SD_CARD_CHIP_SELECT_PIN, OUTPUT);
+
+  debugInfo("@SD_");
+
+  if (!SD.begin(SD_CARD_CHIP_SELECT_PIN))
+  {
+    debugInfo("KO\r\n");
+  }
+  else
+  {
+    debugInfo("OK\r\n");
+  }
+
+  if (!clearAllPersistentDataOnRequest())
+  {
+    debugInfo("@Restart\r\n");
+    resetCounter.increment(1);
+  }
+}
+
 void
 initLeds()
 {
