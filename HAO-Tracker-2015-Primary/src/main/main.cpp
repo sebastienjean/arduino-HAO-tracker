@@ -254,7 +254,7 @@ void
 initDebugSerial()
 {
   SERIAL_DEBUG.begin(SERIAL_DEBUG_BAUDRATE);
-  debugInfo("@Reset\n\r");
+  debugInfo("@Reset\r\n");
 }
 
 /**
