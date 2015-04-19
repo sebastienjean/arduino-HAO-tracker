@@ -24,7 +24,6 @@
 #include <main/defs.h>
 #include <modules/framebuilder/CustomFrameBuilder.h>
 
-
 void
 CustomFrameBuilder::appendStartOfFrameChar()
 {
@@ -79,7 +78,11 @@ CustomFrameBuilder::appendSystemTime()
 void
 CustomFrameBuilder::appendRtcTime()
 {
-  this->rtc->getTimeBrief(this->whereToAppend);
+  Time time = this->rtc->time();
+
+  // Format the time and date and insert into the temporary buffer.
+  sprintf(this->whereToAppend, "%02d%02d%02d", time.hr, time.min, time.sec);
+
   this->whereToAppend += strlen(this->whereToAppend);
 }
 

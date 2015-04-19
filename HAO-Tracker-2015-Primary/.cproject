@@ -127,7 +127,6 @@
 							<tool command="avr-gcc" commandLinePattern="${COMMAND} -s -Os -Wl,--gc-sections ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS} -lm ${FLAGS}" errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="de.innot.avreclipse.tool.cpplinker.app.release.1526160938" name="AVR C++ Linker" superClass="de.innot.avreclipse.tool.cpplinker.app.release">
 								<option id="de.innot.avreclipse.cpplinker.option.libs.885956593" name="Libraries (-l)" superClass="de.innot.avreclipse.cpplinker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="Leds"/>
-									<listOptionValue builtIn="false" value="ds1302"/>
 									<listOptionValue builtIn="false" value="AnalogSensors"/>
 									<listOptionValue builtIn="false" value="Logger"/>
 									<listOptionValue builtIn="false" value="Counters"/>
@@ -145,6 +144,7 @@
 								</option>
 								<option id="de.innot.avreclipse.cpplinker.option.otherobjs.272862930" name="Other Objects (*.o)" superClass="de.innot.avreclipse.cpplinker.option.otherobjs" valueType="userObjs">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FSK600Bauds900Hz1500HzModulation/Mega2560/src/FSK600BaudTA900TB1500Mod.o}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduino-ds1302/Mega2560/DS1302.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/src/core/GPS.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/src/core/GPS2D.o}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GPS/Mega2560/src/core/GPS3D.o}&quot;"/>
