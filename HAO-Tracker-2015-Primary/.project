@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>HAO-Tracker-2015-Primary</name>
+	<name>HAO-Tracker-2015</name>
 	<comment></comment>
 	<projects>
 		<project>AnalogSensors</project>
