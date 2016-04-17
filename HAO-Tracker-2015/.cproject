@@ -39,15 +39,15 @@
 	</storageModule>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Uno">
-			<resource resourceType="PROJECT" workspacePath="/HAO-Tracker"/>
+			<resource resourceType="PROJECT" workspacePath="/HAO-Tracker-2015"/>
 		</configuration>
 		<configuration configurationName="Nano328P">
 			<resource resourceType="PROJECT" workspacePath="/ArduinoCore"/>
-			<resource resourceType="PROJECT" workspacePath="/HAO-Tracker"/>
+			<resource resourceType="PROJECT" workspacePath="/HAO-Tracker-2015"/>
 		</configuration>
 		<configuration configurationName="Mega2560">
 			<resource resourceType="PROJECT" workspacePath="/ArduinoCore"/>
-			<resource resourceType="PROJECT" workspacePath="/HAO-Tracker"/>
+			<resource resourceType="PROJECT" workspacePath="/HAO-Tracker-2015"/>
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
@@ -73,7 +73,7 @@
 		</buildTargets>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="HAO-Tracker.null.76537083" name="HAO-Tracker"/>
+		<project id="HAO-Tracker-2015.null.76537083" name="HAO-Tracker-2015"/>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
