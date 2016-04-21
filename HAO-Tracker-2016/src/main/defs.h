@@ -20,7 +20,7 @@
 // Frames related definitions
 //---------------------------
 
-#define NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME 13
+#define NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME 9
 
 #define NUMBER_OF_COUNTERS_IN_CUSTOM_FRAME 2
 
@@ -60,7 +60,7 @@
 /**
  * Log file path
  */
-#define LOG_FILE_PATH "2015data.txt"
+#define LOG_FILE_PATH "2016data.txt"
 
 /**
  * Log post-write delay in milliseconds
@@ -75,7 +75,7 @@
 /**
  * HAO name
  */
-#define HAO_NAME "CHARLIE26"
+#define HAO_NAME "2016_HAO"
 
 //-----------------------------
 // Counters related definitions
@@ -109,7 +109,7 @@
 /**
  * State of configurable address bit 1 of onboard second MCP3428
  */
-#define MCP3428_1_ADDRESS_BIT1 HIGH
+#define MCP3428_1_ADDRESS_BIT1 LOW
 
 #endif
 

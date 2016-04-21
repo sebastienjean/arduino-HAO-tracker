@@ -78,12 +78,11 @@ CustomFrameBuilder::appendSystemTime()
 void
 CustomFrameBuilder::appendRtcTime()
 {
-  Time time = this->rtc->time();
 
-  // Format the time and date and insert into the temporary buffer.
-  sprintf(this->whereToAppend, "%02d%02d%02d", time.hr, time.min, time.sec);
+  // Format the time and date and insert into the temporary buffer
 
-  this->whereToAppend += strlen(this->whereToAppend);
+ sprintf(this->whereToAppend, rtc->getTimeStr());
+ this->whereToAppend += strlen(this->whereToAppend);
 }
 
 void

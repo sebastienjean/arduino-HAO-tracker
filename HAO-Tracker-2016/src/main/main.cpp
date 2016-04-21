@@ -30,7 +30,6 @@
 #include <FSK600BaudTA900TB1500Mod.h>
 #include <core/BuiltInAnalogSensor.h>
 #include <adc/mcp3428/MCP3428AnalogToDigitalConverter.h>
-#include <sensor/HMC6352HeadingPseudoAnalogSensor.h>
 
 // -----------------------
 // GPS related definitions
@@ -118,21 +117,6 @@ BuiltInAnalogSensor batteryHalfInputVoltageAnalogSensor(BATTERY_VOLTAGE_ANALOG_S
 BuiltInAnalogSensor batteryTemperatureAnalogSensor(BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL);
 
 /**
- * X-Axis acceleration analog sensor
- */
-BuiltInAnalogSensor accelerationXAnalogSensor(ACCELERATION_X_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Y-Axis acceleration analog sensor
- */
-BuiltInAnalogSensor accelerationYAnalogSensor(ACCELERATION_Y_ANALOG_SENSOR_CHANNEL);
-
-/**
- * Z-Axis acceleration analog sensor
- */
-BuiltInAnalogSensor accelerationZAnalogSensor(ACCELERATION_Z_ANALOG_SENSOR_CHANNEL);
-
-/**
  * On board first MCP3428 I2C ADC
  */
 MCP3428AnalogToDigitalConverter onBoardFirstMCP3428(MCP3428_0_ADDRESS_BIT0, MCP3428_0_ADDRESS_BIT1);
@@ -168,11 +152,6 @@ AnalogSensor visibleLuminosityAnalogSensor(&onBoardSecondMCP3428, 0);
 AnalogSensor irLuminosityAnalogSensor(&onBoardSecondMCP3428, 1);
 
 /**
- * Compass heading pseudo analog sensor
- */
-HMC6352HeadingPseudoAnalogSensor headingPseudoAnalogSensor;
-
-/**
  * Array of analog sensors to be included in custom frame
  */
 AnalogSensor* sensorsArray[NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME] =
@@ -181,13 +160,9 @@ AnalogSensor* sensorsArray[NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME] =
     &middleTemperatureAnalogSensor,
     &externalHumidityAnalogSensor,
     &differentialPressureAnalogSensor,
-    &accelerationXAnalogSensor,
-    &accelerationYAnalogSensor,
-    &accelerationZAnalogSensor,
     &visibleLuminosityAnalogSensor,
     &irLuminosityAnalogSensor,
     &batteryTemperatureAnalogSensor,
-    &headingPseudoAnalogSensor,
     &batteryHalfInputVoltageAnalogSensor };
 
 /**
@@ -341,12 +316,15 @@ initLeds()
 void
 setup()
 {
-  initLeds();
   initDebugSerial();
+  rtc.writeProtect(false);
+  rtc.halt(false);
+  initLeds();
   initUserSwitch();
   marioThemePlayer.playMarioTheme();
   initSD();
   initGpsSerial();
+
 }
 
 /**
@@ -424,6 +402,7 @@ loop()
 
   processEndOfLoop();
 }
+
 
 /**
  * Application's main (what else to say?)

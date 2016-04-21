@@ -1,4 +1,4 @@
-#CHARLIE26,3391,0,733,458585,000000,V,0.000,0.000,0.0,0.0,0.0,0,0.0,284,0,0,0,302,282,341,313,0,0,289,2964,294
+#HAO_2016,3391,0,733,458585,000000,V,0.000,0.000,0.0,0.0,0.0,0,0.0,284,0,0,0,302,282,341,313,0,0,289,2964,294
 
 #<objectName>,							null, 
 <frameCounter>,							"\\d{1,5}"
@@ -19,11 +19,7 @@
 <middleTemperatureAnalogSensor>,		"\\d{1,5}"
 <externalHumidityAnalogSensor>,			"\\d{1,5}"
 <differentialPressureAnalogSensor>,		"\\d{1,4}"
-<xAccelerationAnalogSensor>,   			"\\d{1,4}"
-<yAccelerationAnalogSensor>,			"\\d{1,4}"
-<zAccelerationAnalogSensor>,			"\\d{1,4}"
 <visibleLuminosityAnalogSensor>,		"\\d{1,5}"
 <irLuminosityAnalogSensor>,				"\\d{1,5}"
 <batteryTemperatureAnalogSensor>,		"\\d{1,4}"
-<headingPseudoAnalogSensor>,			"\\d{1,4}"
 <batteryVoltageAnalogSensor>			"\\d{1,4}"
