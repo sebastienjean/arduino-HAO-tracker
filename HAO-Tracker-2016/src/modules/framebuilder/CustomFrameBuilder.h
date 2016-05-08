@@ -76,9 +76,9 @@ private:
   AnalogSensors *analogSensors;
 
   /**
-   * Pointer to GPS
+   * Pointer to GPS devices
    */
-  GPS3D *gps;
+  GPS3D **gpsArray;
 
   /**
    * Internal function used to append start-of-frame char to custom frame
@@ -154,7 +154,7 @@ public:
    * @param rtc timing data provider
    * @param gps positioning data provider
    */
-  CustomFrameBuilder(Counters *counters, AnalogSensors *analogSensors, DS1302 *rtc, GPS3D *gps);
+  CustomFrameBuilder(Counters *counters, AnalogSensors *analogSensors, DS1302 *rtc, GPS3D ** gpsArray);
 
   /**
    * Builds custom frame (time, location, sensor data, ...)

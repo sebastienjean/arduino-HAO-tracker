@@ -30,22 +30,25 @@
 #include <FSK600BaudTA900TB1500Mod.h>
 #include <core/BuiltInAnalogSensor.h>
 #include <adc/mcp3428/MCP3428AnalogToDigitalConverter.h>
+#include <sensor/SR04DistancePseudoAnalogSensor.h>
 
-// -----------------------
-// GPS related definitions
-// -----------------------
-
-/**
- * Serial port used for GPS
- */
-#define serialNmeaGPSPort Serial1
 
 SDFileLogger sdFileLogger(&SD, LOG_FILE_PATH, LOG_POST_WRITE_DELAY_MILLIS);
 
 /**
+ * GPS3D object for GPS1, whose raw NMEA sentences will be forwarded on debug serial
+ */
+GPS3D nmeaGPS1(&serialNmeaGPS1Port, &SERIAL_DEBUG);
+
+/**
+ * GPS3D object for GPS2, whose raw NMEA sentences will be forwarded on debug serial
+ */
+GPS3D nmeaGPS2(&serialNmeaGPS2Port, &SERIAL_DEBUG);
+
+/**
  * GPS3D object, whose raw NMEA sentences will be forwarded on debug serial
  */
-GPS3D nmeaGPS(&serialNmeaGPSPort, &SERIAL_DEBUG);
+GPS3D nmeaGPS3(&serialNmeaGPS3Port, &SERIAL_DEBUG);
 
 /**
  * External buffer used for NMEA RMC sentence parsing and storage
@@ -56,6 +59,13 @@ char nmeaRmcSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
  * External buffer used for NMEA GGA sentence parsing and storage
  */
 char nmeaGgaSentenceBuffer[MAX_NMEA_SENTENCE_LENGTH];
+
+
+/**
+ * Array of gps
+ */
+GPS3D* gpsArray[SERIAL_NMEA_GPS_AMOUNT] =
+  { &nmeaGPS1, &nmeaGPS2, &nmeaGPS3};
 
 // ---------------------------------
 // FSK modulator related definitions
@@ -85,7 +95,7 @@ Counter resetCounter(RESET_COUNTER_BASE_ADDRESS);
  */
 Counter* countersArray[NUMBER_OF_COUNTERS_IN_CUSTOM_FRAME] =
   { &frameCounter,
-    &resetCounter, };
+    &resetCounter };
 
 /**
  * Counters to be included in custom frame
@@ -152,6 +162,11 @@ AnalogSensor visibleLuminosityAnalogSensor(&onBoardSecondMCP3428, 0);
 AnalogSensor irLuminosityAnalogSensor(&onBoardSecondMCP3428, 1);
 
 /**
+ * Distance sensor
+ */
+SR04DistancePseudoAnalogSensor distancePseudoAnalogSensor(SR04_TRIG_PIN, SR04_ECHO_PIN);
+
+/**
  * Array of analog sensors to be included in custom frame
  */
 AnalogSensor* sensorsArray[NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME] =
@@ -163,7 +178,8 @@ AnalogSensor* sensorsArray[NUMBER_OF_ANALOG_SENSORS_IN_CUSTOM_FRAME] =
     &visibleLuminosityAnalogSensor,
     &irLuminosityAnalogSensor,
     &batteryTemperatureAnalogSensor,
-    &batteryHalfInputVoltageAnalogSensor };
+    &batteryHalfInputVoltageAnalogSensor,
+    &distancePseudoAnalogSensor};
 
 /**
  * Analog sensors to be included in custom frame
@@ -201,7 +217,7 @@ char customFrame[CUSTOM_FRAME_MAX_LENGTH];
 /**
  * Custom frame builder object
  */
-CustomFrameBuilder customFrameBuilder(&counters, &customFrameAnalogSensors, &rtc, &nmeaGPS);
+CustomFrameBuilder customFrameBuilder(&counters, &customFrameAnalogSensors, &rtc, (GPS3D **) &gpsArray);
 
 /**
  * Mario theme player (just because it is so cool to play it)
@@ -233,12 +249,14 @@ initDebugSerial()
 }
 
 /**
- * Internal function used to initialize GPS serial port.
+ * Internal function used to initialize GPS serial port(s).
  */
 void
 initGpsSerial()
 {
-  serialNmeaGPSPort.begin(SERIAL_NMEA_GPS_BAUDRATE);
+  serialNmeaGPS1Port.begin(SERIAL_NMEA_GPS1_BAUDRATE);
+  serialNmeaGPS2Port.begin(SERIAL_NMEA_GPS2_BAUDRATE);
+  serialNmeaGPS3Port.begin(SERIAL_NMEA_GPS3_BAUDRATE);
 }
 
 /**
@@ -334,24 +352,28 @@ setup()
 void
 processGpsData()
 {
-  /* positioning data reading (and debug) */
-  if (nmeaGPS.readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer) == GPS_OK)
+  for (uint8_t index=0; index<SERIAL_NMEA_GPS_AMOUNT; index++)
   {
-    sdFileLogger.logMessage(nmeaRmcSentenceBuffer, false);
-    sdFileLogger.logMessage(nmeaGgaSentenceBuffer, false);
-    
-    /* NMEA sentences transmission */
-    fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
-    fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaGgaSentenceBuffer));
-  }
-  else
-  {
-    SERIAL_DEBUG.print("$GP_KO\r\n");
-    fskModulator.modulateBytes("$GP_KO\r\n", 8);
+    /* positioning data reading (and debug) */
+    if (gpsArray[index]->readPositioningData(nmeaRmcSentenceBuffer, nmeaGgaSentenceBuffer) == GPS_OK)
+    {
+      sdFileLogger.logMessage(nmeaRmcSentenceBuffer, false);
+      sdFileLogger.logMessage(nmeaGgaSentenceBuffer, false);
+
+      /* NMEA sentences transmission */
+      fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
+      fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaGgaSentenceBuffer));
+    }
+    else
+    {
+      SERIAL_DEBUG.print("$GP_KO\r\n");
+      fskModulator.modulateBytes("$GP_KO\r\n", 8);
+    }
   }
 }
+
 /**
- *  Ccustom frame building, logging (SD/debug) and transmission
+ *  Custom frame building, logging (SD/debug) and transmission
  */
 void
 processCustomFrame()
@@ -396,10 +418,8 @@ void
 loop()
 {
   processStartOfLoop();
-
   processGpsData();
   processCustomFrame();
-
   processEndOfLoop();
 }
 

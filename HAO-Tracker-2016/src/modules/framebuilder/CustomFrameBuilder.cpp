@@ -105,15 +105,32 @@ CustomFrameBuilder::appendAnalogSensorValues()
 void
 CustomFrameBuilder::appendPositioningData()
 {
+  int mostReliableGpsNumber = 0;
+  int numberOfSats = 0;
+
+  for (int index=0; index< SERIAL_NMEA_GPS_AMOUNT; index++)
+  {
+    if (this->gpsArray[index]->getFix())
+      if (this->gpsArray[index]->getSatellitesInUse() > numberOfSats)
+        mostReliableGpsNumber = index;
+  }
+
+  // GPS used
+  itoa(mostReliableGpsNumber, this->whereToAppend, 10);
+  this->whereToAppend += strlen(this->whereToAppend);
+
+  // separator
+  this->appendFieldSeparatorChar();
+
   // time of fix
-  strncpy(this->whereToAppend, this->gps->getTimeOfFix(), 6);
+  strncpy(this->whereToAppend, this->gpsArray[mostReliableGpsNumber]->getTimeOfFix(), 6);
   this->whereToAppend += 6;
 
   // separator
   this->appendFieldSeparatorChar();
 
   // fix
-  if (this->gps->getFix())
+  if (this->gpsArray[mostReliableGpsNumber]->getFix())
   {
     this->whereToAppend++[0] = 'A';
   }
@@ -126,58 +143,58 @@ CustomFrameBuilder::appendPositioningData()
   this->appendFieldSeparatorChar();
 
   // longitude
-  dtostrf(this->gps->getLongitude(), 2, 3, this->whereToAppend);
+  dtostrf(this->gpsArray[mostReliableGpsNumber]->getLongitude(), 2, 3, this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 
   // separator
   this->appendFieldSeparatorChar();
 
   // latitude
-  dtostrf(this->gps->getLatitude(), 2, 3, this->whereToAppend);
+  dtostrf(this->gpsArray[mostReliableGpsNumber]->getLatitude(), 2, 3, this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 
   // separator
   this->appendFieldSeparatorChar();
 
   // altitude
-  dtostrf(this->gps->getAltitude(), 2, 1, this->whereToAppend);
+  dtostrf(this->gpsArray[mostReliableGpsNumber]->getAltitude(), 2, 1, this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 
   // separator
   this->appendFieldSeparatorChar();
 
   // speed
-  dtostrf(this->gps->getSpeedOverGround(), 2, 1, this->whereToAppend);
+  dtostrf(this->gpsArray[mostReliableGpsNumber]->getSpeedOverGround(), 2, 1, this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 
   // separator
   this->appendFieldSeparatorChar();
 
   // course
-  dtostrf(this->gps->getCourseOverGround(), 2, 1, this->whereToAppend);
+  dtostrf(this->gpsArray[mostReliableGpsNumber]->getCourseOverGround(), 2, 1, this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 
   // separator
   this->appendFieldSeparatorChar();
 
   // satellites in use
-  itoa(this->gps->getSatellitesInUse(), this->whereToAppend, 10);
+  itoa(this->gpsArray[mostReliableGpsNumber]->getSatellitesInUse(), this->whereToAppend, 10);
   this->whereToAppend += strlen(this->whereToAppend);
 
   // separator
   this->appendFieldSeparatorChar();
 
   // HDOP
-  dtostrf(this->gps->getHDOP(), 2, 1, this->whereToAppend);
+  dtostrf(this->gpsArray[mostReliableGpsNumber]->getHDOP(), 2, 1, this->whereToAppend);
   this->whereToAppend += strlen(this->whereToAppend);
 }
 
-CustomFrameBuilder::CustomFrameBuilder(Counters *counters, AnalogSensors *analogSensors, DS1302 *rtc, GPS3D *gps)
+CustomFrameBuilder::CustomFrameBuilder(Counters *counters, AnalogSensors *analogSensors, DS1302 *rtc, GPS3D **gpsArray)
 {
   this->counters = counters;
   this->rtc = rtc;
   this->analogSensors = analogSensors;
-  this->gps = gps;
+  this->gpsArray = gpsArray;
 }
 
 void
