@@ -44,22 +44,7 @@
 /**
  * Battery temperature sensor analog channel
  */
-#define BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL A3
-
-/**
- * X-axis acceleration sensor analog channel
- */
-#define ACCELERATION_X_ANALOG_SENSOR_CHANNEL A4
-
-/**
- * Y-axis acceleration sensor analog channel
- */
-#define ACCELERATION_Y_ANALOG_SENSOR_CHANNEL A5
-
-/**
- * Z-axis acceleration sensor analog channel
- */
-#define ACCELERATION_Z_ANALOG_SENSOR_CHANNEL A6
+#define BATTERY_TEMPERATURE_ANALOG_SENSOR_CHANNEL A7
 
 /**
  * SD card chip-select pin
@@ -90,5 +75,15 @@
  * Green LED pin
  */
 #define GREEN_LED_PIN 8
+
+/**
+ * SR04 TRIG pin
+ */
+#define SR04_TRIG_PIN 3
+
+/**
+ * SR04 ECHO pin
+ */
+#define SR04_ECHO_PIN 4
 
 #endif
