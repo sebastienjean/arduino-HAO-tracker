@@ -56,7 +56,7 @@
 /**
  * Debug serial baudrate
  */
-#define SERIAL_DEBUG_BAUDRATE 600
+#define SERIAL_DEBUG_BAUDRATE 115200
 
 /**
  * GPS1 serial baudrate
@@ -95,7 +95,7 @@
 /**
  * Log file path
  */
-#define LOG_FILE_PATH "2016data.txt"
+#define LOG_FILE_PATH "2017data.txt"
 
 /**
  * Log post-write delay in milliseconds
@@ -110,7 +110,7 @@
 /**
  * HAO name
  */
-#define HAO_NAME "NAUTILUS"
+#define HAO_NAME "HAO2017"
 
 //-----------------------------
 // Counters related definitions
