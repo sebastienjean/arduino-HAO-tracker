@@ -18,6 +18,7 @@
 // Globals includes
 #include <pins.h>
 #include <main/defs.h>
+#include <avr/wdt.h>
 
 // Modules includes
 #include <modules/framebuilder/CustomFrameBuilder.h>
@@ -334,6 +335,7 @@ initLeds()
 void
 setup()
 {
+  wdt_disable();
   initDebugSerial();
   rtc.writeProtect(false);
   rtc.halt(false);
@@ -342,7 +344,8 @@ setup()
   marioThemePlayer.playMarioTheme();
   initSD();
   initGpsSerial();
-
+  delay(2000);
+  wdt_enable(WDTO_8S);
 }
 
 /**
@@ -360,14 +363,20 @@ processGpsData()
       sdFileLogger.logMessage(nmeaRmcSentenceBuffer, false);
       sdFileLogger.logMessage(nmeaGgaSentenceBuffer, false);
 
+      wdt_reset();
+
       /* NMEA sentences transmission */
       fskModulator.modulateBytes(nmeaRmcSentenceBuffer, strlen(nmeaRmcSentenceBuffer));
       fskModulator.modulateBytes(nmeaGgaSentenceBuffer, strlen(nmeaGgaSentenceBuffer));
+
+      wdt_reset();
     }
     else
     {
       SERIAL_DEBUG.print("$GP_KO\r\n");
       fskModulator.modulateBytes("$GP_KO\r\n", 8);
+
+      wdt_reset();
     }
   }
 }
@@ -381,14 +390,22 @@ processCustomFrame()
   /* custom frame building */
   customFrameBuilder.buildCustomFrame(customFrame);
 
+  wdt_reset();
+
   /* custom frame debug */
   SERIAL_DEBUG.print(customFrame);
+
+  wdt_reset();
 
   /* custom frame logging */
   sdFileLogger.logMessage(customFrame, false);
 
+  wdt_reset();
+
   /* custom frame transmission */
   fskModulator.modulateBytes(customFrame, strlen(customFrame));
+
+  wdt_reset();
 }
 
 /**
@@ -399,6 +416,7 @@ void
 processEndOfLoop()
 {
   frameCounter.increment(1);
+  wdt_reset();
 }
 
 /**
@@ -409,6 +427,7 @@ void
 processStartOfLoop()
 {
   greenLed.quicklyMakeBlinkSeveralTimes(3);
+  wdt_reset();
 }
 
 /**
